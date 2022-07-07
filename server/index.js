@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 
 const userRoute = require("./routes/user.route")
 const postRoute = require("./routes/post.route")
+const fileRoute = require("./routes/file.route")
 
 const errorMiddleware = require("./middlewares/error.middleware")
 
@@ -27,6 +28,7 @@ app.use(cors({
 
 app.use("/user", userRoute)
 app.use("/post", postRoute)
+app.use("/file", fileRoute)
 
 app.use(errorMiddleware)
 

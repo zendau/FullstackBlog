@@ -3,9 +3,13 @@ const PostDto = require('../dtos/post.dto')
 const UserDto = require("../dtos/user.dto")
 const ApiError = require("../exceprions/api.error");
 
+const UserService = require("./user.service")
+
 class PostService {
     async create(author, title, body) {
-
+        
+        const userData = await UserService.getById(author)
+        console.log('!!!!!!!!!!!!!!!!!!', userData)
         const post = await postModel.create({
             author,
             title,
@@ -67,7 +71,7 @@ class PostService {
 
             return postDto
         } catch (e) {
-            throw ApiError.BadRequest("[GET ONE OPERATION] - Post not found")
+            throw ApiError.BadRequest("[GET ONE OPERATION]", "Post not found")
         }
 
 

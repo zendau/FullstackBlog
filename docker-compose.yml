@@ -1,48 +1,12 @@
-version: '3.1'
+version: '3.4'
 
 services:
-
-  frontend: # Name of our service
-    build: ./frontend # path to dockerfile
-    ports: # Port binding to host from docker container
-      - "3000:3000" # Bind port 3000 of host to 3000 of container
-    container_name: frontend-docker
-    restart: always # What to do if container crashes
-    links:
-      - backend
-    volumes:
-      - "./frontend:/app/frontend"
-      - "./frontend/node_modules:/app/frontend/node_modules"
-
-  backend:
-    # Create backend container  
+  server:
+    image: server
     build:
-      context: ./server
-    ports:
-        - "8080:8080"
-    container_name: backend-docker
-    restart: always
-    links:
-        - mongo
+      context: server
+      dockerfile: ./Dockerfile
     environment:
-        DB_URL: mongodb://root:example@mongo:27017/
-    volumes:
-      - "./server:/app/server"
-      - "./server/node_modules:/app/server/node_modules"
-
-  mongo:
-    image: mongo
-    restart: always
+      NODE_ENV: production
     ports:
-      - 27020:27017
-    volumes:
-      - ./database:/data/db
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      - 8080:8080

@@ -2,6 +2,7 @@ const userModel = require("../models/user.model")
 const ApiError = require("../exceprions/api.error");
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
+const ObjectId =  require('mongodb').ObjectID
 
 const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")
@@ -76,9 +77,20 @@ class UserService {
         const users = await userModel.find();
 
         const userDto = users.map(user => new UserDto(user))
+        return userDto;
+    }
+
+    async getById(id) {
+        if (!ObjectId.isValid(id.toString())) {
+            throw ApiError.BadRequest("Wrong id", `id ${id} is not objectId`)
+        }
+        const user = await userModel.findById(id);
+        console.log('user', user)
+        const userDto = new UserDto(user)
 
         return userDto;
     }
+
 
     async logout(token) {
 
