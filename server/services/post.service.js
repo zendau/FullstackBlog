@@ -4,19 +4,28 @@ const UserDto = require("../dtos/user.dto")
 const ApiError = require("../exceprions/api.error");
 
 const UserService = require("./user.service")
+const FileService = require('./file.service');
+const FileDto = require("../dtos/file.dto");
 
 class PostService {
-    async create(author, title, body) {
-        
-        const userData = await UserService.getById(author)
-        console.log('!!!!!!!!!!!!!!!!!!', userData)
+    async create(author, title, body, file) {
+
+        // check userId
+        await UserService.getById(author)
+        debugger
+        const fileData = await FileService.create(file)
+
         const post = await postModel.create({
             author,
             title,
             body,
+            file: fileData.id
         })
 
-        const postPopulate = await post.populate("author").execPopulate()
+        const postPopulate = await post
+            .populate("author")
+            .populate("file")
+            .execPopulate()
 
         const postDto = this.postDtoFromPopulate(postPopulate)
 
@@ -54,7 +63,7 @@ class PostService {
         const postData = await postModel.findByIdAndDelete(id)
 
         if (postData === null) {
-            throw ApiError.BadRequest("[DELETE OPERATION] - Post not found")
+            throw ApiError.HttpException(`Post with id ${id} not found`)
         }
 
         const postDto = this.postDtoFromPopulate(postData)
@@ -71,7 +80,7 @@ class PostService {
 
             return postDto
         } catch (e) {
-            throw ApiError.BadRequest("[GET ONE OPERATION]", "Post not found")
+            throw ApiError.HttpException(`Post with id ${id} not found`)
         }
 
 
@@ -121,18 +130,18 @@ class PostService {
 
                     const postsDto = await this.postsToDTO(posts)
 
-                    return { nextPage: false, post: postsDto}
+                    return { nextPage: false, post: postsDto }
 
                 }
 
-                const pagesRemainder = countPosts - (pages*limit)
-                const postsOnPage = posts.splice(countPosts-pagesRemainder)
+                const pagesRemainder = countPosts - (pages * limit)
+                const postsOnPage = posts.splice(countPosts - pagesRemainder)
 
                 const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-                return { nextPage: false, post: postsDto}
+                return { nextPage: false, post: postsDto }
 
             } else {
-                throw ApiError.BadRequest("PAGE OUT OF RANGE")
+                throw ApiError.PageNotFoundError("page out of range")
             }
         } else {
 
@@ -140,14 +149,14 @@ class PostService {
 
                 const postsDto = await this.postsToDTO(posts)
 
-                return { nextPage: false, post: postsDto}
+                return { nextPage: false, post: postsDto }
 
             }
 
-            const postsOnPage = posts.splice((currentPage-1)*limit, limit)
+            const postsOnPage = posts.splice((currentPage - 1) * limit, limit)
 
             const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-            return { nextPage: true, post: postsDto}
+            return { nextPage: true, post: postsDto }
         }
     }
 
@@ -155,9 +164,9 @@ class PostService {
     postDtoFromPopulate(postModel) {
         const postDto = new PostDto(postModel)
         const userDto = new UserDto(postModel.author)
-
+        const fileDto = new FileDto(postModel.file)
         postDto.setAuthor(userDto)
-
+        postDto.setImage(fileDto)
         return postDto
     }
 }

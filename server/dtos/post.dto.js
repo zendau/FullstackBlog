@@ -3,6 +3,7 @@ module.exports = class PostDto {
     title;
     body;
     date;
+    file;
 
     constructor(model) {
         this.id = model._id;
@@ -13,5 +14,9 @@ module.exports = class PostDto {
 
     setAuthor(author) {
         this.author = author
+    }
+
+    setImage(file) {
+        this.file = file
     }
 }

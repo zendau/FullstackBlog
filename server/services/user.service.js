@@ -2,7 +2,7 @@ const userModel = require("../models/user.model")
 const ApiError = require("../exceprions/api.error");
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
-const ObjectId =  require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 
 const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")
@@ -11,41 +11,35 @@ const ConfirmCodeService = require("../services/confirmCode.service")
 class UserService {
 
     async registration(email, password) {
-        const candidate = await userModel.findOne({email})
 
-        if (candidate) {
-            throw ApiError.BadRequest("user is already registered")
-        }
-
+        this.checkEmail(email)
         const hashPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
-        const activateLink = uuid.v4()
 
         const user = await userModel.create({
             email,
-            password: hashPass,
-            activationLink: activateLink
-
+            password: hashPass
         })
 
         const userDto = new UserDto(user)
 
         const tokens = TokenService.generateTokens(userDto)
         await TokenService.saveToken(userDto.id, tokens.refreshToken)
+        await ConfirmCodeService.createCode(userDto.id, userDto.email)
 
-        return {...tokens, userDto}
+        return tokens
     }
 
     async login(email, password) {
-        const user = await userModel.findOne({email})
+        const user = await userModel.findOne({ email })
 
         if (!user) {
-            throw ApiError.BadRequest("user is not found")
+            throw ApiError.HttpException("bad credentials")
         }
 
         const passwordEquals = await bcrypt.compare(password, user.password)
 
         if (!passwordEquals) {
-            throw ApiError.BadRequest("wrong password")
+            throw ApiError.HttpException("bad credentials")
         }
 
         const userDto = new UserDto(user)
@@ -53,24 +47,24 @@ class UserService {
         const tokens = TokenService.generateTokens(userDto)
         await TokenService.saveToken(userDto.id, tokens.refreshToken)
 
-        return {...tokens, userDto}
+        return { ...tokens, userDto }
     }
 
     async refresh(refreshToken) {
         if (!refreshToken) {
-            throw ApiError.UnauthorizedError();
+            throw ApiError.UnauthorizedError()
         }
-        const userData = TokenService.validateRefreshToken(refreshToken);
-        const tokenFromDb = await TokenService.findToken(refreshToken);
+        const userData = TokenService.validateRefreshToken(refreshToken)
+        const tokenFromDb = await TokenService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
-            throw ApiError.UnauthorizedError();
+            throw ApiError.UnauthorizedError()
         }
-        const user = await userModel.findById(userData.id);
-        const userDto = new UserDto(user);
-        const tokens = TokenService.generateTokens({...userDto});
+        const user = await userModel.findById(userData.id)
+        const userDto = new UserDto(user)
+        const tokens = TokenService.generateTokens({ ...userDto })
 
-        await TokenService.saveToken(userDto.id, tokens.refreshToken);
-        return {...tokens, user: userDto}
+        await TokenService.saveToken(userDto.id, tokens.refreshToken)
+        return { ...tokens, user: userDto }
     }
 
     async getAllUsers() {
@@ -82,10 +76,14 @@ class UserService {
 
     async getById(id) {
         if (!ObjectId.isValid(id.toString())) {
-            throw ApiError.BadRequest("Wrong id", `id ${id} is not objectId`)
+            throw ApiError.HttpException(`id ${id} is not objectId`)
         }
         const user = await userModel.findById(id);
-        console.log('user', user)
+
+        if (user === null) {
+            throw ApiError.HttpException(`Wrong user id. User id ${fileId} is not found`)
+        }
+
         const userDto = new UserDto(user)
 
         return userDto;
@@ -107,52 +105,40 @@ class UserService {
         return res
     }
 
-    async updateUserData(userId, newEmail) {
+    async setConfirmCode(userId) {
         const user = await userModel.findById(userId)
 
         if (!user) {
-            throw ApiError.BadRequest(`Not found user with id - ${userId}`)
+            throw ApiError.HttpException(`Not found user with id - ${userId}`)
         }
 
-        const checkEmail = await userModel.findOne({email: newEmail})
-
-
-        if (!checkEmail) {
-
-            const res = await ConfirmCodeService.createCode(userId)
-
-            return res
-
-        } else {
-            throw ApiError.BadRequest(`Email - ${newEmail} is already used`)
-        }
-
-
+        const res = await ConfirmCodeService.createCode(userId)
+        return res
 
     }
 
-    async saveNewUserData (userId, code, newEmail, newPassword) {
+    async saveNewUserData(userId, code, newEmail, newPassword) {
 
         const checkCodeValue = await ConfirmCodeService.checkCode(code)
 
         if (!checkCodeValue) {
-            throw ApiError.BadRequest(`Wrong code`)
+            throw ApiError.HttpException(`Wrong code`)
         }
 
 
         const user = await userModel.findById(userId)
 
         if (!user) {
-            throw ApiError.BadRequest(`Not found user with id - ${userId}`)
+            throw ApiError.HttpException(`Not found user with id - ${userId}`)
         } else {
-            const activateLink = uuid.v4()
+
+
+            this.checkEmail(email)
 
             const hashNewPass = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT))
 
             user.email = newEmail
             user.password = hashNewPass
-            user.isActivated = false
-            user.activationLink = activateLink
 
             const userModel = await user.save()
             const userDto = new UserDto(userModel)
@@ -162,11 +148,45 @@ class UserService {
             const tokens = TokenService.generateTokens(userDto)
             await TokenService.saveToken(userDto.id, tokens.refreshToken)
 
-            return {...tokens, userDto}
+            return { ...tokens, userDto }
+        }
+    }
+
+    async activateAccount(userId, confirmCode) {
+        const userData = await this.getById(userId)
+
+        const checkCode = await ConfirmCodeService.checkCode(confirmCode)
+
+        if (!checkCode) {
+            throw ApiError.HttpException('Wrong confirm code')
         }
 
+        await userModel.findByIdAndUpdate(userData.id,
+            {
+                isActivated: true
+            }
+        )
+        await ConfirmCodeService.deleteCode(confirmCode)
 
+        return true
 
+    }
+
+    async repeatConfirmCode(id) {
+        const userData = await this.getById(id)
+
+        await ConfirmCodeService.repeatCode(id, userData.email)
+        return true
+    }
+
+    async checkEmail(email) {
+        const candidate = await userModel.findOne({ email })
+
+        if (candidate) {
+            throw ApiError.HttpException(`user with email - ${email} is already registered`)
+        }
+
+        return true
     }
 
 

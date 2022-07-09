@@ -10,9 +10,12 @@ router.get("/refresh", UserController.refresh)
 router.get("/all", authMiddleware, UserController.allUsers)
 router.get("/logout", UserController.logoutUser)
 
-router.post("/update", UserController.update)
+router.post("/setConfirmCode", UserController.setConfirmCode)
 router.put("/saveNewData", UserController.saveNewUserData)
 
+router.post('/activate', UserController.activateAccount)
+router.get('/getActivateCode/:id', UserController.repeatConfirmCode)
 
+// repeat send code
 
 module.exports = router

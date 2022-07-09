@@ -11,18 +11,8 @@ class FileService {
 
   async create(file) {
 
-    // // Check post id is valid
-    // if (postId === undefined) {
-    //   throw ApiError.BadRequest("Post error", `Post id is required field`)
-    // }
-
-
-    // // check post is created
-    // await PostService.getOne(postId)
-
-
-    if (file.length === 0) {
-      throw ApiError.BadRequest("Wrong file type", "Allowed types: png, jpg, jpeg")
+    if (file === undefined || file.length === 0) {
+      throw ApiError.HttpException("Wrong file type. Allowed types: png, jpg, jpeg")
     }
 
     const fileInsered = await fileModel.create({
@@ -39,14 +29,13 @@ class FileService {
   async getById(fileId) {
 
     if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.BadRequest("Wrong id", `fileId ${fileId} is not objectId`)
+      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
     }
-
 
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
-      throw ApiError.BadRequest("Wrong file id", `File id ${fileId} is not found`)
+      throw ApiError.HttpException(`Wrong file id. File id ${fileId} is not found`)
     }
 
     const fileDTO = new FileDto(file)
@@ -64,13 +53,13 @@ class FileService {
   async update(fileId, newFile) {
 
     if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.BadRequest("Wrong id", `fileId ${fileId} is not objectId`)
+      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
     }
 
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
-      throw ApiError.BadRequest("Wrong file id", `File id ${fileId} is not found`)
+      throw ApiError.HttpException(`Wrong file id File id ${fileId} is not found`)
     }
 
     const oldFileName = file.fileName
@@ -100,22 +89,19 @@ class FileService {
   async delete(fileId) {
 
     if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.BadRequest("Wrong id", `fileId ${fileId} is not objectId`)
+      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
     }
 
     const DeleteStatus = await fileModel.findByIdAndDelete(fileId)  
     if (DeleteStatus === null) {
-      throw ApiError.BadRequest("Wrong file id", `File id ${fileId} is not found`)
+      throw ApiError.HttpException(`Wrong file id File id ${fileId} is not found`)
     }
 
     this.removeFromStorage(DeleteStatus.fileName)
-
 
     return true
   }
 
 }
-
-
 
 module.exports = new FileService()

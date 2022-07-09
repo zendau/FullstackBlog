@@ -5,7 +5,9 @@ class PostController {
     async create(req, res, next) {
         try {
             const {author, title, body} = req.body
-            const data = await PostService.create(author, title, body)
+            const file = req.file
+
+            const data = await PostService.create(author, title, body, file)
             res.json(data)
 
 

@@ -4,7 +4,6 @@ class FileController {
 
   async add(req, res, next) {
     try {
-
       const file = req.file
       const fileInsered = await FileService.create(file)
 
@@ -22,7 +21,6 @@ class FileController {
       const fileUpdated = await FileService.update(id, file)
 
       res.json(fileUpdated);
-
     } catch (e) {
       next(e)
     }
@@ -30,9 +28,7 @@ class FileController {
 
   async delete(req, res, next) {
     try {
-      debugger
       const id = req.params.id
-
       const fileDeleted = await FileService.delete(id)
 
       res.json(fileDeleted);
@@ -47,7 +43,6 @@ class FileController {
       const fileData = await FileService.getById(id)
 
       res.json(fileData);
-
     } catch (e) {
       next(e)
     }
@@ -56,7 +51,6 @@ class FileController {
 
   async getList(req, res, next) {
     try {
-
       const filesData = await FileService.getList()
 
       res.json(filesData);
@@ -67,15 +61,15 @@ class FileController {
 
 
 
-  // async download(req, res, next) {
-  //     try {
+  async download(req, res, next) {
+    try {
+      const id = req.params.id
 
-
-  //     } catch (e) {
-  //         next(e)
-  //     }
-  // }
-
+      res.download(`files/${id}`)
+    } catch (e) {
+      next(e)
+    }
+  }
 
 }
 
