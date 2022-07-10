@@ -18,10 +18,12 @@ class PostController {
 
     async edit(req, res, next) {
         try {
+            debugger
+            const {postId, title, body} = req.body
+            const userId = req.user.payload.id
+            const file = req.file
 
-            const {postId, userId, title, body} = req.body
-
-            const data = await PostService.edit(postId, userId, title, body)
+            const data = await PostService.edit(postId, userId, title, body, file)
 
             res.json(data)
 

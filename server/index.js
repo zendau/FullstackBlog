@@ -3,6 +3,9 @@ require('dotenv').config()
 const express = require("express")
 const app = express()
 
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
@@ -15,6 +18,22 @@ const fileRoute = require("./routes/file.route")
 const errorMiddleware = require("./middlewares/error.middleware")
 
 const PORT = process.env.PORT || 3000
+
+const options = {
+	definition: {
+		openapi: "3.0.0",
+		info: {
+			title: "Blog API",
+			version: "1.0.0",
+			description: "A simple Express Blog API",
+		}
+	},
+	apis: ["./routes/*.js", "./models/*.js", "./dtos/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

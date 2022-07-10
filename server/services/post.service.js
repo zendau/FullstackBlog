@@ -1,18 +1,18 @@
 const postModel = require("../models/post.model")
 const PostDto = require('../dtos/post.dto')
 const UserDto = require("../dtos/user.dto")
-const ApiError = require("../exceprions/api.error");
+const ApiError = require("../exceprions/api.error")
 
 const UserService = require("./user.service")
-const FileService = require('./file.service');
-const FileDto = require("../dtos/file.dto");
+const FileService = require('./file.service')
+const FileDto = require("../dtos/file.dto")
+
+const { ObjectId } = require('mongodb')
 
 class PostService {
     async create(author, title, body, file) {
 
-        // check userId
         await UserService.getById(author)
-        debugger
         const fileData = await FileService.create(file)
 
         const post = await postModel.create({
@@ -33,19 +33,28 @@ class PostService {
 
     }
 
-    async edit(postId, userId, title, body) {
+    async edit(postId, userId, title, body, newFile) {
+        debugger
 
         const postData = await postModel.findById(postId)
 
-        if (postData.author.toString() === userId) {
-            console.log("ok")
+        if (postData === null) {
+            throw ApiError.HttpException(`Post with id ${postId} not found`)
+        }
+         
+        if (postData.author.toString() !== userId) {
+            throw ApiError.HttpException(`User with id ${userId} not author this post`)
+        }
+        if (newFile !== undefined) {
+            await FileService.update(postData.file, newFile)
+
         }
 
-        if (title.length > 0) {
+        if (title !== undefined) {
             postData.title = title
         }
 
-        if (body.length > 0) {
+        if (body !== undefined) {
             postData.body = body
         }
 
@@ -56,7 +65,6 @@ class PostService {
         const postDto = this.postDtoFromPopulate(postPopulate)
 
         return postDto
-
     }
 
     async delete(id) {

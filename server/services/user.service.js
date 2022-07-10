@@ -12,7 +12,7 @@ class UserService {
 
     async registration(email, password) {
 
-        this.checkEmail(email)
+        await this.checkEmail(email)
         const hashPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
 
         const user = await userModel.create({
@@ -47,7 +47,7 @@ class UserService {
         const tokens = TokenService.generateTokens(userDto)
         await TokenService.saveToken(userDto.id, tokens.refreshToken)
 
-        return { ...tokens, userDto }
+        return tokens
     }
 
     async refresh(refreshToken) {
@@ -64,7 +64,7 @@ class UserService {
         const tokens = TokenService.generateTokens({ ...userDto })
 
         await TokenService.saveToken(userDto.id, tokens.refreshToken)
-        return { ...tokens, user: userDto }
+        return tokens
     }
 
     async getAllUsers() {
@@ -133,7 +133,7 @@ class UserService {
         } else {
 
 
-            this.checkEmail(email)
+            await this.checkEmail(email)
 
             const hashNewPass = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT))
 
