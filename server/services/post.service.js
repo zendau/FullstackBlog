@@ -7,176 +7,156 @@ const UserService = require("./user.service")
 const FileService = require('./file.service')
 const FileDto = require("../dtos/file.dto")
 
-const { ObjectId } = require('mongodb')
-
 class PostService {
-    async create(author, title, body, file) {
+  async create(author, title, body, file) {
 
-        await UserService.getById(author)
-        const fileData = await FileService.create(file)
+    await UserService.getById(author)
+    const fileData = await FileService.create(file)
 
-        const post = await postModel.create({
-            author,
-            title,
-            body,
-            file: fileData.id
-        })
+    const post = await postModel.create({
+      author,
+      title,
+      body,
+      file: fileData.id
+    })
 
-        const postPopulate = await post
-            .populate("author")
-            .populate("file")
-            .execPopulate()
+    const postPopulate = await post
+      .populate("author")
+      .populate("file")
+      .execPopulate()
 
-        const postDto = this.postDtoFromPopulate(postPopulate)
+    const postDto = this.postDtoFromPopulate(postPopulate)
+    return postDto
+  }
 
-        return postDto
+  async edit(postId, userId, title, body, newFile) {
 
+    const postData = await postModel.findById(postId)
+
+    if (postData === null) {
+      throw ApiError.HttpException(`Post with id ${postId} not found`)
     }
 
-    async edit(postId, userId, title, body, newFile) {
-        debugger
+    if (postData.author.toString() !== userId) {
+      throw ApiError.HttpException(`User with id ${userId} not author this post`)
+    }
+    if (newFile !== undefined) {
+      await FileService.update(postData.file, newFile)
+    }
 
-        const postData = await postModel.findById(postId)
+    if (title !== undefined) {
+      postData.title = title
+    }
 
-        if (postData === null) {
-            throw ApiError.HttpException(`Post with id ${postId} not found`)
+    if (body !== undefined) {
+      postData.body = body
+    }
+
+    const post = await postData.save()
+    const postPopulate = await post.populate("author").execPopulate()
+    const postDto = this.postDtoFromPopulate(postPopulate)
+    return postDto
+  }
+
+  async delete(id) {
+    const postData = await postModel.findByIdAndDelete(id)
+
+    if (postData === null) {
+      throw ApiError.HttpException(`Post with id ${id} not found`)
+    }
+
+    const postDto = this.postDtoFromPopulate(postData)
+    return postDto
+  }
+
+  async getOne(id) {
+
+    try {
+      const post = await postModel.findById(id).populate("author")
+
+      const postDto = this.postDtoFromPopulate(post)
+      return postDto
+    } catch (e) {
+      throw ApiError.HttpException(`Post with id ${id} not found`)
+    }
+
+
+  }
+
+  async getAllPosts() {
+    const posts = await postModel.find().populate("author")
+
+    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
+    return postsDto
+  }
+
+  postsToDTO(posts) {
+    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
+    return postsDto
+  }
+
+  async getLimitPosts(currentPage, limit) {
+    const posts = await postModel.find().populate("author")
+    return this.getPosts(posts, currentPage, limit)
+  }
+
+
+  async getLimitUserPosts(currentPage, limit, userId) {
+    const posts = await postModel.find().where("author").equals(userId).populate("author")
+    return this.getPosts(posts, currentPage, limit)
+  }
+
+
+  async getPosts(posts, currentPage, limit) {
+    const countPosts = posts.length
+
+    const pages = Math.floor(countPosts / limit)
+
+    if (currentPage > pages) {
+      if (currentPage - 1 === pages) {
+
+        if (limit === 0 || limit > countPosts) {
+
+          const postsDto = await this.postsToDTO(posts)
+
+          return { nextPage: false, post: postsDto }
+
         }
-         
-        if (postData.author.toString() !== userId) {
-            throw ApiError.HttpException(`User with id ${userId} not author this post`)
-        }
-        if (newFile !== undefined) {
-            await FileService.update(postData.file, newFile)
 
-        }
+        const pagesRemainder = countPosts - (pages * limit)
+        const postsOnPage = posts.splice(countPosts - pagesRemainder)
 
-        if (title !== undefined) {
-            postData.title = title
-        }
+        const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
+        return { nextPage: false, post: postsDto }
 
-        if (body !== undefined) {
-            postData.body = body
-        }
+      } else {
+        throw ApiError.PageNotFoundError("page out of range")
+      }
+    } else {
 
-        const post = await postData.save()
+      if (parseInt(limit) === 0 || limit > countPosts) {
 
-        const postPopulate = await post.populate("author").execPopulate()
+        const postsDto = await this.postsToDTO(posts)
 
-        const postDto = this.postDtoFromPopulate(postPopulate)
+        return { nextPage: false, post: postsDto }
 
-        return postDto
+      }
+
+      const postsOnPage = posts.splice((currentPage - 1) * limit, limit)
+
+      const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
+      return { nextPage: true, post: postsDto }
     }
+  }
 
-    async delete(id) {
-        const postData = await postModel.findByIdAndDelete(id)
-
-        if (postData === null) {
-            throw ApiError.HttpException(`Post with id ${id} not found`)
-        }
-
-        const postDto = this.postDtoFromPopulate(postData)
-
-        return postDto
-    }
-
-    async getOne(id) {
-
-        try {
-            const post = await postModel.findById(id).populate("author")
-
-            const postDto = this.postDtoFromPopulate(post)
-
-            return postDto
-        } catch (e) {
-            throw ApiError.HttpException(`Post with id ${id} not found`)
-        }
-
-
-    }
-
-    async getAllPosts() {
-        const posts = await postModel.find().populate("author")
-
-        const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-
-        return postsDto
-    }
-
-    // async getAllUserPosts(userId) {
-    //     const posts = await postModel.find().where("author").equals(userId).populate("author")
-    //     const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-    //
-    //     return postsDto
-    // }
-
-    postsToDTO(posts) {
-        const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-        return postsDto
-    }
-
-    async getLimitPosts(currentPage, limit) {
-        const posts = await postModel.find().populate("author")
-        return this.getPosts(posts, currentPage, limit)
-    }
-
-
-    async getLimitUserPosts(currentPage, limit, userId) {
-        const posts = await postModel.find().where("author").equals(userId).populate("author")
-        return this.getPosts(posts, currentPage, limit)
-    }
-
-
-    async getPosts(posts, currentPage, limit) {
-        const countPosts = posts.length
-
-        const pages = Math.floor(countPosts / limit)
-
-        if (currentPage > pages) {
-            if (currentPage - 1 === pages) {
-
-                if (limit === 0 || limit > countPosts) {
-
-                    const postsDto = await this.postsToDTO(posts)
-
-                    return { nextPage: false, post: postsDto }
-
-                }
-
-                const pagesRemainder = countPosts - (pages * limit)
-                const postsOnPage = posts.splice(countPosts - pagesRemainder)
-
-                const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-                return { nextPage: false, post: postsDto }
-
-            } else {
-                throw ApiError.PageNotFoundError("page out of range")
-            }
-        } else {
-
-            if (parseInt(limit) === 0 || limit > countPosts) {
-
-                const postsDto = await this.postsToDTO(posts)
-
-                return { nextPage: false, post: postsDto }
-
-            }
-
-            const postsOnPage = posts.splice((currentPage - 1) * limit, limit)
-
-            const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-            return { nextPage: true, post: postsDto }
-        }
-    }
-
-
-    postDtoFromPopulate(postModel) {
-        const postDto = new PostDto(postModel)
-        const userDto = new UserDto(postModel.author)
-        const fileDto = new FileDto(postModel.file)
-        postDto.setAuthor(userDto)
-        postDto.setImage(fileDto)
-        return postDto
-    }
+  postDtoFromPopulate(postModel) {
+    const postDto = new PostDto(postModel)
+    const userDto = new UserDto(postModel.author)
+    const fileDto = new FileDto(postModel.file)
+    postDto.setAuthor(userDto)
+    postDto.setImage(fileDto)
+    return postDto
+  }
 }
 
 module.exports = new PostService()

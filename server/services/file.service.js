@@ -1,5 +1,4 @@
 const fileModel = require("../models/file.model")
-const ObjectId = require('mongodb').ObjectID
 
 const ApiError = require("../exceprions/api.error");
 
@@ -11,10 +10,6 @@ class FileService {
 
   async create(file) {
 
-    if (file === undefined || file.length === 0) {
-      throw ApiError.HttpException("Wrong file type. Allowed types: png, jpg, jpeg")
-    }
-
     const fileInsered = await fileModel.create({
       fileName: file.filename,
       size: file.size,
@@ -23,14 +18,9 @@ class FileService {
 
     const fileDTO = new FileDto(fileInsered)
     return fileDTO
-
   }
 
   async getById(fileId) {
-
-    if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
-    }
 
     const file = await fileModel.findById(fileId)
 
@@ -52,14 +42,10 @@ class FileService {
 
   async update(fileId, newFile) {
 
-    if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
-    }
-
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
-      throw ApiError.HttpException(`Wrong file id File id ${fileId} is not found`)
+      throw ApiError.HttpException(`File id ${fileId} is not found`)
     }
 
     const oldFileName = file.fileName
@@ -87,10 +73,6 @@ class FileService {
   }
 
   async delete(fileId) {
-
-    if (!ObjectId.isValid(fileId.toString())) {
-      throw ApiError.HttpException(`Wrong id fileId ${fileId} is not objectId`)
-    }
 
     const DeleteStatus = await fileModel.findByIdAndDelete(fileId)  
     if (DeleteStatus === null) {

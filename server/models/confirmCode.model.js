@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 /**
  * @swagger
@@ -22,8 +22,8 @@ const {Schema, model} = require('mongoose');
  */
 
 const ConfirmCodeSchema = new Schema({
-    user: {type: Schema.Types.ObjectId, ref: 'Users', required: true},
-    code: {type: String, required: true},
+  user: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+  code: { type: String, required: true },
 })
 
 module.exports = model("ConfirmCode", ConfirmCodeSchema)

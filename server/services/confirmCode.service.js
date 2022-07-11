@@ -6,55 +6,51 @@ const ApiError = require("../exceprions/api.error")
 
 class ConfirmCodeService {
 
-    async createCode(userData) {
-        const confirmCode = uuid.v4()
+  async createCode(userData) {
+    const confirmCode = uuid.v4()
+    const codeData = await confirmCodeModel.findOne({ user: userData.id })
 
-        const codeData = await confirmCodeModel.findOne({ user: userData.id })
-
-        if (codeData) {
-            codeData.code = confirmCode
-            await codeData.save()
-        } else {
-            await confirmCodeModel.create({
-                user: userData.id,
-                code: confirmCode
-            })
-        }
-
-        NodeMailerService.sendConfirmСode(confirmCode, userData.email)
-        return true
+    if (codeData) {
+      codeData.code = confirmCode
+      await codeData.save()
+    } else {
+      await confirmCodeModel.create({
+        user: userData.id,
+        code: confirmCode
+      })
     }
 
-    async deleteCode(code) {
-        const codeData = await confirmCodeModel.deleteOne({ code })
-        return codeData;
+    NodeMailerService.sendConfirmСode(confirmCode, userData.email)
+    return true
+  }
+
+  async deleteCode(code) {
+    const codeData = await confirmCodeModel.deleteOne({ code })
+    return codeData;
+  }
+
+  async checkCode(code) {
+    const codeData = await confirmCodeModel.findOne({ code })
+
+    const confirmCodeStatus = !!codeData
+
+    if (confirmCodeStatus) {
+      await this.deleteCode(code)
+    } else {
+      throw ApiError.HttpException('Wrong confirm code')
+    }
+  }
+
+  async repeatCode(id, email) {
+    const codeData = await confirmCodeModel.findOne({ user: id })
+
+    if (!codeData) {
+      throw ApiError.HttpException('Confirm code was not found')
     }
 
-    async checkCode(code) {
-        const codeData = await confirmCodeModel.findOne({ code })
-
-        const confirmCodeStatus = !!codeData
-
-        if (confirmCodeStatus) {
-            await this.deleteCode(code)
-        } else {
-            throw ApiError.HttpException('Wrong confirm code')
-        }
-    }
-
-    async repeatCode(id, email) {
-        const codeData = await confirmCodeModel.findOne({ user: id })
-
-
-        if (!codeData) {
-            throw ApiError.HttpException('Confirm code was not found')
-        }
-
-
-        NodeMailerService.sendConfirmСode(codeData.code, email)
-
-        return true
-    }
+    NodeMailerService.sendConfirmСode(codeData.code, email)
+    return true
+  }
 }
 
 module.exports = new ConfirmCodeService()

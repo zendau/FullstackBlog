@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 /**
  * @swagger
@@ -36,11 +36,11 @@ const {Schema, model} = require('mongoose');
  */
 
 const PostSchema = new Schema({
-    author: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
-    file: { type: Schema.Types.ObjectId, ref: 'Files', required: true },
-    title: { type: String, required: true },
-    body: { type: String, required: true },
-    createdDate: { type: Date, required: true, default: Date.now },
+  author: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+  file: { type: Schema.Types.ObjectId, ref: 'Files', required: true },
+  title: { type: String, required: true },
+  body: { type: String, required: true },
+  createdDate: { type: Date, required: true, default: Date.now },
 })
 
 module.exports = model("Posts", PostSchema)

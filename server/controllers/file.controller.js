@@ -4,7 +4,17 @@ class FileController {
 
   async add(req, res, next) {
     try {
+      const schema = Joi.object({
+        id: Joi.objectId().required()
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
       const file = req.file
+      if (file === undefined) {
+        throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
+      }
+
       const fileInsered = await FileService.create(file)
 
       res.json(fileInsered);
@@ -15,9 +25,18 @@ class FileController {
 
   async update(req, res, next) {
     try {
-      const file = req.file
-      const id = req.params.id
+      const schema = Joi.object({
+        id: Joi.objectId().required()
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
+      const file = req.file
+      if (file === undefined) {
+        throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
+      }
+
+      const id = req.params.id
       const fileUpdated = await FileService.update(id, file)
 
       res.json(fileUpdated);
@@ -28,6 +47,12 @@ class FileController {
 
   async delete(req, res, next) {
     try {
+      const schema = Joi.object({
+        id: Joi.objectId().required()
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
       const id = req.params.id
       const fileDeleted = await FileService.delete(id)
 
@@ -39,6 +64,12 @@ class FileController {
 
   async getOne(req, res, next) {
     try {
+      const schema = Joi.object({
+        id: Joi.objectId().required()
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
       const id = req.params.id
       const fileData = await FileService.getById(id)
 
@@ -63,6 +94,12 @@ class FileController {
 
   async download(req, res, next) {
     try {
+      const schema = Joi.object({
+        id: Joi.string().required()
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
       const id = req.params.id
 
       res.download(`files/${id}`)
