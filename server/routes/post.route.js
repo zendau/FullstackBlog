@@ -48,7 +48,7 @@ const multer = require('../middlewares/multer.middleware')
  *         description: Unexpected error
  */
 
-router.post("/create", multer, PostController.create)
+router.post("/create", authMiddleware, multer, PostController.create)
 
 /**
  * @swagger
@@ -114,7 +114,7 @@ router.patch("/edit", authMiddleware, multer, PostController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", PostController.delete)
+router.delete("/delete/:id", authMiddleware, PostController.delete)
 
 /**
  * @swagger
@@ -145,7 +145,7 @@ router.delete("/delete/:id", PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", PostController.getOne)
+router.get("/get/:id", authMiddleware, PostController.getOne)
 
 /**
  * @swagger
@@ -188,7 +188,7 @@ router.get("/get/:id", PostController.getOne)
  *         description: Unexpected error
  */
 
-router.get("/getUserPosts/", PostController.getUserPosts)
+router.get("/getUserPosts/", authMiddleware, PostController.getUserPosts)
 
 /**
  * @swagger
@@ -215,7 +215,7 @@ router.get("/getUserPosts/", PostController.getUserPosts)
  *         description: Unexpected error
  */
 
-router.get("/getAllPosts", PostController.getAllPosts)
+router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
 
 /**
  * @swagger
@@ -253,7 +253,7 @@ router.get("/getAllPosts", PostController.getAllPosts)
  *         description: Unexpected error
  */
 
-router.get("/getLimitPosts", PostController.getLimitPosts)
+router.get("/getLimitPosts", authMiddleware, PostController.getLimitPosts)
 
 
 module.exports = router

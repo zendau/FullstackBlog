@@ -1,5 +1,5 @@
 const userModel = require("../models/user.model")
-const ApiError = require("../exceprions/api.error");
+const ApiError = require("../exceprions/api.error")
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
 const ObjectId = require('mongodb').ObjectID
@@ -7,13 +7,14 @@ const ObjectId = require('mongodb').ObjectID
 const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")
 const ConfirmCodeService = require("../services/confirmCode.service")
+const nodemailerService = require("./nodemailer.service")
 
 class UserService {
 
     async registration(email, password) {
 
         await this.checkEmail(email)
-        const hashPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
+        const hashPass = await this.getHashPassword(password)
 
         const user = await userModel.create({
             email,
@@ -105,25 +106,23 @@ class UserService {
         return res
     }
 
-    async setConfirmCode(userId) {
-        const user = await userModel.findById(userId)
+    async setConfirmCode(email) {
+        const user = await userModel.findOne({email})
 
         if (!user) {
-            throw ApiError.HttpException(`Not found user with id - ${userId}`)
+            throw ApiError.HttpException(`Not found user with email - ${email}`)
         }
 
-        const res = await ConfirmCodeService.createCode(userId)
+        const res = await ConfirmCodeService.createCode(user)
         return res
 
     }
 
     async saveNewUserData(userId, code, newEmail, newPassword) {
 
-        const checkCodeValue = await ConfirmCodeService.checkCode(code)
+        await ConfirmCodeService.checkCode(code)
 
-        if (!checkCodeValue) {
-            throw ApiError.HttpException(`Wrong code`)
-        }
+    
 
 
         const user = await userModel.findById(userId)
@@ -155,11 +154,8 @@ class UserService {
     async activateAccount(userId, confirmCode) {
         const userData = await this.getById(userId)
 
-        const checkCode = await ConfirmCodeService.checkCode(confirmCode)
+        await ConfirmCodeService.checkCode(confirmCode)
 
-        if (!checkCode) {
-            throw ApiError.HttpException('Wrong confirm code')
-        }
 
         await userModel.findByIdAndUpdate(userData.id,
             {
@@ -179,16 +175,40 @@ class UserService {
         return true
     }
 
+    async getByEmail(email) {
+        const userData = await userModel.findOne({ email })
+        return userData
+    }
+
     async checkEmail(email) {
-        const candidate = await userModel.findOne({ email })
+        const candidate = await this.getByEmail(email)
 
         if (candidate) {
             throw ApiError.HttpException(`user with email - ${email} is already registered`)
         }
 
-        return true
+        return candidate
     }
 
+    async getHashPassword(password) {
+        return await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
+    }
+
+    async resetPassword(email, confirmCode) {
+
+        const userData = await this.getByEmail(email)
+        await ConfirmCodeService.checkCode(confirmCode)
+
+        const newPaswword = uuid.v4()
+        const hashPassword = await this.getHashPassword(newPaswword)
+
+        userData.password = hashPassword
+        await userData.save()
+        
+        nodemailerService.sendNewPassword(newPaswword, email)
+
+        return `New password was send to ${email}`;
+    }
 
 }
 

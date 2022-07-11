@@ -13,14 +13,22 @@ class NodeMailerService {
     });
   }
 
-  async sendConfirmСode(code, email) {
-    await this.transporter.sendMail({
+  sendConfirmСode(code, email) {
+    this.transporter.sendMail({
       to: email,
       from: 'nest@exampla.com',
       subject: 'Confirm code',
       html: `<p>Your confirm code - ${code}</p>`,
     })
-    return true;
+  }
+
+  sendNewPassword(password, email) {
+    this.transporter.sendMail({
+      to: email,
+      from: 'nest@exampla.com',
+      subject: 'Reseted password',
+      html: `<p>Your new password - ${password}</p>`,
+    })
   }
 
 

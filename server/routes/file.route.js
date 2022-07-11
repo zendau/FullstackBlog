@@ -43,7 +43,7 @@ const multer = require('../middlewares/multer.middleware')
  *         description: Unexpected error
  */
 
-router.post("/add", multer, FileController.add)
+router.post("/add", authMiddleware, multer, FileController.add)
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.post("/add", multer, FileController.add)
  *       500:
  *         description: Unexpected error
  */
-router.get("/get/:id", FileController.getOne)
+router.get("/get/:id", authMiddleware, FileController.getOne)
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.get("/get/:id", FileController.getOne)
  *         description: Unexpected error
  */
 
-router.get("/list", FileController.getList)
+router.get("/list", authMiddleware, FileController.getList)
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get("/list", FileController.getList)
  *         description: Unexpected error
  */
 
-router.put("/update/:id", multer, FileController.update)
+router.put("/update/:id", authMiddleware, multer, FileController.update)
 
 /**
  * @swagger
@@ -156,7 +156,7 @@ router.put("/update/:id", multer, FileController.update)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", FileController.delete)
+router.delete("/delete/:id", authMiddleware, FileController.delete)
 
 
 /**
@@ -165,8 +165,6 @@ router.delete("/delete/:id", FileController.delete)
  *   get:
  *     summary: Download file
  *     tags: [File]
- *     security:
- *      - bearerAuth: []
  *     responses:
  *       200:
  *         description: Download file by name

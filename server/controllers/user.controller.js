@@ -64,9 +64,11 @@ class UserController {
     }
 
     async setConfirmCode(req, res, next) {
+        debugger
+
         try {
-            const { userId } = req.body
-            await UserService.setConfirmCode(userId)
+            const { email } = req.body
+            await UserService.setConfirmCode(email)
             return res.send(true)
         } catch (e) {
             next(e)
@@ -102,6 +104,19 @@ class UserController {
             debugger
             const userId = req.params.id
             const status = await UserService.repeatConfirmCode(userId)
+            return res.json(status)
+
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async resetPassword(req, res, next) {
+        try {
+            debugger
+            const {confirmCode, email} = req.body
+            const status = await UserService.resetPassword(email, confirmCode)
+
             return res.json(status)
 
         } catch (e) {

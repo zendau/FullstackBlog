@@ -2,27 +2,27 @@ const confirmCodeModel = require("../models/confirmCode.model")
 const uuid = require("uuid")
 const NodeMailerService = require('./nodemailer.service')
 
+const ApiError = require("../exceprions/api.error")
+
 class ConfirmCodeService {
 
-    async createCode(userId, email) {
+    async createCode(userData) {
         const confirmCode = uuid.v4()
 
-        const codeData = await confirmCodeModel.findOne({ user: userId })
+        const codeData = await confirmCodeModel.findOne({ user: userData.id })
 
         if (codeData) {
             codeData.code = confirmCode
-            return await codeData.save()
+            await codeData.save()
+        } else {
+            await confirmCodeModel.create({
+                user: userData.id,
+                code: confirmCode
+            })
         }
 
-        const code = await confirmCodeModel.create({
-            user: userId,
-            code: confirmCode
-        })
-
-        NodeMailerService.sendConfirmСode(confirmCode, email)
-
-        return code
-
+        NodeMailerService.sendConfirmСode(confirmCode, userData.email)
+        return true
     }
 
     async deleteCode(code) {
@@ -33,7 +33,13 @@ class ConfirmCodeService {
     async checkCode(code) {
         const codeData = await confirmCodeModel.findOne({ code })
 
-        return !!codeData;
+        const confirmCodeStatus = !!codeData
+
+        if (confirmCodeStatus) {
+            await this.deleteCode(code)
+        } else {
+            throw ApiError.HttpException('Wrong confirm code')
+        }
     }
 
     async repeatCode(id, email) {

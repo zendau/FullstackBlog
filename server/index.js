@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require("express")
 const app = express()
+const path = require('path')
 
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -50,6 +51,8 @@ app.use("/post", postRoute)
 app.use("/file", fileRoute)
 
 app.use(errorMiddleware)
+
+app.use("/image", express.static(path.join(__dirname, 'files')));
 
 async function start() {
     try {

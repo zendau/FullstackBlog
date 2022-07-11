@@ -3,7 +3,6 @@ const UserController = require('../controllers/user.controller')
 const router = new Router()
 
 const authMiddleware = require("../middlewares/auth.middleware")
-const isActivateMiddleware = require("../middlewares/isActivate.middleware")
 
 /**
  * @swagger
@@ -99,7 +98,7 @@ router.post("/login", UserController.login)
  *         description: Unexpected error
  */
 
-router.get("/refresh", UserController.refresh)
+router.get("/refresh", authMiddleware, UserController.refresh)
 
 /**
  * @swagger
@@ -126,7 +125,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/all", authMiddleware, isActivateMiddleware, UserController.allUsers)
+router.get("/all", authMiddleware, UserController.allUsers)
 
 /**
  * @swagger
@@ -147,7 +146,7 @@ router.get("/all", authMiddleware, isActivateMiddleware, UserController.allUsers
  *         description: Unexpected error
  */
 
-router.get("/logout", UserController.logoutUser)
+router.get("/logout", authMiddleware, UserController.logoutUser)
 
 /**
  * @swagger
@@ -155,13 +154,11 @@ router.get("/logout", UserController.logoutUser)
  *   post:
  *     summary: Set confirm code
  *     tags: [User]
- *     security:
- *      - bearerAuth: []
  *     parameters:
- *       - in: userId
- *         name: userId
- *         type: ObjectId
- *         description: ObjectId of User
+ *       - in: email
+ *         name: email
+ *         type: string
+ *         description: email of User
  *     responses:
  *       200:
  *         description: confirm code successfully created
@@ -215,7 +212,7 @@ router.post("/setConfirmCode", UserController.setConfirmCode)
  *         description: Unexpected error
  */
 
-router.put("/saveNewData", UserController.saveNewUserData)
+router.put("/saveNewData", authMiddleware, UserController.saveNewUserData)
 
 /**
  * @swagger
@@ -245,7 +242,7 @@ router.put("/saveNewData", UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post('/activate', UserController.activateAccount)
+router.post('/activate', authMiddleware, UserController.activateAccount)
 
 /**
  * @swagger
@@ -271,6 +268,34 @@ router.post('/activate', UserController.activateAccount)
  *         description: Unexpected error
  */
 
-router.get('/getActivateCode/:id', UserController.repeatConfirmCode)
+router.get('/getActivateCode/:id', authMiddleware, UserController.repeatConfirmCode)
+
+/**
+ * @swagger
+ * /user/resetPassword:
+ *   post:
+ *     summary: Reset user password
+ *     tags: [User]
+ *     parameters:
+ *       - in: email
+ *         name: email
+ *         type: string
+ *         description: email of User
+ *       - in: confirmCode
+ *         name: confirmCode
+ *         type: string
+ *         description: confirmCode
+ *     responses:
+ *       200:
+ *         description: New password was send to email
+ *       400:
+ *          description: Error message
+ *       401:
+ *         description: User is not auth
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.post('/resetPassword', UserController.resetPassword)
 
 module.exports = router
