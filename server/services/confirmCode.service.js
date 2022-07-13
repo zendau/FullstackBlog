@@ -26,7 +26,7 @@ class ConfirmCodeService {
 
   async deleteCode(code) {
     const codeData = await confirmCodeModel.deleteOne({ code })
-    return codeData;
+    return codeData
   }
 
   async checkCode(code) {

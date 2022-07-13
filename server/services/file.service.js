@@ -1,8 +1,7 @@
 const fileModel = require("../models/file.model")
 
-const ApiError = require("../exceprions/api.error");
-
-const FileDto = require("../dtos/file.dto");
+const ApiError = require("../exceprions/api.error")
+const FileDto = require("../dtos/file.dto")
 
 const fs = require('fs')
 
@@ -34,10 +33,10 @@ class FileService {
   }
 
   async getList() {
-    const files = await fileModel.find();
+    const files = await fileModel.find()
 
     const filesDTO = files.map(file => new FileDto(file))
-    return filesDTO;
+    return filesDTO
   }
 
   async update(fileId, newFile) {
@@ -63,7 +62,7 @@ class FileService {
   }
 
   removeFromStorage(filename) {
-    fs.unlink(`files/${filename}`, (err) => {
+    fs.unlink(`${process.env.FILE_FOULDER}/${filename}`, (err) => {
       if (err && err.code == 'ENOENT') {
         console.log("File doesn't exist, won't remove it")
       } else if (err) {

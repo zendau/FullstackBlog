@@ -1,15 +1,15 @@
 const multer = require("multer")
-const { v4: uuidv4 } = require('uuid');
-const { extname } = require('path');
+const { v4: uuidv4 } = require('uuid')
+const { extname } = require('path')
 
 const storageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "files");
+    cb(null, process.env.FILE_FOULDER)
   },
   filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}${extname(file.originalname)}`);
+    cb(null, `${uuidv4()}${extname(file.originalname)}`)
   }
-});
+})
 // определение фильтра
 const fileFilter = (req, file, cb) => {
 
@@ -18,10 +18,10 @@ const fileFilter = (req, file, cb) => {
     file.mimetype === "image/jpg" ||
     file.mimetype === "image/jpeg"
   ) {
-    cb(null, true);
+    cb(null, true)
   }
   else {
-    cb(null, false);
+    cb(null, false)
   }
 }
 

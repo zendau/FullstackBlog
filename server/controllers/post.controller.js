@@ -114,7 +114,7 @@ class PostController {
       const schema = Joi.object({
         currentPage: Joi.number().required(),
         limit: Joi.number().required()
-      })
+      })      
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 

@@ -1,22 +1,22 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer")
 
 class NodeMailerService {
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
+      host: process.env.MAILER_HOST,
+      port: process.env.MAILER_PORT,
       secure: false,
       auth: {
-        user: 'carmel.mante81@ethereal.email',
-        pass: 'MdgrMz8BC6kY9jrPau',
+        user: process.env.MAILER_USER,
+        pass: process.env.MAILER_PASS,
       },
-    });
+    })
   }
 
   sendConfirmСode(code, email) {
     this.transporter.sendMail({
       to: email,
-      from: 'nest@exampla.com',
+      from: process.env.MAILER_FROM,
       subject: 'Confirm code',
       html: `<p>Your confirm code - ${code}</p>`,
     })
@@ -25,7 +25,7 @@ class NodeMailerService {
   sendNewPassword(password, email) {
     this.transporter.sendMail({
       to: email,
-      from: 'nest@exampla.com',
+      from: process.env.MAILER_FROM,
       subject: 'Reseted password',
       html: `<p>Your new password - ${password}</p>`,
     })

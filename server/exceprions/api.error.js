@@ -1,8 +1,8 @@
 module.exports = class ApiError extends Error {
 
   constructor(status, response) {
-    super(response);
-    this.status = status;
+    super(response)
+    this.status = status
   }
 
   static UnauthorizedError() {
@@ -14,7 +14,7 @@ module.exports = class ApiError extends Error {
   }
 
   static ForbiddenError() {
-    return new ApiError(403, 'You do not have access to this page');
+    return new ApiError(403, 'You do not have access to this page')
   }
 
   static PageNotFoundError(respone) {

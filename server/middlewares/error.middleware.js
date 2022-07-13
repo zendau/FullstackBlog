@@ -1,4 +1,4 @@
-const ApiError = require('../exceprions/api.error');
+const ApiError = require('../exceprions/api.error')
 
 module.exports = function (err, req, res, next) {
   if (err instanceof ApiError) {
@@ -6,4 +6,4 @@ module.exports = function (err, req, res, next) {
   }
   return res.status(500).send('Unexpected error')
 
-};
+}

@@ -16,8 +16,7 @@ class FileController {
       }
 
       const fileInsered = await FileService.create(file)
-
-      res.json(fileInsered);
+      res.json(fileInsered)
     } catch (e) {
       next(e)
     }
@@ -39,7 +38,7 @@ class FileController {
       const id = req.params.id
       const fileUpdated = await FileService.update(id, file)
 
-      res.json(fileUpdated);
+      res.json(fileUpdated)
     } catch (e) {
       next(e)
     }
@@ -56,7 +55,7 @@ class FileController {
       const id = req.params.id
       const fileDeleted = await FileService.delete(id)
 
-      res.json(fileDeleted);
+      res.json(fileDeleted)
     } catch (e) {
       next(e)
     }
@@ -73,7 +72,7 @@ class FileController {
       const id = req.params.id
       const fileData = await FileService.getById(id)
 
-      res.json(fileData);
+      res.json(fileData)
     } catch (e) {
       next(e)
     }
@@ -83,8 +82,7 @@ class FileController {
   async getList(req, res, next) {
     try {
       const filesData = await FileService.getList()
-
-      res.json(filesData);
+      res.json(filesData)
     } catch (e) {
       next(e)
     }
@@ -101,8 +99,7 @@ class FileController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const id = req.params.id
-
-      res.download(`files/${id}`)
+      res.download(`${process.env.FILE_FOULDER}/${id}`)
     } catch (e) {
       next(e)
     }

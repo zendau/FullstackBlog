@@ -4,8 +4,8 @@ const express = require("express")
 const app = express()
 const path = require('path')
 
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express")
+const swaggerJsDoc = require("swagger-jsdoc")
 
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -30,11 +30,11 @@ const options = {
     }
   },
   apis: ["./routes/*.js", "./models/*.js", "./dtos/*.js"],
-};
+}
 
-const specs = swaggerJsDoc(options);
+const specs = swaggerJsDoc(options)
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -51,24 +51,24 @@ app.use("/post", postRoute)
 app.use("/file", fileRoute)
 
 app.use(errorMiddleware)
-
-app.use("/image", express.static(path.join(__dirname, 'files')));
+app.use("/image", express.static(path.join(__dirname, process.env.FILE_FOULDER)))
 
 async function start() {
   try {
-    await mongoose.connect(process.env.DB_URL, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-    }).then(() => console.log("Connected to MongoDB server"))
-      .catch((error) => console.log(error));
+    await mongoose
+      .connect(process.env.DB_URL, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => console.log("Connected to MongoDB server"))
+      .catch((error) => console.log(error))
 
     app.listen(PORT, () => {
       console.log(`server started on http://localhost:${PORT}`)
     })
-
   } catch (e) {
-    console.log(e.message)
+    console.error(e.message)
   }
 }
 

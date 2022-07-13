@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, memo, useEffect, useState} from 'react';
 
 
 
@@ -15,7 +15,7 @@ interface ITextInput {
 const typeValues = ["text", "email", "password"]
 
 
-const TextInput : React.FC<ITextInput> = ({title, letters, id, value, setValue, type, name}) => {
+const TextInput : React.FC<ITextInput> = memo(({title, letters, id, value, setValue, type, name}) => {
 
     useEffect(() => {
         const val = typeValues.filter(item => item === type)
@@ -51,6 +51,6 @@ const TextInput : React.FC<ITextInput> = ({title, letters, id, value, setValue, 
             <p className="letters"><span>{charLeft}</span> Characters remaining</p>
         </div>
     );
-};
+})
 
 export default TextInput;
