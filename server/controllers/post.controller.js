@@ -1,7 +1,8 @@
 const PostService = require("../services/post.service")
+const ApiError = require("../exceprions/api.error")
+
 const Joi = require("joi")
 Joi.objectId = require('joi-objectid')(Joi)
-const ApiError = require("../exceprions/api.error")
 
 
 class PostController {
@@ -17,7 +18,7 @@ class PostController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { author, title, body } = req.body
-      
+
       const file = req.file
       if (file === undefined) {
         throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
@@ -68,14 +69,42 @@ class PostController {
 
   async getOne(req, res, next) {
     try {
+      debugger
+      
+
       const schema = Joi.object({
-        id: Joi.objectId().required()
+        postId: Joi.objectId().required(),
+        userId: Joi.objectId().required()
       })
-      const { error } = schema.validate(req.params)
+      const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const data = await PostService.getOne(req.params.id)
+      const { postId, userId } = req.query
+
+      const data = await PostService.getOne(postId, userId)
       res.json(data)
+    } catch (e) {
+      debugger
+      next(e)
+    }
+  }
+
+  async reactionPost(req, res, next) {
+    try {
+      debugger
+      
+      const schema = Joi.object({
+        postId: Joi.objectId().required(),
+        userId: Joi.objectId().required(),
+        isLiked: Joi.bool().required()
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { postId, userId, isLiked } = req.query
+
+      const resData = await PostService.postReaction(postId, userId, isLiked)
+      return res.json(resData)
     } catch (e) {
       next(e)
     }
@@ -114,7 +143,7 @@ class PostController {
       const schema = Joi.object({
         currentPage: Joi.number().required(),
         limit: Joi.number().required()
-      })      
+      })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 

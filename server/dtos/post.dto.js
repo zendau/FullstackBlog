@@ -53,4 +53,8 @@ module.exports = class PostDto {
   setImage(file) {
     this.file = file
   }
+
+  setReaction(reaction) {
+    this.reaction = reaction
+  }
 }

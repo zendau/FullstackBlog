@@ -5,6 +5,8 @@ const ApiError = require("../exceprions/api.error")
 
 const UserService = require("./user.service")
 const FileService = require('./file.service')
+const ReactionService = require('./reaction.service')
+
 const FileDto = require("../dtos/file.dto")
 
 class PostService {
@@ -69,23 +71,30 @@ class PostService {
     return postDto
   }
 
-  async getOne(id) {
+  async postExist(postId) {
+    const post = await postModel.findById(postId).populate("author")
 
-    try {
-      const post = await postModel.findById(id).populate("author")
-
-      const postDto = this.postDtoFromPopulate(post)
-      return postDto
-    } catch (e) {
-      throw ApiError.HttpException(`Post with id ${id} not found`)
+    if (post === null) {
+      throw ApiError.HttpException(`Post with id ${postId} not found`)
     }
+    
+    return post
+  }
 
 
+  async getOne(postId, userId) {
+
+    const post = await this.postExist(postId)
+    const postDto = this.postDtoFromPopulate(post)
+
+    const reactionData = await ReactionService.getReactionsCount(postId, userId)
+    postDto.setReaction(reactionData)
+
+    return postDto
   }
 
   async getAllPosts() {
     const posts = await postModel.find().populate("author")
-
     const postsDto = posts.map(post => this.postDtoFromPopulate(post))
     return postsDto
   }
@@ -156,6 +165,18 @@ class PostService {
     postDto.setAuthor(userDto)
     postDto.setImage(fileDto)
     return postDto
+  }
+
+  async postReaction(postId, userId, isLiked) {
+    const reactionStatus = await ReactionService.setReaction(postId, userId, isLiked)
+
+    if (!reactionStatus) {
+      await this.postExist(postId)
+      await ReactionService.add(postId, userId, isLiked)
+    }
+
+    return true
+
   }
 }
 

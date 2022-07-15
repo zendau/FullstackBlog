@@ -125,11 +125,16 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *     security:
  *      - bearerAuth: []
  *     parameters:
- *       - in: id
- *         name: id
+ *       - in: postId
+ *         name: postId
  *         schema:
  *          type: string
  *         description: Get Post by id.
+ *       - in: userId
+ *         name: userId
+ *         schema:
+ *          type: string
+ *          description: UserId for get likes.
  *     responses:
  *       200:
  *         description: Post data
@@ -145,7 +150,7 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", authMiddleware, PostController.getOne)
+router.get("/get", PostController.getOne)
 
 /**
  * @swagger
@@ -215,7 +220,8 @@ router.get("/getUserPosts/", authMiddleware, PostController.getUserPosts)
  *         description: Unexpected error
  */
 
-router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
+//router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
+router.get("/getAllPosts", PostController.getAllPosts)
 
 /**
  * @swagger
@@ -254,6 +260,8 @@ router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
  */
 
 router.get("/getLimitPosts", authMiddleware, PostController.getLimitPosts)
+
+router.patch("/reacting", PostController.reactionPost)
 
 
 module.exports = router
