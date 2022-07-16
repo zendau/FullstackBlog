@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *   DTOs:
- *     User:
+ *     Reaction:
  *       type: object
  *       properties:
  *         id:
@@ -15,9 +15,9 @@
  *           type: boolean
  *           description: isActivated user status
  *       example:
- *         id: 62c7234d9f3f1739381f93c4
- *         email: root@admin.com
- *         isActivated: false
+ *         like: 2
+ *         dislike: 1
+ *         isLiked: false
  */
 
  module.exports = class ReactionDto {

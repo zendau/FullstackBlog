@@ -23,6 +23,12 @@
  *         date:
  *           type: Date
  *           description: Data when blog was created
+ *         reaction:
+ *           $ref: '#/components/DTOs/Reaction'
+ *           description: Comments of post
+ *         comment:
+ *           $ref: '#/components/DTOs/Comment'
+ *           description: Comments of post
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
  *         author: 62c7234d9f3f1739381f93c4
@@ -30,6 +36,16 @@
  *         title: test
  *         body: blog content
  *         date: Fri Jul 08 2022 11:15:54 GMT+0000 (Coordinated Universal Time)
+ *         reaction:
+ *          like: 2
+ *          dislike: 1
+ *          isLiked: false
+ *         commenst:
+ *          type: array
+ *          items:
+ *           id: 62c7234d9f3f1739381f93c4
+ *           user: 62c7234d9f3f1739381f93c4
+ *           message: 'test message'
  */
 
 module.exports = class PostDto {

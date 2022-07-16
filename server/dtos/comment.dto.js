@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *   DTOs:
- *     User:
+ *     Comment:
  *       type: object
  *       properties:
  *         id:
@@ -16,8 +16,8 @@
  *           description: message of comment
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
- *         email: 62c7234d9f3f1739381f93c4
- *         isActivated: 'test message'
+ *         user: 62c7234d9f3f1739381f93c4
+ *         message: 'test message'
  */
 
  module.exports = class CommentDTO {
