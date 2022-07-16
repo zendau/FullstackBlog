@@ -1,11 +1,12 @@
-const postModel = require("../models/post.model")
+const postModel = require('../models/post.model')
 const PostDto = require('../dtos/post.dto')
-const UserDto = require("../dtos/user.dto")
-const ApiError = require("../exceprions/api.error")
+const UserDto = require('../dtos/user.dto')
+const ApiError = require('../exceprions/api.error')
 
-const UserService = require("./user.service")
+const UserService = require('./user.service')
 const FileService = require('./file.service')
 const ReactionService = require('./reaction.service')
+const CommentService = require('./comment.serice')
 
 const FileDto = require("../dtos/file.dto")
 
@@ -89,6 +90,9 @@ class PostService {
 
     const reactionData = await ReactionService.getReactionsCount(postId, userId)
     postDto.setReaction(reactionData)
+
+    const commentsData = await CommentService.getList(postId)
+    postDto.setComments(commentsData)
 
     return postDto
   }
@@ -176,8 +180,15 @@ class PostService {
     }
 
     return true
-
   }
+
+  async addPostComment(userId, postId, message) {
+    await this.postExist(postId)
+
+    const inseredCommentDTO = await CommentService.create(userId, postId, message)
+    return inseredCommentDTO
+  }
+
 }
 
 module.exports = new PostService()

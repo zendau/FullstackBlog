@@ -7,9 +7,10 @@ class UserController {
 
   async registration(req, res, next) {
     try {
+      debugger
       const schema = Joi.object({
-        email: Joi.string().email(),
-        password: Joi.string().min(6).max(20),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).max(20).required(),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)

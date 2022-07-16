@@ -26,8 +26,9 @@
   isLiked
 
   constructor(model) {
+    debugger
     this.like = model.like
     this.dislike = model.dislike
-    this.isLiked = model.user[0].isLiked
+    this.isLiked = model.user[0]?.isLiked
   }
 }

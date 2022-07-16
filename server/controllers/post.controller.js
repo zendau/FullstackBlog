@@ -1,4 +1,6 @@
 const PostService = require("../services/post.service")
+const CommentService = require('../services/comment.serice')
+
 const ApiError = require("../exceprions/api.error")
 
 const Joi = require("joi")
@@ -73,13 +75,13 @@ class PostController {
       
 
       const schema = Joi.object({
-        postId: Joi.objectId().required(),
-        userId: Joi.objectId().required()
+        postId: Joi.objectId().required()
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, userId } = req.query
+      const { postId } = req.query
+      const userId = req.user.payload.id
 
       const data = await PostService.getOne(postId, userId)
       res.json(data)
@@ -95,16 +97,16 @@ class PostController {
       
       const schema = Joi.object({
         postId: Joi.objectId().required(),
-        userId: Joi.objectId().required(),
         isLiked: Joi.bool().required()
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, userId, isLiked } = req.query
+      const { postId, isLiked } = req.query
+      const userId = req.user.payload.id
 
       const resData = await PostService.postReaction(postId, userId, isLiked)
-      return res.json(resData)
+      res.json(resData)
     } catch (e) {
       next(e)
     }
@@ -113,15 +115,16 @@ class PostController {
   async getUserPosts(req, res, next) {
     try {
       const schema = Joi.object({
-        userId: Joi.objectId().required(),
         currentPage: Joi.number().required(),
         limit: Joi.number().required()
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { currentPage, limit, userId } = req.query
+      const userId = req.user.payload.id
+      const { currentPage, limit } = req.query
       const data = await PostService.getLimitUserPosts(currentPage, limit, userId)
+      
       res.json(data)
 
     } catch (e) {
@@ -151,6 +154,63 @@ class PostController {
       const data = await PostService.getLimitPosts(currentPage, limit)
 
       res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async addPostComment(req, res, next) {
+    try {
+      const schema = Joi.object({
+        postId: Joi.objectId().required(),
+        message: Joi.string().required()
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { postId, message } = req.body
+
+      const userId = req.user.payload.id
+
+      const inseredData = await PostService.addPostComment(userId, postId, message)
+      res.json(inseredData)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async editPostComment(req, res, next) {
+    try {
+      const schema = Joi.object({
+        commentId: Joi.objectId().required(),
+        newMessage: Joi.string().required()
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { commentId, newMessage } = req.body
+      const userId = req.user.payload.id
+
+      const updatedStatus = await CommentService.edit(commentId, userId, newMessage)
+      res.json(updatedStatus)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async deletePostComment(req, res, next) {
+    try {
+      const schema = Joi.object({
+        commentId: Joi.objectId().required()
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { commentId } = req.body
+      const userId = req.user.payload.id
+
+      const deleteStatus = await CommentService.delete(commentId, userId)
+      res.json(deleteStatus)
     } catch (e) {
       next(e)
     }

@@ -150,7 +150,7 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get", PostController.getOne)
+router.get("/get", authMiddleware, PostController.getOne)
 
 /**
  * @swagger
@@ -261,7 +261,10 @@ router.get("/getAllPosts", PostController.getAllPosts)
 
 router.get("/getLimitPosts", authMiddleware, PostController.getLimitPosts)
 
-router.patch("/reacting", PostController.reactionPost)
+router.patch("/reacting", authMiddleware, PostController.reactionPost)
 
+router.post('/addComment', authMiddleware, PostController.addPostComment)
+router.patch('/editComment', authMiddleware, PostController.editPostComment)
+router.delete('/deleteComment', authMiddleware, PostController.deletePostComment)
 
 module.exports = router

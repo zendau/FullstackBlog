@@ -38,6 +38,8 @@ module.exports = class PostDto {
   body
   date
   file
+  comments
+
 
   constructor(model) {
     this.id = model._id
@@ -56,5 +58,9 @@ module.exports = class PostDto {
 
   setReaction(reaction) {
     this.reaction = reaction
+  }
+
+  setComments(comments) {
+    this.comments = comments
   }
 }
