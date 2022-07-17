@@ -1,29 +1,29 @@
-import React, {useEffect} from 'react';
-import {useParams} from "react-router";
-import {useAction} from "../../hooks/useAction";
-import {useTypedSelector} from "../../hooks/useTypedSelector";
+import React, { useEffect } from 'react';
+import { useParams } from "react-router";
+import { useAction } from "../../hooks/useAction";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 interface IParams {
-    id: string
+  id: string
 }
 
-const DeletePost : React.FC = () => {
+const DeletePost: React.FC = () => {
 
-    const {id} = useParams<IParams>()
+  const { id } = useParams<IParams>()
 
-    const {posts} = useTypedSelector(state => state.post)
+  const { posts } = useTypedSelector(state => state.post)
 
-    const {deletePost} = useAction()
+  const { deletePost } = useAction()
 
-    useEffect(() => {
-        deletePost(id, posts)
-    }, [])
+  useEffect(() => {
+    deletePost(id, posts)
+  }, [])
 
-    return (
-        <div>
+  return (
+    <div>
 
-        </div>
-    );
+    </div>
+  );
 };
 
 export default DeletePost;

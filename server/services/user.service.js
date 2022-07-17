@@ -2,7 +2,6 @@ const userModel = require("../models/user.model")
 const ApiError = require("../exceprions/api.error")
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
-const ObjectId = require('mongodb').ObjectID
 
 const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")

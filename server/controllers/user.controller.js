@@ -7,7 +7,6 @@ class UserController {
 
   async registration(req, res, next) {
     try {
-      debugger
       const schema = Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(6).max(20).required(),
@@ -147,7 +146,6 @@ class UserController {
 
   async resetPassword(req, res, next) {
     try {
-      debugger
       const { confirmCode, email } = req.body
       const status = await UserService.resetPassword(email, confirmCode)
 

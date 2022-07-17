@@ -71,9 +71,6 @@ class PostController {
 
   async getOne(req, res, next) {
     try {
-      debugger
-      
-
       const schema = Joi.object({
         postId: Joi.objectId().required()
       })
@@ -86,15 +83,12 @@ class PostController {
       const data = await PostService.getOne(postId, userId)
       res.json(data)
     } catch (e) {
-      debugger
       next(e)
     }
   }
 
   async reactionPost(req, res, next) {
-    try {
-      debugger
-      
+    try {      
       const schema = Joi.object({
         postId: Joi.objectId().required(),
         isLiked: Joi.bool().required()

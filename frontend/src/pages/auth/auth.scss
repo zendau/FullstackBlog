@@ -5,8 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15%;
-    margin-bottom: 30px;
+    margin: 30px 0;
   }
 
   &__wrapper {
@@ -30,9 +29,10 @@
     color: $main-color!important;
     width: 200px!important;
     height: 40px!important;
+    line-height: 0!important;
     box-sizing: border-box;
     padding: 10px;
-    margin-top: 15px;
+    margin-top: 25px;
     align-self: center;
     transition: .5s ease;
 

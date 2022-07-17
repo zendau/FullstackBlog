@@ -1,30 +1,30 @@
-import React, {useContext} from 'react';
-import {BrowserRouter as Router} from "react-router-dom";
-import {privateRoutes, publicRoutes} from "./Routes";
+import React, { useContext } from 'react';
+import { BrowserRouter as Router } from "react-router-dom";
+import { privateRoutes, publicRoutes } from "./Routes";
 
 
-import {privatePaths, publicPaths} from "./NavPaths"
+import { privatePaths, publicPaths } from "./NavPaths"
 import RouterSwitch from "./RouterSwitch";
-import {AuthContext} from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 
-const AppRouter : React.FC = () => {
+const AppRouter: React.FC = () => {
 
-    const {authStatus} = useContext(AuthContext)
+  const { authStatus } = useContext(AuthContext)
 
 
-    return (
-        <Router>
+  return (
+    <Router>
 
-            {authStatus
-                ?
-                <RouterSwitch privateType={true}  typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths}/>
-                :
-                <RouterSwitch privateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths}/>
-            }
+      {authStatus
+        ?
+        <RouterSwitch privateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
+        :
+        <RouterSwitch privateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} />
+      }
 
-        </Router>
-    )
+    </Router>
+  )
 }
 
 export default AppRouter;

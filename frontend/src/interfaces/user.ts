@@ -1,11 +1,11 @@
 export interface IUser {
-    email: string,
-    id: string,
-    isActivated: boolean
+  email: string,
+  id: string,
+  isActivated: boolean
 }
 
-export interface  IFetchUser {
-    accessToken: string
-    refreshToken: string
-    userDto: IUser
+export interface IFetchUser {
+  accessToken: string
+  refreshToken: string
+  userDto: IUser
 }

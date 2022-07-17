@@ -20,7 +20,7 @@
  *         mimetype: image/png
  */
 
-module.exports = class FileDto {
+module.exports = class FileDTO {
   id
   fileName
   mimetype

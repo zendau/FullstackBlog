@@ -16,13 +16,16 @@
     align-items: center;
   }
 
-  &__main-title, &__title, &__status {
+  &__main-title,
+  &__title,
+  &__status {
     text-align: center;
     margin-bottom: 15px;
   }
 
   &__title {
     position: relative;
+
     &:after {
       content: "";
       display: block;
@@ -43,8 +46,8 @@
     display: block;
     text-align: center;
     line-height: 29px;
-    background-color: $nav-hover-color!important;
-    color: #fff!important;
+    background-color: $nav-hover-color !important;
+    color: #fff !important;
     padding: 5px;
 
     &:hover {
@@ -52,7 +55,8 @@
     }
   }
 
-  &__change-data-container, &__confirm-code {
+  &__change-data-container,
+  &__confirm-code {
     margin-top: 25px;
     position: relative;
     padding: 0 5px;
@@ -63,11 +67,12 @@
     }
 
   }
+
   &__btn {
-    background-color: #ff4500!important;
-    color: $main-color!important;
-    width: 200px!important;
-    height: 40px!important;
+    background-color: #ff4500 !important;
+    color: $main-color !important;
+    width: 200px !important;
+    height: 40px !important;
     box-sizing: border-box;
     padding: 10px;
     margin-top: 15px;
@@ -86,7 +91,10 @@
 @media (max-width: 720px) {
 
   .account {
-    &__main-title, &__title, &__status {
+
+    &__main-title,
+    &__title,
+    &__status {
       font-size: 30px;
     }
 
@@ -98,4 +106,3 @@
 
 
 }
-

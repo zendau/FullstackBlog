@@ -30,7 +30,6 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
-    debugger
     const tokenData = await reactionModel.aggregate([
       {
         "$match": {

@@ -1,17 +1,17 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import PostList from "../../components/posts/postList";
-import {useFetchPosts} from "../../hooks/useFetchPosts";
-import {PageContext} from "../../context/PageContext";
+import { useFetchPosts } from "../../hooks/useFetchPosts";
+import { PageContext } from "../../context/PageContext";
 
-const AllPosts : React.FC = () => {
+const AllPosts: React.FC = () => {
 
-    const {pageNumber} = useContext(PageContext)
+  const { pageNumber } = useContext(PageContext)
 
-    useFetchPosts(pageNumber)
+  useFetchPosts(pageNumber)
 
-    return (
-        <PostList />
-    );
+  return (
+    <PostList />
+  );
 };
 
 export default AllPosts;

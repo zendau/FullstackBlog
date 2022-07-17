@@ -10,7 +10,6 @@ module.exports = class ApiError extends Error {
   }
 
   static HttpException(response) {
-    debugger
     return new ApiError(400, response)
   }
 
