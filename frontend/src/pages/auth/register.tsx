@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
+import { useTypedSelector } from "../../store/store";
 import { useAction } from "../../hooks/useAction";
 import { useAuthContext } from "../../context/AuthContext";
 import ErrorMessage from "../../components/UI/ErrorMessage/ErrorMessage";
@@ -9,11 +9,12 @@ import ConfirmCodeForm from "../../components/confirmCodeForm/confirmCodeForm";
 import "./auth.scss"
 import IFormikElements from "../../interfaces/formikElements";
 import { useHistory } from "react-router-dom";
+import { useRegisterUserMutation } from "../../store/user/user.api";
 
 
 const Register: React.FC = () => {
 
-  const state = useTypedSelector(state => state.user)
+  const state = useTypedSelector(state => state.userState)
 
   const [isConfirmCode, setConfirmStatus] = useState(false)
 
@@ -21,8 +22,14 @@ const Register: React.FC = () => {
   const { setAuthStatus } = useAuthContext()
   const { push } = useHistory()
 
+  const [userRegister, { data, isError }] = useRegisterUserMutation()
+
   const formikSubmit = (values: IFormikElements, { setSubmitting }: any) => {
     console.log('isConfirmCode', isConfirmCode)
+    userRegister({
+      email: values.email, 
+      password: values.password
+    })
     if (isConfirmCode) {
       setSubmitting(false)
       userAuth(values.email, values.password, setAuthStatus, "login", push)

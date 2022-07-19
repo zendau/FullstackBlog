@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { store } from "./redux"
+import { store } from "./store/store"
 import AppRouter from "./router/AppRouter"
 
 import { AuthContext } from "./context/AuthContext"

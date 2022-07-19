@@ -46,11 +46,11 @@ const Login: React.FC = () => {
     <section className="auth-container">
       <div className="auth__wrapper">
         <div className="auth__form-container">
-          <ErrorMessage message={state.error} timeout={5000} />
-          <ErrorMessage message={
+          {/* <ErrorMessage message={state.error} timeout={5000} /> */}
+          {/* <ErrorMessage message={
               formikForm.errors.email && formikForm.touched.email && formikForm.errors.email ||
               formikForm.errors.password && formikForm.touched.password && formikForm.errors.password
-            } timeout={5000} />
+            } timeout={5000} /> */}
           <form onSubmit={formikForm.handleSubmit}>
             
             <TextInput

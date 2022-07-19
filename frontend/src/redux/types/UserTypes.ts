@@ -21,6 +21,7 @@ export interface UserState {
   error?: string | null
   users?: IUser[]
   confirmCode?: boolean
+  token?: string
 }
 
 interface UserLoginAction {
