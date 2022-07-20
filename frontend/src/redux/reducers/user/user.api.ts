@@ -1,5 +1,7 @@
-import { mainApi } from '../../api/base.api'
-import {  alertActions } from '../alert/alert.slice';
+import { mainApi } from '@/redux/api/base.api'
+import { alertActions } from '@/redux/reducers/alert/alert.slice';
+import { setUser } from '@/redux/reducers/user/user.slice';
+import jwt from 'jwt-decode'
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
@@ -9,14 +11,14 @@ const extendedApi = mainApi.injectEndpoints({
         method: 'POST',
         body: data
       }),
-      transformResponse: () => {
-
-      },
+      transformResponse: (result: any) => result,
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          //dispatch(setUser(data));
-          console.log('success', data)
+          const tokenDecode: any = jwt(data.accessToken)
+          localStorage.setItem("token", data.accessToken)
+          console.log('tokenDecode', tokenDecode)
+          dispatch(setUser(tokenDecode.payload));
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,

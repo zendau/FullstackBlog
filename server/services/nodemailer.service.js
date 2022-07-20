@@ -11,6 +11,7 @@ class NodeMailerService {
         pass: process.env.MAILER_PASS,
       },
     })
+    console.log(process.env.MAILER_USER)
   }
 
   sendConfirmСode(code, email) {

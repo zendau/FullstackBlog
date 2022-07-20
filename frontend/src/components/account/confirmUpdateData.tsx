@@ -24,7 +24,7 @@ const ConfirmUpdateData = () => {
 
       <h2 className="account__title">Confirm code</h2>
 
-      <ErrorMessage message={error} timeout={5000} />
+      <ErrorMessage timeout={5000} />
       <form>
         <div className="textInput">
           <label htmlFor="confirmCode">Confirm code</label>

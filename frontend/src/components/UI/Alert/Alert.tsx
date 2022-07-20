@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
-import { useTypedSelector } from '../../../hooks/useTypedSelector';
-import { useAction } from '../../../hooks/useAction';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useAction } from '@/hooks/useAction';
 
 
 interface IErrorMessageProps {

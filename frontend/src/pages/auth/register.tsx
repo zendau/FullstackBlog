@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { useAction } from "@/hooks/useAction";
 import { useAuthContext } from "@/context/AuthContext";
@@ -21,12 +21,19 @@ const Register: React.FC = () => {
   const { setAuthStatus } = useAuthContext()
   const { push } = useHistory()
 
-  const [userRegister, { data, isError }] = useRegisterUserMutation()
+  const [userRegister, { data, isError, isSuccess }] = useRegisterUserMutation()
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAuthStatus(true)
+      push("/account")
+    }
+  }, [isSuccess])
 
   const formikSubmit = (values: IFormikElements, { setSubmitting }: any) => {
     console.log('isConfirmCode', isConfirmCode)
     userRegister({
-      email: values.email, 
+      email: values.email,
       password: values.password
     })
     if (isConfirmCode) {
@@ -43,17 +50,7 @@ const Register: React.FC = () => {
       <div className="auth__wrapper">
         <div className="auth__form-container">
           <ErrorMessage timeout={5000} />
-          {/* <ErrorMessage message={
-              formikForm.errors.email && formikForm.touched.email && formikForm.errors.email ||
-              formikForm.errors.password && formikForm.touched.password && formikForm.errors.password ||
-              formikForm.errors.confirmPassword && formikForm.touched.confirmPassword && formikForm.errors.confirmPassword
-            } timeout={5000} /> */}
-          {
-            isConfirmCode
-              ? <ConfirmCodeForm onSubmit={formikSubmit} />
-              : <RegisterForm onSubmit={formikSubmit} />
-          }
-
+          <RegisterForm onSubmit={formikSubmit} />
         </div>
       </div>
     </section>

@@ -15,6 +15,7 @@ class UserController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { email, password } = req.body
+      console.log('email, password', email, password)
       const data = await UserService.registration(email, password)
       res.cookie("JWTRefreshToken", data.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
       res.json(data)

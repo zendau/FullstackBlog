@@ -1,9 +1,9 @@
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react'
-import TextInput from '../../UI/input/textInput';
+import TextInput from '@/components/UI/input/textInput';
 
 import * as yup from 'yup'
-import IFormikElements from '../../../interfaces/formikElements';
+import IFormikElements from '@/interfaces/formikElements';
 import { useAction } from "@/hooks/useAction";
 
 interface Props {
