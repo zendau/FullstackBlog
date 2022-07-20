@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { useChangeUserDataContext } from "../../context/ChangeUserDataContext";
 import { useAction } from "../../hooks/useAction";
-import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../UI/Alert/Alert";
 
 const ConfirmUpdateData = () => {
 

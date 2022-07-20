@@ -2,7 +2,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { useAction } from "../../hooks/useAction";
 import { useChangeUserDataContext } from "../../context/ChangeUserDataContext";
-import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../UI/Alert/Alert";
 
 interface IChangeUserData {
   setStatus: React.Dispatch<React.SetStateAction<boolean>>

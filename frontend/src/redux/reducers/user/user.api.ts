@@ -1,5 +1,5 @@
-import { mainApi } from '../api/base.api'
-import { setError } from './user.slice';
+import { mainApi } from '../../api/base.api'
+import {  alertActions } from '../alert/alert.slice';
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
@@ -17,9 +17,12 @@ const extendedApi = mainApi.injectEndpoints({
           const { data } = await queryFulfilled;
           //dispatch(setUser(data));
           console.log('success', data)
-        } catch (error: any) {
-          dispatch(setError(error.error.data.message));
-          console.log('error', error)
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+          console.log('error', e)
         }
       },
     }),

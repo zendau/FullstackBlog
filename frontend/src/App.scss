@@ -48,7 +48,7 @@ input, textarea {
 }
 
 
-.error-message {
+.alert-message {
   margin-top: 15px;
   min-height: 40px;
   width: 100%;
@@ -57,14 +57,29 @@ input, textarea {
   font-size: 16px;
   border-radius: 3%;
   line-height: 40px;
-  background-color: #d30027;
+  background-color: #d3a700;
   display: none;
 
+  padding: 3px;
+
+  span {
+    display: block;
+  }
+
+  &--active {
+    display: block;
+  }
+
+  &--error {
+    background-color: #d30027;
+  }
+
+  &--success {
+    background-color: #00d302;
+  }
+
 }
 
-.error-message--active {
-  display: block;
-}
 
 .textInput {
   display: flex;

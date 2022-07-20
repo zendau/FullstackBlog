@@ -2,7 +2,7 @@ import React from "react";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { useAction } from "../../hooks/useAction";
 import { useAuthContext } from "../../context/AuthContext";
-import ErrorMessage from "../../components/UI/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../../components/UI/Alert/Alert";
 
 import "./auth.scss"
 import TextInput from "../../components/UI/input/textInput";

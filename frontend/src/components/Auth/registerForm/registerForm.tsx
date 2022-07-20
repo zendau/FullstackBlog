@@ -1,9 +1,10 @@
 import { useFormik } from 'formik';
-import React from 'react'
+import React, { useEffect } from 'react'
 import TextInput from '../../UI/input/textInput';
 
 import * as yup from 'yup'
 import IFormikElements from '../../../interfaces/formikElements';
+import { useAction } from "@/hooks/useAction";
 
 interface Props {
   onSubmit: (values: IFormikElements, { setSubmitting }: any) => void
@@ -11,6 +12,8 @@ interface Props {
 
 const registerForm = ({ onSubmit } : Props) => {
 
+  const { setError } = useAction()
+  
   const schema = yup.object({
     email: yup.string().required().email(),
     password: yup.string().required().min(6),
@@ -27,8 +30,19 @@ const registerForm = ({ onSubmit } : Props) => {
     validationSchema: schema
   })
   
-  console.log('formik', formikForm)
-  
+  useEffect(() => {
+
+    if (formikForm.isSubmitting && formikForm.errors) {
+
+      const errors : string = Object.values(formikForm.errors).map((value) => `<span>${value}</span>`).join('')
+
+      setError({
+        message: errors,
+        type: 'error'
+      })
+    }
+
+  }, [formikForm.isSubmitting])
   return (
     <form onSubmit={formikForm.handleSubmit}>
       <TextInput
@@ -60,8 +74,9 @@ const registerForm = ({ onSubmit } : Props) => {
       />
 
 
-      <button className="btn auth__btn" type="submit" disabled={formikForm.isSubmitting}>
+      <button className="btn auth__btn" type="submit" disabled={!formikForm.dirty}>
         Register
+        {formikForm.isSubmitting}
       </button>
     </form>
   )
