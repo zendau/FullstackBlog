@@ -1,11 +1,7 @@
 export interface IUser {
-  name: string;
   email: string;
-  role: string;
-  _id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+  id: string;
+  isActivate: boolean
 }
 
 export interface IGenericResponse {

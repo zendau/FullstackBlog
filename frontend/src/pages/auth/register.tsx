@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { useAction } from "@/hooks/useAction";
 import { useAuthContext } from "@/context/AuthContext";
-import ErrorMessage from "@/components/UI/Alert/Alert";
+import AlertMessage from "@/components/UI/Alert/Alert";
 import RegisterForm from "@/components/Auth/registerForm/registerForm";
 import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm";
 
@@ -30,26 +30,18 @@ const Register: React.FC = () => {
     }
   }, [isSuccess])
 
-  const formikSubmit = (values: IFormikElements, { setSubmitting }: any) => {
-    console.log('isConfirmCode', isConfirmCode)
+  const formikSubmit = (values: IFormikElements) => {
     userRegister({
       email: values.email,
       password: values.password
     })
-    if (isConfirmCode) {
-      setSubmitting(false)
-      // userAuth(values.email, values.password, setAuthStatus, "login", push)
-    } else {
-      setConfirmStatus(true)
-    }
-
   }
 
   return (
     <section className="auth-container">
       <div className="auth__wrapper">
         <div className="auth__form-container">
-          <ErrorMessage timeout={5000} />
+          <AlertMessage timeout={5000} />
           <RegisterForm onSubmit={formikSubmit} />
         </div>
       </div>

@@ -2,9 +2,9 @@ import { Dispatch } from "redux";
 
 import $api from "../../axios"
 
-import { UserActionType, userTypes } from "../types/UserTypes"
+import { UserActionType, userTypes } from "../../redux/types/UserTypes"
 import { IFetchUser } from "../../interfaces/user"
-import { postTypes } from "../types/PostTypes";
+import { postTypes } from "../../redux/types/PostTypes";
 
 export const userAuth = (email: string | undefined, password: string | undefined, setAuthStatus: (status: boolean) => void, type: string, route: { (path: string, state?: unknown): void }) => {
 

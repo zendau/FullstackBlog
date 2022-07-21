@@ -1,4 +1,4 @@
-import { UserActionType, UserState, userTypes } from "../types/UserTypes"
+import { UserActionType, UserState, userTypes } from "../../redux/types/UserTypes"
 
 const initState: UserState = {
   id: "",

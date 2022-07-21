@@ -1,22 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./Routes";
 
-
+import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { privatePaths, publicPaths } from "./NavPaths"
 import RouterSwitch from "./RouterSwitch";
-import { AuthContext } from "../context/AuthContext";
+import { useAction } from '@/hooks/useAction';
+
 
 
 const AppRouter: React.FC = () => {
 
-  const { authStatus } = useContext(AuthContext)
+  const { isAuth } = useTypedSelector(state => state.userState)
+
+
+  const { checkAuth } = useAction()
+  useEffect(() => {
+    checkAuth()
+  }, [])
 
 
   return (
     <Router>
 
-      {authStatus
+      {isAuth
         ?
         <RouterSwitch privateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
         :

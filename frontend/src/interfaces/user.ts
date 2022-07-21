@@ -1,7 +1,7 @@
 export interface IUser {
   email: string,
   id: string,
-  isActivated: boolean
+  isActivate: boolean
 }
 
 export interface IFetchUser {

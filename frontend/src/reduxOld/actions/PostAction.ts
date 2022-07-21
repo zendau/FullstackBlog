@@ -1,4 +1,4 @@
-import { PostActionType, postTypes } from "../types/PostTypes";
+import { PostActionType, postTypes } from "../../redux/types/PostTypes";
 import { Dispatch } from "redux";
 
 import $api from "../../axios"

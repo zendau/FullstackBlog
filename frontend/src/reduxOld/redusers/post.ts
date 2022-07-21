@@ -1,4 +1,4 @@
-import { PostActionType, PostState, postTypes } from "../types/PostTypes";
+import { PostActionType, PostState, postTypes } from "../../redux/types/PostTypes";
 
 const initState: PostState = {
   posts: [],

@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { mainApi } from './api/base.api'
-import userReducer from './reducers/user/user.slice'
-
+import { userReducer } from './reducers/user/user.slice'
 import { alertReducer } from './reducers/alert/alert.slice'
 
 
