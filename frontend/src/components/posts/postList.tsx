@@ -15,7 +15,7 @@ interface IPostList {
 
 const PostList: React.FC<IPostList> = ({ author }) => {
 
-  const { posts, hasMore } = useTypedSelector(state => state.post)
+  const { posts, hasMore } = useTypedSelector(state => state.postState)
 
   const [filterType, setFilterType] = useState<string>("titleName")
   const [filterName, setFilterName] = useState<string>("")

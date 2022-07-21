@@ -2,20 +2,19 @@ import { useContext, useEffect } from "react";
 import { useAction } from "./useAction";
 import { useTypedSelector } from "./useTypedSelector";
 import { PageContext } from "../context/PageContext";
-import { clearPostStore } from "../redux/actions/PostAction";
-
+import { useLazyGetLimitPostsQuery } from "@/redux/reducers/post/post.api";
 
 export const useFetchPosts = (currentPage: number) => {
 
-  const { getLimitPosts } = useAction()
-  const { hasMore } = useTypedSelector(state => state.post)
+  const [getLimitPosts, {isLoading}] = useLazyGetLimitPostsQuery()
+  const { hasMore } = useTypedSelector(state => state.postState)
 
   const { limit, setPageNumber } = useContext(PageContext)
 
-  const { clearPostStore } = useAction()
+  const { clearPost } = useAction()
 
   useEffect(() => {
-    clearPostStore()
+    clearPost()
     setPageNumber(1)
 
   }, [limit])
@@ -23,7 +22,9 @@ export const useFetchPosts = (currentPage: number) => {
   useEffect(() => {
 
     if (hasMore) {
-      getLimitPosts(currentPage, limit)
+      getLimitPosts({
+        currentPage, limit
+      })
     }
 
   }, [currentPage, limit, hasMore])
