@@ -27,9 +27,31 @@ const extendedApi = mainApi.injectEndpoints({
           console.log('error', e)
         }
       },
+    }),
+    loginUser: build.mutation({
+      query: (data) => ({
+        url: '/user/login',
+        method: 'POST',
+        body: data
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          debugger
+          const { data } = await queryFulfilled;
+          const tokenDecode: any = jwt(data.accessToken)
+          localStorage.setItem("token", data.accessToken)
+          dispatch(userActions.setUser(tokenDecode.payload));
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+          console.log('error', e)
+        }
+      },
     })
   }),
   overrideExisting: false,
 })
 
-export const { useRegisterUserMutation } = extendedApi
+export const { useRegisterUserMutation, useLoginUserMutation } = extendedApi

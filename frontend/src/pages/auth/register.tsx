@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useAction } from "@/hooks/useAction";
-import { useAuthContext } from "@/context/AuthContext";
+import React, { useEffect } from "react";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import RegisterForm from "@/components/Auth/registerForm/registerForm";
-import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm";
-
 import "./auth.scss"
 import IFormikElements from "@/interfaces/formikElements";
 import { useHistory } from "react-router-dom";
@@ -14,18 +9,11 @@ import { useRegisterUserMutation } from "@/redux/reducers/user/user.api";
 
 const Register: React.FC = () => {
 
-  const state = useTypedSelector(state => state.userState)
-
-  const [isConfirmCode, setConfirmStatus] = useState(false)
-
-  const { setAuthStatus } = useAuthContext()
   const { push } = useHistory()
-
-  const [userRegister, { data, isError, isSuccess }] = useRegisterUserMutation()
+  const [userRegister, { isSuccess }] = useRegisterUserMutation()
 
   useEffect(() => {
     if (isSuccess) {
-      setAuthStatus(true)
       push("/account")
     }
   }, [isSuccess])
