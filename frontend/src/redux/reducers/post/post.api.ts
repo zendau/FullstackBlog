@@ -99,7 +99,7 @@ const extendedApi = mainApi.injectEndpoints({
           console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
-          dispatch(postActions.clearPost())
+          //dispatch(postActions.clearPost())
           dispatch(postActions.setHasMore(data.nextPage))
           dispatch(postActions.fetchPost(data.post))
         } catch (e: any) {

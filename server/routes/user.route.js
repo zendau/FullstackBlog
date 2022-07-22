@@ -98,7 +98,7 @@ router.post("/login", UserController.login)
  *         description: Unexpected error
  */
 
-router.get("/refresh", authMiddleware, UserController.refresh)
+router.get("/refresh", UserController.refresh)
 
 /**
  * @swagger

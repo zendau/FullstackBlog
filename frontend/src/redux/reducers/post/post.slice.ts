@@ -12,7 +12,7 @@ export const postSlice = createSlice({
   initialState,
   reducers: {
     fetchPost: (state: PostState, action: PayloadAction<any>) => {
-      state.posts.push(action.payload)
+      state.posts.push(...action.payload)
     },
     //getPost: () => {},
     clearPost: () => initialState,

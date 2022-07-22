@@ -28,11 +28,19 @@ const PostList: React.FC<IPostList> = ({ author }) => {
   useEffect(() => {
 
     console.log("CHANGE TYPE")
-
+    debugger
     if (filterType === "date") {
       setPostList([...posts.sort((a: IPost, b: IPost) => a.date.localeCompare(b.date))])
     } else if (filterType === "titleName") {
-      setPostList([...posts.sort((a: IPost, b: IPost) => a.title.localeCompare(b.title))])
+      const test = structuredClone(posts)
+      const arr = test.sort((a: IPost, b: IPost) => {
+        debugger
+        const res = a.title.localeCompare(b.title)
+        console.log('res' , res)
+        return res
+      })
+      const test2  = [...arr]
+      setPostList(test2)
     } else if (filterType === "authorName") {
       setPostList([...posts.sort((a: IPost, b: IPost) => a.author.email.localeCompare(b.author.email))])
     }

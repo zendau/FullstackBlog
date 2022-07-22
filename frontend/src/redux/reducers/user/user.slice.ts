@@ -21,29 +21,24 @@ export const userSlice = createSlice({
     },
     logout: () => initialState,
     checkAuth: (state: UserState) => {
-      debugger
       const accessToken = localStorage.getItem('token')
 
       if (accessToken) {
         try {
-          const tokenDecode: IUser = jwt<any>(accessToken).payload
-          
-          state.email = tokenDecode.email
-          state.id = tokenDecode.id
-          state.isActivate = tokenDecode.isActivate
+          const tokenDecode: any = jwt<any>(accessToken)
+          const userData: IUser = tokenDecode.payload
+
+          state.email = userData.email
+          state.id = userData.id
+          state.isActivate = userData.isActivate
 
           state.isAuth = true
-
         } catch {
           state.isAuth = false
-          // const resRefresh = await $api.get('/user/refresh')
-
-          // if (resRefresh.data.statusCode === 401) return
-
-          // const accessToken = resRefresh.data.accessToken
-          // localStorage.setItem('token', accessToken)
-          // tokenDecode = jwt_decode(accessToken)
         }
+      } else {
+        state.isAuth = false
+        localStorage.removeItem('token')
       }
     }
   },

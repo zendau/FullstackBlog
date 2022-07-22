@@ -1,12 +1,12 @@
-import {BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError} from '@reduxjs/toolkit/query/react'
-
+import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { RootState } from '../store'
+import { userActions } from "@/redux/reducers/user/user.slice"
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8080', 
+  baseUrl: 'http://localhost:8080',
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    // By default, if we have a token in the store, let's use that for authenticated requests
-    //const token = (getState() as RootState).auth.token
-    const token = 'test'
+    const token = localStorage.getItem('token')
     if (token) {
       headers.set('authentication', `Bearer ${token}`)
     }
@@ -22,14 +22,14 @@ const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions)
   if (result.error && result.error.status === 401) {
     // try to get a new token
-    const refreshResult = await baseQuery('/refreshToken', api, extraOptions)
+    const refreshResult = await baseQuery('/user/refresh', api, extraOptions)
     if (refreshResult.data) {
-      // store the new token
-      //api.dispatch(tokenReceived(refreshResult.data))
-      // retry the initial query
+      const { accessToken } : any = refreshResult.data
+      localStorage.setItem('token', accessToken)
       result = await baseQuery(args, api, extraOptions)
     } else {
-      //api.dispatch(loggedOut())
+      console.log('user is not login')
+      api.dispatch(userActions.logout())
     }
   }
   return result
