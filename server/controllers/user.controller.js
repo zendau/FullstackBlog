@@ -66,8 +66,9 @@ class UserController {
 
   async logoutUser(req, res, next) {
     try {
+      debugger
       const { JWTRefreshToken } = req.cookies
-
+      
       const resLogout = await UserService.logout(JWTRefreshToken)
 
       res.clearCookie("JWTRefreshToken")

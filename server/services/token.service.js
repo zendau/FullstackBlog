@@ -57,7 +57,7 @@ class TokenService {
   async removeToken(refreshToken) {
     const tokenData = await tokenModel.deleteOne({ refreshToken })
 
-    if (tokenData) {
+    if (!tokenData.deletedCount) {
       throw ApiError.UnauthorizedError()
     }
   }

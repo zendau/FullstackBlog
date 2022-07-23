@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { useLogoutUserMutation } from '@/redux/reducers/user/user.api';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useHistory } from "react-router-dom";
 
 import "./Navbar.scss"
 
@@ -27,6 +28,18 @@ const Navbar: React.FC<INavbarProps> = ({ paths, privateType }) => {
 
   const [menuStatus, setMenuStatus] = useState(false)
 
+  const [logout, { isSuccess, isError }] = useLogoutUserMutation()
+
+  const history = useHistory()
+
+  function userLogout() {
+    logout()
+  }
+
+  useEffect(() => {
+    console.log('push to /')
+    history.push('/')
+  }, [isSuccess, isError])
 
   return (
     <header>
@@ -41,7 +54,7 @@ const Navbar: React.FC<INavbarProps> = ({ paths, privateType }) => {
           <div className="navbar__container">
             {paths.map(path => createNavElement(path))}
           </div>
-          {privateType ? <NavLink className="navbar__item" activeClassName="navbar__item--active" to="/logout" >Exit</NavLink> : ""}
+          {privateType ? <a className="navbar__item" onClick={userLogout}>Exit</a> : ""}
         </div>
       </nav>
     </header>

@@ -36,7 +36,6 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          debugger
           const { data } = await queryFulfilled;
           const tokenDecode: any = jwt(data.accessToken)
           localStorage.setItem("token", data.accessToken)
@@ -46,12 +45,30 @@ const extendedApi = mainApi.injectEndpoints({
             message: e.error.data.message,
             type: 'error'
           }));
-          console.log('error', e)
         }
       },
+    }),
+    logoutUser: build.mutation({
+      query: () => ({
+        url: '/user/logout',
+        method: 'GET'
+      }),
+      async onQueryStarted(args: void, { dispatch, queryFulfilled}) {
+        debugger
+        try {
+          await queryFulfilled;
+          localStorage.removeItem("token")
+          dispatch(userActions.logout())
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
     })
   }),
   overrideExisting: false,
 })
 
-export const { useRegisterUserMutation, useLoginUserMutation } = extendedApi
+export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation } = extendedApi
