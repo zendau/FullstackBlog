@@ -29,7 +29,7 @@ class UserController {
     try {
       const schema = Joi.object({
         email: Joi.string().email(),
-        password: Joi.string().min(6).max(20),
+        password: Joi.string().min(6).max(40),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)

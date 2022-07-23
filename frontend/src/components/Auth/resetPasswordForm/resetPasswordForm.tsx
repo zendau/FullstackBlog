@@ -5,25 +5,22 @@ import TextInput from '@/components/UI/input/textInput';
 import * as yup from 'yup'
 import IFormikElements from '@/interfaces/formikElements';
 import { useAction } from "@/hooks/useAction";
-import { NavLink } from 'react-router-dom';
 
 interface Props {
   onSubmit: (values: IFormikElements, { setSubmitting }: any) => void
 }
 
-const loginForm = ({ onSubmit }: Props) => {
+const resetPasswordForm = ({ onSubmit }: Props) => {
 
   const { setError } = useAction()
 
   const schema = yup.object({
     email: yup.string().required().email(),
-    password: yup.string().required().min(6),
   })
 
   const formikForm = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+      email: ''
     },
     onSubmit,
     validationSchema: schema
@@ -53,23 +50,12 @@ const loginForm = ({ onSubmit }: Props) => {
         value={formikForm.values.email}
         setValue={formikForm.handleChange}
       />
-      <TextInput
-        type="password"
-        name="password"
-        title="Password"
-        id="pass"
-        letters={40}
-        value={formikForm.values.password}
-        setValue={formikForm.handleChange}
-      />
-
       <button className="btn auth__btn" type="submit" disabled={!formikForm.dirty}>
-        Login
+        reset password
         {formikForm.isSubmitting}
       </button>
-      <NavLink to='/forgot'>forgot password ?</NavLink>
     </form>
   )
 }
 
-export default loginForm
+export default resetPasswordForm

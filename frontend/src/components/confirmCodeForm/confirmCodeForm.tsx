@@ -29,7 +29,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
         name="confirmCode"
         title="Confirm code"
         id="confirmCode"
-        letters={30}
+        letters={36}
         value={formikForm.values.confirmCode}
         setValue={formikForm.handleChange}
       />

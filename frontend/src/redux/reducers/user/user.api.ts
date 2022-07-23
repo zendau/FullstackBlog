@@ -53,7 +53,7 @@ const extendedApi = mainApi.injectEndpoints({
         url: '/user/logout',
         method: 'GET'
       }),
-      async onQueryStarted(args: void, { dispatch, queryFulfilled}) {
+      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
         debugger
         try {
           await queryFulfilled;
@@ -66,9 +66,53 @@ const extendedApi = mainApi.injectEndpoints({
           }));
         }
       }
-    })
+    }),
+    setConfirmCode: build.mutation({
+      query: (data) => ({
+        url: '/user/setConfirmCode',
+        method: 'POST',
+        body: data
+      }),
+      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
+    }),
+    resetPassword: build.mutation({
+      query: (data) => ({
+        url: '/user/resetPassword',
+        method: 'POST',
+        body: data
+      }),
+      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(alertActions.setError({
+            message: data,
+            type: 'success'
+          }));
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
+    }),
   }),
   overrideExisting: false,
 })
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation } = extendedApi
+export const { 
+  useRegisterUserMutation, 
+  useLoginUserMutation, 
+  useLogoutUserMutation,
+  useResetPasswordMutation,
+  useSetConfirmCodeMutation, 
+} = extendedApi

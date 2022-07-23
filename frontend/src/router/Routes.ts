@@ -10,6 +10,7 @@ import EditPost from "../pages/post/editPost";
 import DeletePost from "../pages/post/deletePost";
 import Register from "../pages/auth/register";
 import Users from "../pages/users/users";
+import ResetPassword from "@/pages/auth/resetPassword";
 
 
 export const postRoutes: ITypeRoutes[] = [
@@ -53,5 +54,8 @@ export const publicRoutes: ITypeRoutes[] = [
   },
   {
     path: "/register", component: Register, exact: true
+  },
+  {
+    path: "/forgot", component: ResetPassword, exact: true
   }
 ]
