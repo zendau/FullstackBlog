@@ -1,62 +1,92 @@
-import React, { FormEvent, useEffect, useState } from 'react';
-import { useTypedSelector } from "../../hooks/useTypedSelector";
-import { useAction } from "../../hooks/useAction";
-import { useChangeUserDataContext } from "../../context/ChangeUserDataContext";
-import ErrorMessage from "../UI/Alert/Alert";
+import React, { useEffect } from 'react';
+import { useAction } from "@/hooks/useAction";
+import IFormikElements from '@/interfaces/formikElements';
+import * as yup from 'yup'
+import { useFormik } from 'formik';
+import TextInput from '@/components/UI/input/textInput';
 
-interface IChangeUserData {
-  setStatus: React.Dispatch<React.SetStateAction<boolean>>
+interface Props {
+  onSubmit: (values: IFormikElements, { setSubmitting }: any) => void
 }
 
+const ChangeUserData = ({ onSubmit }: Props) => {
 
-const ChangeUserData: React.FC<IChangeUserData> = ({ setStatus }) => {
+  const { setError } = useAction()
 
-  const { email, id, error } = useTypedSelector(state => state.user)
+  // const schema = yup.lazy((value) =>
+  //   yup.object().shape({
+  //     email: value.email?.length > 0 && yup.string().email(),
+  //     password: value.password?.length > 0 && ,
+  //     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  //   })
+  // );
 
-  const [userEmail, setUserEmail] = useState(email)
+  const schema = yup.object({
+    email: yup.string().email(),
+    password: yup.string().min(6),
+    confirmPassword: yup.string().test('passwords-match', 'Passwords must match', function (value) { return this.parent.password === value })
+  });
+
+  const formikForm = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    onSubmit,
+    validationSchema: schema
+  })
 
   useEffect(() => {
-    setUserEmail(email)
-  }, [email])
 
-  const { userDataUpdateRequest } = useAction()
+    if (formikForm.isSubmitting && formikForm.errors) {
+      console.log(formikForm)
+      const errors: string = Object.values(formikForm.errors).map((value) => `<span>${value}</span>`).join('')
 
-  const { setNewEmail, newPassword, setNewPassword } = useChangeUserDataContext()
+      setError({
+        message: errors,
+        type: 'error'
+      })
+    }
 
-
-  function sendReqToUpdateData(event: FormEvent) {
-    event.preventDefault()
-    userDataUpdateRequest(id, userEmail)
-    setNewEmail(userEmail)
-    setStatus(false)
-  }
+  }, [formikForm.isSubmitting])
 
   return (
+    <form onSubmit={formikForm.handleSubmit}>
+      <TextInput
+        type="email"
+        name="email"
+        title="Email"
+        id="email"
+        letters={30}
+        value={formikForm.values.email}
+        setValue={formikForm.handleChange}
+      />
+      <TextInput
+        type="password"
+        name="password"
+        title="Password"
+        id="pass"
+        letters={30}
+        value={formikForm.values.password}
+        setValue={formikForm.handleChange}
+      />
+      <TextInput
+        type="password"
+        name="confirmPassword"
+        title="Confirm password"
+        id="confirmPass"
+        letters={30}
+        value={formikForm.values.confirmPassword}
+        setValue={formikForm.handleChange}
+      />
 
-    <div className="account__change-data-container">
 
-      <h2 className="account__title">Change user email and password</h2>
-
-      <ErrorMessage message={error} timeout={5000} />
-
-      <form>
-        <div className="textInput">
-          <label htmlFor="newEmail">Email</label>
-          <input type="text" id="newEmail" placeholder="Email" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
-          <p className="letters"><span>30</span> Characters remaining</p>
-        </div>
-
-        <div className="textInput">
-          <label htmlFor="newPass">Password</label>
-          <input type="text" id="newPass" placeholder="Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-          <p className="letters"><span>30</span> Characters remaining</p>
-        </div>
-
-        <input type="button" className="btn account__btn" onClick={sendReqToUpdateData} value="Change user data" />
-
-      </form>
-
-    </div>
+      <button className="btn account__btn" type="submit" disabled={!formikForm.dirty}>
+        Change user data
+        {formikForm.isSubmitting}
+      </button>
+    </form>
 
   );
 };

@@ -111,33 +111,34 @@ class UserService {
   }
 
   async saveNewUserData(userId, code, newEmail, newPassword) {
-
+    debugger
     await ConfirmCodeService.checkCode(code)
 
     const user = await userModel.findById(userId)
 
     if (!user) {
       throw ApiError.HttpException(`Not found user with id - ${userId}`)
-    } else {
-
-
-      await this.checkEmail(email)
-
-      const hashNewPass = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT))
-
-      user.email = newEmail
-      user.password = hashNewPass
-
-      const userModel = await user.save()
-      const userDto = new UserDto(userModel)
-
-      await ConfirmCodeService.deleteCode(code)
-
-      const tokens = TokenService.generateTokens(userDto)
-      await TokenService.saveToken(userDto.id, tokens.refreshToken)
-
-      return { ...tokens, userDto }
     }
+
+    if (newEmail) {
+      await this.checkEmail(newEmail)
+      user.email = newEmail
+    }
+
+    if (newPassword) {
+      const hashNewPass = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT))
+      user.password = hashNewPass
+    }
+
+    const updatedUserModel = await user.save()
+    const userDto = new UserDto(updatedUserModel)
+
+    await ConfirmCodeService.deleteCode(code)
+
+    const tokens = TokenService.generateTokens(userDto)
+    await TokenService.saveToken(userDto.id, tokens.refreshToken)
+
+    return tokens
   }
 
   async activateAccount(userId, confirmCode) {

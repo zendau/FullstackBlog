@@ -103,7 +103,8 @@ class UserController {
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { userId, code, newEmail, newPassword } = req.body
+      const { code, newEmail, newPassword } = req.body
+      const userId = req.user.payload.id
       const newUserData = await UserService.saveNewUserData(userId, code, newEmail, newPassword)
       res.cookie('JWTRefreshToken', newUserData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
       return res.json(newUserData)

@@ -36,10 +36,6 @@
     align-self: center;
     transition: .5s ease;
 
-    &:disabled, &[disabled] {
-      cursor: not-allowed;
-    }
-
     &:hover {
       opacity: .8;
     }

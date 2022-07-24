@@ -37,8 +37,11 @@ const Navbar: React.FC<INavbarProps> = ({ paths, privateType }) => {
   }
 
   useEffect(() => {
-    console.log('push to /')
-    history.push('/')
+    
+    if (isSuccess || isError) {
+      history.push('/')
+    }
+    
   }, [isSuccess, isError])
 
   return (

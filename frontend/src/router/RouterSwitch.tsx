@@ -24,7 +24,6 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = ({ redirect, typeRoutes, path
           typeRoutes.map(route => renderRoute(route))
         }
         <Redirect exact from="/" to={redirect} />
-        <Redirect exact from="/login" to={redirect} />
         <Route path="*" component={NotFound} />
       </Switch>
     </>

@@ -105,6 +105,30 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
+    editUserData: build.mutation({
+      query: (data) => ({
+        url: '/user/saveNewData',
+        method: 'PUT',
+        body: data
+      }),
+      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const tokenDecode: any = jwt(data.accessToken)
+          localStorage.setItem("token", data.accessToken)
+          dispatch(userActions.setUser(tokenDecode.payload));
+          dispatch(alertActions.setError({
+            message: 'Data updated successfully',
+            type: 'success'
+          }))
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
+    }),
   }),
   overrideExisting: false,
 })
@@ -114,5 +138,6 @@ export const {
   useLoginUserMutation, 
   useLogoutUserMutation,
   useResetPasswordMutation,
-  useSetConfirmCodeMutation, 
+  useSetConfirmCodeMutation,
+  useEditUserDataMutation,
 } = extendedApi

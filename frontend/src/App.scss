@@ -40,6 +40,11 @@ input, textarea {
   cursor: pointer;
   text-align: center;
   line-height: 29px;
+
+  &:disabled, &[disabled] {
+    cursor: not-allowed;
+  }
+
 }
 
 .message-info {

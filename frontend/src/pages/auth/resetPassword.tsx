@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import AlertMessage from "../../components/UI/Alert/Alert";
+import AlertMessage from "@/components/UI/Alert/Alert";
 import "./auth.scss"
 import { useHistory } from "react-router-dom";
-import IFormikElements from "../../interfaces/formikElements";
+import IFormikElements from "@/interfaces/formikElements";
 import { useResetPasswordMutation, useSetConfirmCodeMutation } from "@/redux/reducers/user/user.api";
-import ConfirmCodeForm from "../../components/confirmCodeForm/confirmCodeForm";
+import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm";
 import ResetPasswordForm from "@/components/Auth/resetPasswordForm/resetPasswordForm";
 
 
 const ResetPassword: React.FC = () => {
 
   const [isConfirmCode, setConfirmStatus] = useState(false)
-  const history = useHistory()
 
-  const [resetPassword, { isSuccess: isSuccessReset }] = useResetPasswordMutation()
-  const [confirmCode, { isSuccess: isSuccessConfirm }] = useSetConfirmCodeMutation()
+  const [resetPassword] = useResetPasswordMutation()
+  const [confirmCode] = useSetConfirmCodeMutation()
   const [userEmail, setUserEmail] = useState<any>('')
 
   // TODO: добавить тип
