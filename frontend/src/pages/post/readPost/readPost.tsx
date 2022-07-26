@@ -24,8 +24,8 @@ const ReadPost: React.FC = () => {
 
   const [post, setPost] = useState<IPost>()
 
-  const { posts } = useTypedSelector(state => state.post)
-  const { id: userID } = useTypedSelector(state => state.user)
+  const { posts } = useTypedSelector(state => state.postState)
+  const { id: userID } = useTypedSelector(state => state.userState)
 
   useEffect(() => {
     const data = posts.filter((post) => post.id === id)[0]

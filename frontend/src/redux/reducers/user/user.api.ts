@@ -1,3 +1,4 @@
+import { IUser } from '@/redux/interfaces/types';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { userActions } from '@/redux/reducers/user/user.slice';
@@ -129,6 +130,11 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
+    getUsers: build.query<IUser[], void>({
+      query: () => ({
+        url: '/user/all'
+      })
+    }),
   }),
   overrideExisting: false,
 })
@@ -140,4 +146,5 @@ export const {
   useResetPasswordMutation,
   useSetConfirmCodeMutation,
   useEditUserDataMutation,
+  useGetUsersQuery
 } = extendedApi

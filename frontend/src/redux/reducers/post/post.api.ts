@@ -1,26 +1,16 @@
+import { ApiError } from '@/redux/interfaces/ApiError';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { postActions } from '@/redux/reducers/post/post.slice';
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
-    createPost: build.mutation({
+    createPost: build.mutation<void | ApiError, any>({
       query: (data) => ({
         url: '/post/create',
         method: 'POST',
         body: data
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(postActions.fetchPost(data));
-        } catch (e: any) {
-          dispatch(alertActions.setError({
-            message: e.error.data.message,
-            type: 'error'
-          }))
-        }
-      },
     }),
     editPost: build.mutation({
       query: (data) => ({
