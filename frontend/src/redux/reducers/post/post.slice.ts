@@ -53,6 +53,9 @@ export const postSlice = createSlice({
     },
     addComment: (state: IPostState, action: PayloadAction<IComment>) => {
       state.post?.comments.push(action.payload)
+    },
+    editComment: (state: IPostState, action: PayloadAction<IComment>) => {
+      state.post!.comments = state.post!.comments.map(comment => comment.id === action.payload.id ? action.payload : comment)
     }
   },
 })

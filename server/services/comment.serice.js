@@ -12,7 +12,11 @@ class CommentService {
       message,
     })
 
-    const inseredCommentDTO = new CommentDTO(inseredComment)
+    const commentPopulate = await inseredComment
+    .populate("user")
+    .execPopulate()
+
+    const inseredCommentDTO = new CommentDTO(commentPopulate)
     return inseredCommentDTO
   }
 
@@ -24,13 +28,20 @@ class CommentService {
       ]
     },
     {
-      $set: { message: newMessage, edited: true }
-    })
+      $set: { message: newMessage, edited: true },
+    },
+    { new: true  })
 
     if (res === null) {
       throw ApiError.HttpException(`Comment id ${commentId} is not found. Or User with id ${userId} is not author of this post`)
     }
-    return true
+
+    const commentPopulate = await res
+    .populate("user")
+    .execPopulate()
+
+    const editCommentDTO = new CommentDTO(commentPopulate)
+    return editCommentDTO
   }
 
   async delete(commentId, userId) {

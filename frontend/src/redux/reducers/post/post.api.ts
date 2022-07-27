@@ -154,8 +154,25 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('data', data)
           dispatch(postActions.addComment(data))
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      }
+    }),
+    editComment: build.mutation({
+      query: (commentData: { commentId: string, newMessage: string}) => ({
+        url: '/post/editComment',
+        method: 'PUT',
+        body: commentData
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(postActions.editComment(data))
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -177,5 +194,6 @@ export const {
   useGetAllPostsQuery,
   useLazyGetPostQuery,
   useSetReactionMutation,
-  useAddCommentMutation
+  useAddCommentMutation,
+  useEditCommentMutation
 } = extendedApi

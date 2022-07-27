@@ -1,23 +1,67 @@
-import AlertMessage from '@/components/UI/Alert/Alert'
-import { useTypedSelector } from '@/hooks/useTypedSelector'
-import React from 'react'
-import CommentForm from './commentForm'
-import CommentList from './commentList'
+import { useAction } from '@/hooks/useAction'
+import { IComment } from '@/interfaces/IComment'
+import { useEditCommentMutation } from '@/redux/reducers/post/post.api'
+import React, { useRef, useState } from 'react'
 
-interface Props {}
 
-const comment = (props: Props) => {
+const Comment = ({id, edited, message,user}: IComment) => {
 
-  const { post } = useTypedSelector(state => state.postState)
+  const { setError } = useAction()
+  const [isEdit, setIsEdit] = useState(false)
+  const messageRef = useRef<HTMLDivElement>(null)
+
+  const [editComment] = useEditCommentMutation()
+
+  function editMessage() {
+    if (messageRef.current === null) {
+      setError({
+        message: 'Undefined error',
+        type: 'error'
+      })
+      return
+    }
+
+    const message = messageRef.current.textContent
+
+    if (message!.length <= 0) {
+      setError({
+        message: 'Comment is required',
+        type: 'error'
+      })
+      return
+    }
+
+    editComment({
+      commentId: id,
+      newMessage: message as string,
+    })
+
+  } 
+
+  function switchEditStatus() {
+
+    if (isEdit) {
+      setIsEdit(false)
+      editMessage()
+    } else {
+      setIsEdit(true)
+    }
+
+  }
 
   return (
-    <div>
-      <h2>Comments {post?.comments.length}</h2>
-      <AlertMessage timeout={5000} />
-      <CommentForm />
-      <CommentList/>
-    </div>
+    <li style={{'border': '1px solid black'}}>
+      <div>
+        {edited ? <small>edited</small> : ''}
+        <div>
+          <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
+          <button>delete</button>
+        </div>
+      </div>
+      <h3>{user.email}</h3>
+      <p className='new-line' ref={messageRef} contentEditable={isEdit} suppressContentEditableWarning={true}>{message}</p>
+    </li>
   )
 }
 
-export default comment
+export default Comment

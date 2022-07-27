@@ -337,7 +337,7 @@ router.post('/addComment', authMiddleware, PostController.addPostComment)
 /**
  * @swagger
  * /post/editComment:
- *   post:
+ *   put:
  *     summary: add comment to post
  *     tags: [Post]
  *     security:
@@ -359,7 +359,9 @@ router.post('/addComment', authMiddleware, PostController.addPostComment)
  *         content:
  *           application/json:
  *             schema:
- *              type: string
+ *               type: array
+ *               items:
+ *                $ref: '#/components/DTOs/Comment'
  *       400:
  *          description: Error message
  *       401:
@@ -368,7 +370,7 @@ router.post('/addComment', authMiddleware, PostController.addPostComment)
  *         description: Unexpected error
  */
 
-router.patch('/editComment', authMiddleware, PostController.editPostComment)
+router.put('/editComment', authMiddleware, PostController.editPostComment)
 
 /**
  * @swagger

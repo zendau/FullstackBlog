@@ -1,21 +1,19 @@
 import { useTypedSelector } from '@/hooks/useTypedSelector'
-import React from 'react'
+import React, { useState } from 'react'
+import Comment from './comment'
 
 type Props = {}
 
 const CommentList = (props: Props) => {
 
   const { post } = useTypedSelector(state => state.postState)
+
+
   console.log('post', post!.comments)
   return (
     <ul>
-      test
-      {post?.comments.map((comment) =>  
-        <li key={comment.id}>
-          { comment.edited ? <small>edited</small>: ''} 
-          <h3>{comment.user.email}</h3>
-          <p>{comment.message}</p>
-        </li>
+      {post?.comments.map((comment) =>
+        <Comment key={comment.id} id={comment.id} edited={comment.edited} message={comment.message} user={comment.user} />
       )}
     </ul>
   )

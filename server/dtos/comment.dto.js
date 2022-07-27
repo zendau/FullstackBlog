@@ -11,14 +11,17 @@ const UserDTO = require("../dtos/user.dto")
  *           type: ObjectId
  *           description: ObjectId of comment
  *         user:
- *           type: ObjectId
- *           description: ObjectId user's ref
+ *           $ref: '#/components/DTOs/User'
+ *           description: author of post
  *         message:
  *           type: string
  *           description: message of comment
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
- *         user: 62c7234d9f3f1739381f93c4
+ *         user: 
+ *          id: 62c7234d9f3f1739381f93c4
+ *          email: root@admin.com
+ *          isActivated: false
  *         message: 'test message'
  */
 
