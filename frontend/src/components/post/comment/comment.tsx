@@ -1,6 +1,6 @@
 import { useAction } from '@/hooks/useAction'
 import { IComment } from '@/interfaces/IComment'
-import { useEditCommentMutation } from '@/redux/reducers/post/post.api'
+import { useDeleteCommentMutation, useEditCommentMutation } from '@/redux/reducers/post/post.api'
 import React, { useRef, useState } from 'react'
 
 
@@ -11,6 +11,7 @@ const Comment = ({id, edited, message,user}: IComment) => {
   const messageRef = useRef<HTMLDivElement>(null)
 
   const [editComment] = useEditCommentMutation()
+  const [deleteComment] = useDeleteCommentMutation()
 
   function editMessage() {
     if (messageRef.current === null) {
@@ -46,7 +47,12 @@ const Comment = ({id, edited, message,user}: IComment) => {
     } else {
       setIsEdit(true)
     }
+  }
 
+  function onDeleteComment() {
+    deleteComment({
+      commentId: id
+    })
   }
 
   return (
@@ -55,7 +61,7 @@ const Comment = ({id, edited, message,user}: IComment) => {
         {edited ? <small>edited</small> : ''}
         <div>
           <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
-          <button>delete</button>
+          <button onClick={onDeleteComment}>delete</button>
         </div>
       </div>
       <h3>{user.email}</h3>

@@ -54,7 +54,8 @@ class CommentService {
     if (DeleteStatus === null) {
       throw ApiError.HttpException(`Comment id ${commentId} is not found. Or User with id ${userId} is not author of this post`)
     }
-    return true
+    const deleteCommentDTO = new CommentDTO(DeleteStatus)
+    return deleteCommentDTO
   }
 
   async getList(postId) {

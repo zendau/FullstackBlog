@@ -37,7 +37,11 @@ const UserDTO = require("../dtos/user.dto")
     this.message = model.message
     this.edited = model.edited
 
-    this.setUser(model.user)
+    if (model.user) {
+      this.setUser(model.user)
+    }
+
+    
   }
 
   setUser(user) {

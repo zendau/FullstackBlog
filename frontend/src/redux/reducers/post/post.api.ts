@@ -180,6 +180,24 @@ const extendedApi = mainApi.injectEndpoints({
           }))
         }
       }
+    }),
+    deleteComment: build.mutation({
+      query: (commentData: { commentId: string }) => ({
+        url: '/post/deleteComment',
+        method: 'DELETE',
+        body: commentData
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(postActions.deleteComment(data))
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      }
     })
   }),
   overrideExisting: false,
@@ -195,5 +213,6 @@ export const {
   useLazyGetPostQuery,
   useSetReactionMutation,
   useAddCommentMutation,
-  useEditCommentMutation
+  useEditCommentMutation,
+  useDeleteCommentMutation
 } = extendedApi
