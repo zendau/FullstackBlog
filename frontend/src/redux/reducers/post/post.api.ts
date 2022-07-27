@@ -144,6 +144,25 @@ const extendedApi = mainApi.injectEndpoints({
         method: 'PATCH',
         params: reactionData
       })
+    }),
+    addComment: build.mutation({
+      query: (commentData: { postId: string, message: string}) => ({
+        url: '/post/addComment',
+        method: 'POST',
+        body: commentData
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log('data', data)
+          dispatch(postActions.addComment(data))
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      }
     })
   }),
   overrideExisting: false,
@@ -157,5 +176,6 @@ export const {
   useLazyGetLimitPostsQuery,
   useGetAllPostsQuery,
   useLazyGetPostQuery,
-  useSetReactionMutation
+  useSetReactionMutation,
+  useAddCommentMutation
 } = extendedApi

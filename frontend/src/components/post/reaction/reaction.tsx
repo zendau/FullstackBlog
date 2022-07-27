@@ -6,7 +6,7 @@ import React, { useMemo, useState } from 'react'
 import { boolean } from 'yup'
 
 
-const Reaction = () => {
+const Reaction =  () => {
 
   const { post } = useTypedSelector(state => state.postState)
   const { setLiked } = useAction()
@@ -15,7 +15,7 @@ const Reaction = () => {
 
   const [postReaction] = useSetReactionMutation()
 
-  function inc() {
+  function setLike() {
     if (isLiked === true) {
       setLiked(null)
       postReaction({
@@ -31,7 +31,7 @@ const Reaction = () => {
     }
   }
 
-  function dec() {
+  function setDislike() {
     if (isLiked === false) {
       setLiked(null)
       postReaction({
@@ -49,11 +49,11 @@ const Reaction = () => {
 
   return (
     <div>
-      <div onClick={inc} style={{ backgroundColor: isLiked === true ? 'red' : 'white' }}>
+      <div onClick={setLike} style={{ backgroundColor: isLiked === true ? 'red' : 'white' }}>
         <img src='/src/assets/like.svg' alt="like" />
         <span>{like}</span>
       </div>
-      <div onClick={dec} style={{ backgroundColor: isLiked === false ? 'red' : 'white' }}>
+      <div onClick={setDislike} style={{ backgroundColor: isLiked === false ? 'red' : 'white' }}>
         <img src='/src/assets/dislike.svg' alt="dislike" />
         <span>{dislike}</span>
       </div>

@@ -1,3 +1,4 @@
+import { IComment } from './../../../interfaces/IComment';
 import { IPost } from '@/interfaces/post';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -49,6 +50,9 @@ export const postSlice = createSlice({
       }
 
       state.post!.reaction.isLiked = isLiked
+    },
+    addComment: (state: IPostState, action: PayloadAction<IComment>) => {
+      state.post?.comments.push(action.payload)
     }
   },
 })

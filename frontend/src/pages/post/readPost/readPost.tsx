@@ -9,7 +9,8 @@ import FetchLoader from "../../../components/UI/fetchLoader/fetchLoader";
 import "./readPost.scss"
 import { useLazyGetPostQuery } from '@/redux/reducers/post/post.api';
 
-import Reaction from '@/components/reaction/reaction'
+import Reaction from '@/components/post/reaction/reaction'
+import Comment from '@/components/post/comment/comment'
 
 interface IParams {
   id: string
@@ -70,7 +71,9 @@ const ReadPost: React.FC = () => {
             </div>
             <h1 className="read-post__title">{post.title}</h1>
             <div className="read-post__body" dangerouslySetInnerHTML={{ __html: post.body }}></div>
+            <Comment/>
           </div>
+         
         </section>
       }
     </>

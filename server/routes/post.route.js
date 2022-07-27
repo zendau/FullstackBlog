@@ -336,7 +336,7 @@ router.post('/addComment', authMiddleware, PostController.addPostComment)
 
 /**
  * @swagger
- * /post/addComment:
+ * /post/editComment:
  *   post:
  *     summary: add comment to post
  *     tags: [Post]
