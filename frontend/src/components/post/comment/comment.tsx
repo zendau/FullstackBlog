@@ -1,7 +1,8 @@
 import { useAction } from '@/hooks/useAction'
+import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { IComment } from '@/interfaces/IComment'
 import { useDeleteCommentMutation, useEditCommentMutation } from '@/redux/reducers/post/post.api'
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 
 
 const Comment = ({id, edited, message,user}: IComment) => {
@@ -12,6 +13,8 @@ const Comment = ({id, edited, message,user}: IComment) => {
 
   const [editComment] = useEditCommentMutation()
   const [deleteComment] = useDeleteCommentMutation()
+
+  const { id: userId } = useTypedSelector((state) => state.userState)
 
   function editMessage() {
     if (messageRef.current === null) {
@@ -55,15 +58,22 @@ const Comment = ({id, edited, message,user}: IComment) => {
     })
   }
 
+  const isAuthor = useMemo(() => userId === user.id, [])
+
   return (
     <li style={{'border': '1px solid black'}}>
-      <div>
+      {
+        isAuthor ?
+        <div>
         {edited ? <small>edited</small> : ''}
         <div>
           <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
           <button onClick={onDeleteComment}>delete</button>
         </div>
       </div>
+      : ""
+      }
+
       <h3>{user.email}</h3>
       <p className='new-line' ref={messageRef} contentEditable={isEdit} suppressContentEditableWarning={true}>{message}</p>
     </li>

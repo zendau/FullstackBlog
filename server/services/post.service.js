@@ -73,7 +73,7 @@ class PostService {
   }
 
   async postExist(postId) {
-    const post = await postModel.findById(postId).populate("author")
+    const post = await postModel.findById(postId).populate("author").populate('file')
 
     if (post === null) {
       throw ApiError.HttpException(`Post with id ${postId} not found`)

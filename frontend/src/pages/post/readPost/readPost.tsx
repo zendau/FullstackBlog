@@ -70,6 +70,7 @@ const ReadPost: React.FC = () => {
               }
             </div>
             <h1 className="read-post__title">{post.title}</h1>
+            <img src={`${import.meta.env.VITE_API_URL}/image/${post.file.fileName}`} alt="img" />
             <div className="read-post__body" dangerouslySetInnerHTML={{ __html: post.body }}></div>
             <Comments/>
           </div>

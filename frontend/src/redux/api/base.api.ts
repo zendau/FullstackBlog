@@ -3,7 +3,7 @@ import { RootState } from '../store'
 import { userActions } from "@/redux/reducers/user/user.slice"
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8080',
+  baseUrl: import.meta.env.VITE_API_URL,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem('token')
