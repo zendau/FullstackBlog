@@ -1,5 +1,7 @@
+import { IUser } from './user';
 export interface IComment {
   id: string
-  user: string
+  user: IUser
   message: string
+  edited: boolean
 }

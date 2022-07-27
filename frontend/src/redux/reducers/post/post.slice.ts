@@ -1,4 +1,4 @@
-import { IComment } from './../../../interfaces/IComment';
+import { IComment } from '@/interfaces/IComment';
 import { IPost } from '@/interfaces/post';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'

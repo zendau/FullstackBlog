@@ -1,3 +1,5 @@
+const UserDTO = require("../dtos/user.dto")
+
 /**
  * @swagger
  * components:
@@ -24,10 +26,18 @@
   id
   user
   message
+  edited
+  user 
 
   constructor(model) {
     this.id = model._id
-    this.user = model.user
     this.message = model.message
+    this.edited = model.edited
+
+    this.setUser(model.user)
+  }
+
+  setUser(user) {
+    this.user = new UserDTO(user)
   }
 }

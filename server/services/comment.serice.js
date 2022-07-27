@@ -24,7 +24,7 @@ class CommentService {
       ]
     },
     {
-      $set: { message: newMessage }
+      $set: { message: newMessage, edited: true }
     })
 
     if (res === null) {
@@ -47,7 +47,7 @@ class CommentService {
   }
 
   async getList(postId) {
-    const commentList = await commentModel.find({post: postId})
+    const commentList = await commentModel.find({post: postId}).populate("user")
     const commentListDTO = commentList.map(comment => new CommentDTO(comment))
     return commentListDTO
   }
