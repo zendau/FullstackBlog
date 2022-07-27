@@ -1,8 +1,10 @@
+import { IPost } from '@/interfaces/post';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { PostState } from '@/redux/types/PostTypes';
+import { IPostState } from '@/interfaces/state/IPostState';
 
-const initialState: PostState = {
+const initialState: IPostState = {
+  post: null,
   posts: [],
   hasMore: true
 }
@@ -11,13 +13,42 @@ export const postSlice = createSlice({
   name: 'post',
   initialState,
   reducers: {
-    fetchPost: (state: PostState, action: PayloadAction<any>) => {
+    fetchPost: (state: IPostState, action: PayloadAction<IPost[]>) => {
       state.posts.push(...action.payload)
     },
-    //getPost: () => {},
+    getPost: (state: IPostState, action: PayloadAction<IPost>) => {
+      state.post = action.payload
+    },
     clearPost: () => initialState,
-    setHasMore: (state: PostState, action: PayloadAction<any>) => {
+    setHasMore: (state: IPostState, action: PayloadAction<boolean>) => {
       state.hasMore = action.payload
+    },
+    setLiked: (state: IPostState, action: PayloadAction<boolean | null>) => {
+
+      const prevLiked = state.post!.reaction.isLiked
+      const isLiked = action.payload
+
+      if (isLiked === true) {
+        state.post!.reaction.like++
+        if (prevLiked === false) {
+          state.post!.reaction.dislike--
+        }
+
+      } else if (isLiked === false) {
+        state.post!.reaction.dislike++
+        if (prevLiked === true) {
+          state.post!.reaction.like--
+        } 
+
+      } else {
+        if (prevLiked === true) {
+          state.post!.reaction.like--
+        } else if (prevLiked === false) {
+          state.post!.reaction.dislike--
+        }
+      }
+
+      state.post!.reaction.isLiked = isLiked
     }
   },
 })

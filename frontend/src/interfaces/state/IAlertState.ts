@@ -1,4 +1,4 @@
-export default interface IAlert {
+export default interface IAlertState {
   message: string,
   type: "error" | "success" | "";
 }

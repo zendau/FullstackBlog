@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import React from 'react';
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
@@ -14,8 +14,8 @@ import AlertMessage from "@/components/UI/Alert/Alert";
 import { useCreatePostMutation } from "@/redux/reducers/post/post.api";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import { ApiError } from "@/redux/interfaces/ApiError";
+import { convertToRaw } from 'draft-js';
+import { ApiError } from "@/interfaces/api/ApiError";
 
 const CreatePost: React.FC = () => {
 
@@ -27,7 +27,9 @@ const CreatePost: React.FC = () => {
 
   const { id } = useTypedSelector(state => state.userState)
 
-  const [createPost, { data, isError, error }] = useCreatePostMutation()
+  const [createPost, { data, error }] = useCreatePostMutation()
+
+  const history = useHistory()
 
   const sendPostData = (values: { title: string }) => {
     if (file === undefined) {
@@ -103,6 +105,14 @@ const CreatePost: React.FC = () => {
 
   useEffect(() => {
     console.log('data', data)
+
+    if (data && 'id' in data) { 
+      history.push({
+        pathname: `/post/${data.id}`,
+        state: data
+      })
+    }
+
   }, [data])
 
   useEffect(() => {

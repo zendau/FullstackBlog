@@ -84,7 +84,7 @@ class PostService {
 
 
   async getOne(postId, userId) {
-
+    debugger
     const post = await this.postExist(postId)
     const postDto = this.postDtoFromPopulate(post)
 

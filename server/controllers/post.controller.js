@@ -72,15 +72,15 @@ class PostController {
   async getOne(req, res, next) {
     try {
       const schema = Joi.object({
-        postId: Joi.objectId().required()
+        id: Joi.objectId().required()
       })
-      const { error } = schema.validate(req.query)
+      const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId } = req.query
+      const { id } = req.params
       const userId = req.user.payload.id
 
-      const data = await PostService.getOne(postId, userId)
+      const data = await PostService.getOne(id, userId)
       res.json(data)
     } catch (e) {
       next(e)
@@ -88,10 +88,11 @@ class PostController {
   }
 
   async reactionPost(req, res, next) {
+    debugger
     try {      
       const schema = Joi.object({
         postId: Joi.objectId().required(),
-        isLiked: Joi.bool().required()
+        isLiked: [Joi.bool().required(), Joi.allow(null)]
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)

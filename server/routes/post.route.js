@@ -150,7 +150,7 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get", authMiddleware, PostController.getOne)
+router.get("/get/:id", authMiddleware, PostController.getOne)
 
 /**
  * @swagger

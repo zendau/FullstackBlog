@@ -14,6 +14,9 @@ class ReactionService {
   }
 
   async setReaction(postId, userId, isLiked) {
+    debugger
+    if (isLiked === 'null') return await this.deleteReaction(postId, userId)
+
     const res = await reactionModel.findOneAndUpdate({
       $and: [
         { post: postId },
@@ -22,6 +25,20 @@ class ReactionService {
     },
       { $set: { isLiked } }
     )
+
+    if (res === null) {
+      return false
+    }
+    return true
+  }
+
+  async deleteReaction(postId, userId) {
+    const res = await reactionModel.findOneAndDelete({
+      $and: [
+        { post: postId },
+        { user: userId }
+      ]
+    })
 
     if (res === null) {
       return false
@@ -81,6 +98,15 @@ class ReactionService {
         }
       }
     ])
+
+    if (tokenData.length === 0) {
+      return new ReactionDto({
+        like: 0,
+        dislike: 0,
+        user: [{ isLiked: null }]
+      })
+    }
+
     return new ReactionDto(tokenData[0])
   }
 }

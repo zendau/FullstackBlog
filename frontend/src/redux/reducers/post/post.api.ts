@@ -1,11 +1,12 @@
-import { ApiError } from '@/redux/interfaces/ApiError';
+import { IPost } from './../../../interfaces/post';
+import { ApiError } from '@/interfaces/api/ApiError';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { postActions } from '@/redux/reducers/post/post.slice';
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
-    createPost: build.mutation<void | ApiError, any>({
+    createPost: build.mutation<IPost | ApiError, any>({
       query: (data) => ({
         url: '/post/create',
         method: 'POST',
@@ -118,16 +119,43 @@ const extendedApi = mainApi.injectEndpoints({
           }))
         }
       }
+    }),
+    getPost: build.query({
+      query: (id: string) => ({
+        url: `/post/get/${id}`
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+        try {
+          console.log(getState, 'getState')
+          const { data } = await queryFulfilled;
+          console.log('data', data)
+          dispatch(postActions.getPost(data))
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      }
+    }),
+    setReaction: build.mutation({
+      query: (reactionData: { isLiked: boolean | null, postId: string }) => ({
+        url: '/post/reacting',
+        method: 'PATCH',
+        params: reactionData
+      })
     })
   }),
   overrideExisting: false,
 })
 
-export const { 
-  useCreatePostMutation, 
-  useEditPostMutation, 
-  useDeletePostMutation, 
-  useLazyGetUserPostsQuery, 
-  useLazyGetLimitPostsQuery, 
-  useGetAllPostsQuery  
+export const {
+  useCreatePostMutation,
+  useEditPostMutation,
+  useDeletePostMutation,
+  useLazyGetUserPostsQuery,
+  useLazyGetLimitPostsQuery,
+  useGetAllPostsQuery,
+  useLazyGetPostQuery,
+  useSetReactionMutation
 } = extendedApi

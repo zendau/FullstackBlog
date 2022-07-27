@@ -1,4 +1,4 @@
-import { IUser } from '@/redux/interfaces/types';
+import { IUser } from '@/interfaces/user';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { userActions } from '@/redux/reducers/user/user.slice';
