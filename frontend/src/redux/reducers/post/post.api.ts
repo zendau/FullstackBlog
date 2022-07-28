@@ -81,7 +81,7 @@ const extendedApi = mainApi.injectEndpoints({
       query: (postData: any) => ({
         url: '/post/getLimitPosts/',
         params: {
-          currentPage: postData.currentPage,
+          currentPage: postData.pageNumber,
           limit: postData.limit
         }
       }),
@@ -198,6 +198,11 @@ const extendedApi = mainApi.injectEndpoints({
           }))
         }
       }
+    }),
+    searchPosts: build.query({
+      query: (substring: string) => ({
+        url: `/post/search/${substring}`
+      })
     })
   }),
   overrideExisting: false,
@@ -214,5 +219,6 @@ export const {
   useSetReactionMutation,
   useAddCommentMutation,
   useEditCommentMutation,
-  useDeleteCommentMutation
+  useDeleteCommentMutation,
+  useSearchPostsQuery
 } = extendedApi

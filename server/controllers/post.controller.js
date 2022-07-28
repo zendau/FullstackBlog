@@ -87,6 +87,24 @@ class PostController {
     }
   }
 
+  async getPostsBySubString(req, res, next) {
+    try {
+      debugger
+      const schema = Joi.object({
+        substring: Joi.string().min(3).max(20).required(),
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { substring } = req.params
+
+      const data = await PostService.searchBySubstring(substring)
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async reactionPost(req, res, next) {
     debugger
     try {      

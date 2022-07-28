@@ -7,7 +7,10 @@ import { IPostState } from '@/interfaces/state/IPostState';
 const initialState: IPostState = {
   post: null,
   posts: [],
-  hasMore: true
+  hasMore: true,
+  pageNumber: 1,
+  limit: 5,
+  isSearched: false
 }
 
 export const postSlice = createSlice({
@@ -20,7 +23,9 @@ export const postSlice = createSlice({
     getPost: (state: IPostState, action: PayloadAction<IPost>) => {
       state.post = action.payload
     },
-    clearPost: () => initialState,
+    clearPost: (state: IPostState) => {
+      state.posts = []
+    },
     setHasMore: (state: IPostState, action: PayloadAction<boolean>) => {
       state.hasMore = action.payload
     },
@@ -59,6 +64,20 @@ export const postSlice = createSlice({
     },
     deleteComment: (state: IPostState, action: PayloadAction<IComment>) => {
       state.post!.comments = state.post!.comments.filter(comment => comment.id !== action.payload.id)
+    },
+    setPageNumber: (state: IPostState, action: PayloadAction<number>) => {
+      console.log('set state', action.payload)
+      state.pageNumber = action.payload
+      console.log('state', state.pageNumber)
+    },
+    incPageNumber: (state: IPostState) => {
+      state.pageNumber++
+    },
+    setLimit: (state: IPostState, action: PayloadAction<number>) => {
+      state.limit = action.payload
+    },
+    setSearched: (state: IPostState, action: PayloadAction<boolean>) => {
+      state.isSearched = action.payload
     }
   },
 })

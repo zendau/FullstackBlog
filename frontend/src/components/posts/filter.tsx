@@ -1,8 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import "./filter.scss"
-import { PageContext } from "../../context/PageContext";
-import { clearPostStore } from "../../redux/actions/PostAction";
+
+import { useAction } from '@/hooks/useAction';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useSearchPostsQuery } from '@/redux/reducers/post/post.api';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
 interface IFilter {
   filterType: string
@@ -11,11 +14,43 @@ interface IFilter {
   setFilterName: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Filter: React.FC<IFilter> = ({ filterName, setFilterName, filterType, setFilterType }) => {
+const Filter: React.FC<IFilter> = ({ setFilterType }) => {
 
+  const [searchPost, setSearchPost] = useState('')
   const [filterStatus, setFilterStatus] = useState(false)
 
-  const { setLimit, limit, setPageNumber } = useContext(PageContext)
+  const value = useDebounce(searchPost)
+  const { data } = useSearchPostsQuery(value, {
+    skip: value.length < 3
+  })
+
+  const { limit, isSearched } = useTypedSelector((state) => state.postState)
+  const { clearPost, fetchPost, setLimit, setPageNumber, setSearched, setHasMore } = useAction()
+
+  useEffect(() => {
+
+    if (data !== undefined) {
+      clearPost()
+      setSearched(true)
+      fetchPost(data)
+    }
+
+    console.log('data', data)
+
+  }, [data])
+
+  useEffect(() => {
+    console.log('debounce value', value, value.length, isSearched)
+
+    if (isSearched && value.length === 0) {
+      console.log('test111')
+      setSearched(false)
+      clearPost()
+      setPageNumber(1)
+    }
+
+  }, [value])
+
 
   function onChangeValue(event: any) {
     console.log("change type")
@@ -23,7 +58,12 @@ const Filter: React.FC<IFilter> = ({ filterName, setFilterName, filterType, setF
   }
 
   function onSelectValue(event: any) {
-    setLimit(event.target.value)
+    setLimit(parseInt(event.target.value))
+  }
+
+  function test(e: any) {
+
+    console.log('value', value)
   }
 
   return (
@@ -34,7 +74,7 @@ const Filter: React.FC<IFilter> = ({ filterName, setFilterName, filterType, setF
         <div className={filterStatus ? "filter__body filter__body--active" : "filter__body"}>
           <div className="filter__search">
             <label htmlFor="filterSearch">Search by title:</label>
-            <input id="filterSearch" type="text" value={filterName} onChange={(e) => setFilterName(e.target.value)} />
+            <input id="filterSearch" type="text" value={searchPost} onChange={(e) => setSearchPost(e.target.value)} />
           </div>
 
           <div className="filter__sort" onChange={onChangeValue}>
@@ -45,7 +85,7 @@ const Filter: React.FC<IFilter> = ({ filterName, setFilterName, filterType, setF
             <label htmlFor="sortDate">By date</label>
 
             <input type="radio" id="sortTitle"
-              name="sortType" value="titleName" defaultChecked={true} />
+              name="sortType" value="titleName" />
             <label htmlFor="sortTitle">By title name</label>
 
             <input type="radio" id="sortAuthor"

@@ -119,6 +119,15 @@ class PostService {
     return this.getPosts(posts, currentPage, limit)
   }
 
+  async searchBySubstring(substring) {
+    console.log('test', substring)
+    const posts = await postModel.find({
+      title: {$regex: substring}
+    }).populate('author')
+
+    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
+    return postsDto
+  }
 
   async getPosts(posts, currentPage, limit) {
     const countPosts = posts.length

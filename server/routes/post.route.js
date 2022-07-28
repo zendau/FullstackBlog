@@ -152,6 +152,8 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
 
 router.get("/get/:id", authMiddleware, PostController.getOne)
 
+router.get("/search/:substring", PostController.getPostsBySubString)
+
 /**
  * @swagger
  * /post/getUserPosts:

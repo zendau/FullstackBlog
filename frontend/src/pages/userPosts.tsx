@@ -6,8 +6,6 @@ import { useAction } from "../hooks/useAction";
 import PostList from "../components/posts/postList";
 
 
-import { PageContext } from "../context/PageContext"
-
 interface IParams {
   userId: string
 }
