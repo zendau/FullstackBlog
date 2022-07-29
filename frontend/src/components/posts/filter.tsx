@@ -30,6 +30,7 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
   useEffect(() => {
 
     if (data !== undefined) {
+      console.log('1')
       clearPost()
       setSearched(true)
       fetchPost(data)
@@ -45,6 +46,7 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
     if (isSearched && value.length === 0) {
       console.log('test111')
       setSearched(false)
+      console.log('2')
       clearPost()
       setPageNumber(1)
     }

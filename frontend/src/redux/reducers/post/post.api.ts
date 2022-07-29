@@ -21,7 +21,6 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
           // dispatch(postActions.fetchPost(data));
@@ -40,7 +39,6 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
           // dispatch(postActions.fetchPost(data));
@@ -63,9 +61,9 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
+          console.log('4')
           dispatch(postActions.clearPost())
           dispatch(postActions.setHasMore(data.nextPage))
           dispatch(postActions.fetchPost(data.post))
@@ -87,7 +85,6 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
           //dispatch(postActions.clearPost())
@@ -107,9 +104,9 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
+          console.log('5')
           dispatch(postActions.clearPost())
           dispatch(postActions.fetchPost(data.post))
         } catch (e: any) {
@@ -126,7 +123,6 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          console.log(getState, 'getState')
           const { data } = await queryFulfilled;
           console.log('data', data)
           dispatch(postActions.getPost(data))

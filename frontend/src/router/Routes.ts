@@ -7,7 +7,6 @@ import Post from "../pages/post/post";
 import { ITypeRoutes } from "../interfaces/router";
 import UserPosts from "../pages/userPosts";
 import EditPost from "../pages/post/editPost";
-import DeletePost from "../pages/post/deletePost";
 import Register from "../pages/auth/register";
 import Users from "../pages/users/users";
 import ResetPassword from "@/pages/auth/resetPassword";
@@ -25,9 +24,6 @@ export const postRoutes: ITypeRoutes[] = [
   },
   {
     path: "/post/edit/:id", component: EditPost, exact: true
-  },
-  {
-    path: "/post/delete/:id", component: DeletePost, exact: true
   }
 ]
 

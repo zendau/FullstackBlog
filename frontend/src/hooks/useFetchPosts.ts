@@ -12,12 +12,14 @@ export const useFetchPosts = () => {
 
   const { clearPost } = useAction()
   useEffect(() => {
+    console.log('3')
     clearPost()
     setPageNumber(1)
 
   }, [limit])
 
   useEffect(() => {
+    console.log('trigger')
     if (hasMore && !isSearched) {
       getLimitPosts({
         pageNumber, limit
