@@ -1,5 +1,5 @@
-.create-post {
-  &-container {
+.post-editor {
+  &__container {
     display: flex;
     flex-direction: column;
     margin-top: 25px;
@@ -58,7 +58,7 @@
 
 @media (max-width: 720px) {
 
-  .create-post {
+  .post-editor {
 
     &__title,
     &__body {

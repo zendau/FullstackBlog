@@ -1,91 +1,36 @@
-import React, { FormEvent, useEffect, useMemo, useState } from 'react';
-import { useParams } from "react-router";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
-import { useAction } from "../../hooks/useAction";
-import { Link, Redirect } from "react-router-dom";
-
-import "./createPost/createPost.scss"
-import FetchLoader from "../../components/UI/fetchLoader/fetchLoader";
+import React, { useEffect } from 'react';
+import { useEditPostMutation, useLazyGetPostQuery } from "@/redux/reducers/post/post.api";
+import PostEditor from "@/components/postEditor/postEditor";
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
+import { useParams } from 'react-router-dom';
 
 interface IParams {
   id: string
 }
 
-const EditPost: React.FC = () => {
+const CreatePost: React.FC = () => {
+
+  const { post } = useTypedSelector(state => state.postState)
+  const [getPost] = useLazyGetPostQuery()
 
   const { id } = useParams<IParams>()
-
-  const { editPost } = useAction()
-
-  const { posts } = useTypedSelector(state => state.post)
-  const { id: userId } = useTypedSelector(state => state.user)
-
-
-  const [title, setTitle] = useState("")
-  const [body, setBody] = useState("")
-
-  const [isLoaded, setIsLoaded] = useState(true)
-  const [checkStatus, setCheckStatus] = useState(true)
-
   useEffect(() => {
-
-    const data = posts.filter((post) => post.id === id)[0]
-
-
-    if (data !== undefined) {
-      setTitle(data.title)
-      setBody(data.body)
+    if (post === null) {
+      getPost(id)
     }
 
-    setCheckStatus(userId === data?.author.id)
-    setIsLoaded(false)
-
-
-  }, [posts])
-
-
-  const sendPostData = (e: FormEvent) => {
-    e.preventDefault()
-    editPost(id, userId, title, body, posts)
-
-  }
-
-
+  }, [])
 
   return (
-    <>{
-      isLoaded ?
-        <FetchLoader /> :
-        <>{
-          checkStatus ?
-            <>
-              <section className="create-post-container">
-                <form className="create-post__wrapper">
-                  <input className="create-post__title"
-                    placeholder="Title"
-                    type="text"
-                    value={title}
-                    onChange={e => setTitle(e.target.value)} />
-                  <textarea
-                    className="create-post__body"
-                    placeholder="Text"
-                    value={body}
-                    onChange={e => setBody(e.target.value)}>
-                    Post text
-                  </textarea>
-                  <button className="btn create-post__create" onClick={sendPostData}>Edit post</button>
-                </form>
-              </section>
-            </>
-            :
-            <Redirect to={"/post/all"} />
-        }</>
+    <PostEditor 
+      isCreate={false} 
+      savePostRequest={useEditPostMutation}
+    />
+  );
+};
 
-    }
+export default CreatePost;
 
 
-    </>
-  )
-}
-
-export default EditPost;
