@@ -25,7 +25,7 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
   })
 
   const { limit, isSearched } = useTypedSelector((state) => state.postState)
-  const { clearPost, fetchPost, setLimit, setPageNumber, setSearched, setHasMore } = useAction()
+  const { clearPost, fetchPost, setLimit, setPageNumber, setSearched } = useAction()
 
   useEffect(() => {
 

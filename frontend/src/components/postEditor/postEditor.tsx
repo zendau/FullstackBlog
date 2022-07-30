@@ -165,8 +165,8 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
           value={formikForm.values.title}
           setValue={formikForm.handleChange}
         />
-        <input type="file" name="file" onChange={uploadImg} />
-        <img ref={fileImg} />
+        <input type="file" name="file" onChange={uploadImg} accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" />
+        <img ref={fileImg}  />
         <Editor
           editorState={body}
           toolbarClassName="toolbarClassName"

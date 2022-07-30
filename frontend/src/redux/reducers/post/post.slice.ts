@@ -68,6 +68,7 @@ export const postSlice = createSlice({
     setPageNumber: (state: IPostState, action: PayloadAction<number>) => {
       console.log('set state', action.payload)
       state.pageNumber = action.payload
+      state.hasMore = true
       console.log('state', state.pageNumber)
     },
     incPageNumber: (state: IPostState) => {

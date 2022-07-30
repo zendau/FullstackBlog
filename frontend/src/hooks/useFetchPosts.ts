@@ -19,7 +19,7 @@ export const useFetchPosts = () => {
   }, [limit])
 
   useEffect(() => {
-    console.log('trigger')
+    console.log('trigger', hasMore, isSearched)
     if (hasMore && !isSearched) {
       getLimitPosts({
         pageNumber, limit

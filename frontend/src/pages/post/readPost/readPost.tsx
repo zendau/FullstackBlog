@@ -26,14 +26,24 @@ const ReadPost: React.FC = () => {
 
   const { id } = useParams<IParams>()
 
-  const { post } = useTypedSelector(state => state.postState)
+  const { post, posts } = useTypedSelector(state => state.postState)
   const { id: userId } = useTypedSelector(state => state.userState)
 
   const [getPost] = useLazyGetPostQuery()
 
-  useEffect(() => {
-    getPost(id)
+  function searcPost() {
+    const res = posts.filter(post => post.id === id)
+    const post = res[0]
 
+
+    if (post === undefined) {
+      getPost(id)
+    }
+
+  }
+
+  useEffect(() => {
+    searcPost()
   }, [])
 
   return (

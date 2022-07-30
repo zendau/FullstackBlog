@@ -10,12 +10,13 @@ export const usePostObserver = () => {
   const observerCallback = useCallback(node => {
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
+      console.log('has more', hasMore)
       if (entries[0].isIntersecting && hasMore) {
         incPageNumber()
       }
     })
     if (node) observer.current.observe(node)
-  }, [])
+  }, [hasMore])
 
   return observerCallback
 
