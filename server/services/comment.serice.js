@@ -58,8 +58,18 @@ class CommentService {
     return deleteCommentDTO
   }
 
+  async usersComments(userId) {
+    const commentList = await commentModel.find({
+      user: userId
+    })
+    const commentListDTO = commentList.map(comment => new CommentDTO(comment))
+    return commentListDTO
+  }
+
   async getList(postId) {
     const commentList = await commentModel.find({post: postId}).populate("user")
+    
+    
     const commentListDTO = commentList.map(comment => new CommentDTO(comment))
     return commentListDTO
   }

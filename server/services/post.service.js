@@ -8,6 +8,8 @@ const FileService = require('./file.service')
 const ReactionService = require('./reaction.service')
 const CommentService = require('./comment.serice')
 
+const { ObjectId } = require('mongodb')
+
 const FileDto = require("../dtos/file.dto")
 
 class PostService {
@@ -68,6 +70,8 @@ class PostService {
       throw ApiError.HttpException(`Post with id ${id} not found`)
     }
 
+    await ReactionService.deletePostReactions(id)
+
     const postDto = this.postDtoFromPopulate(postData)
     return postDto
   }
@@ -113,6 +117,17 @@ class PostService {
     return this.getPosts(posts, currentPage, limit)
   }
 
+
+  async getUserPostData(userId) {
+    const posts = await postModel.find().where("author").equals(userId)
+    const postsId = posts.map(post => ObjectId(post._id))
+
+    const comments = await CommentService.usersComments(userId)
+    const userRating = await ReactionService.getUserRating(postsId)
+    const reactions = await ReactionService.getPersonalLikes(userId)
+
+    return { userRating, comments, reactions }
+  }
 
   async getLimitUserPosts(currentPage, limit, userId) {
     const posts = await postModel.find().where("author").equals(userId).populate("author")

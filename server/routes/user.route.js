@@ -298,4 +298,34 @@ router.get('/getActivateCode/:id', authMiddleware, UserController.repeatConfirmC
 
 router.post('/resetPassword', UserController.resetPassword)
 
+/**
+ * @swagger
+ * /user/data/:
+ *   get:
+ *     summary: Get user post data
+ *     tags: [User]
+ *     security:
+ *      - bearerAuth: []
+ *     parameters:
+ *       - in: id
+ *         name: id
+ *         type: ObjectId
+ *         description: ObjectId of User
+ *     responses:
+ *       200:
+ *         description: User post data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/DTOs/postData'
+ *       400:
+ *          description: Error message
+ *       401:
+ *         description: User is not auth
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.get('/data/:id', UserController.getUserById)
+
 module.exports = router

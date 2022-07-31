@@ -5,7 +5,7 @@ import AllPosts from "../pages/post/allPosts";
 import ReadPost from "../pages/post/readPost/readPost";
 import Post from "../pages/post/post";
 import { ITypeRoutes } from "../interfaces/router";
-import UserPosts from "../pages/userPosts";
+import User from "../pages/user/user";
 import EditPost from "../pages/post/editPost";
 import Register from "../pages/auth/register";
 import Users from "../pages/users/users";
@@ -36,7 +36,7 @@ export const privateRoutes: ITypeRoutes[] = [
     path: "/post", component: Post, exact: false
   },
   {
-    path: "/user/:userId", component: UserPosts, exact: true
+    path: "/user/:userId", component: User, exact: true
   },
   {
     path: "/users", component: Users, exact: true

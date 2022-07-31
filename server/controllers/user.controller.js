@@ -160,6 +160,26 @@ class UserController {
     }
   }
 
+  async getUserById(req, res, next) {
+    try {
+
+      const schema = Joi.object({
+        id: Joi.objectId().required(),
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const userId = req.params.id
+      const status = await UserService.getUserData(userId)
+
+      return res.json(status)
+
+    } catch (e) {
+      debugger
+      next(e)
+    }
+  }
+
 }
 
 module.exports = new UserController()

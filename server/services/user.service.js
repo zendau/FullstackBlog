@@ -7,6 +7,7 @@ const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")
 const ConfirmCodeService = require("../services/confirmCode.service")
 const nodemailerService = require("./nodemailer.service")
+const PostService = require('../services/post.service')
 
 class UserService {
 
@@ -85,6 +86,17 @@ class UserService {
     const userDto = new UserDto(user)
 
     return userDto
+  }
+
+  async getUserData(id) {
+    const user = await this.getById(id)
+
+    const postData = await PostService.getUserPostData(id)
+    user.rating = postData.userRating 
+    user.comments = postData.comments 
+    user.reactions = postData.reactions
+
+    return user
   }
 
 

@@ -14,7 +14,6 @@ class ReactionService {
   }
 
   async setReaction(postId, userId, isLiked) {
-    debugger
     if (isLiked === 'null') return await this.deleteReaction(postId, userId)
 
     const res = await reactionModel.findOneAndUpdate({
@@ -47,7 +46,7 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
-    const tokenData = await reactionModel.aggregate([
+    const reactions = await reactionModel.aggregate([
       {
         "$match": {
           post: ObjectId(postId)
@@ -99,7 +98,7 @@ class ReactionService {
       }
     ])
 
-    if (tokenData.length === 0) {
+    if (reactions.length === 0) {
       return new ReactionDto({
         like: 0,
         dislike: 0,
@@ -107,8 +106,83 @@ class ReactionService {
       })
     }
 
-    return new ReactionDto(tokenData[0])
+    return new ReactionDto(reactions[0])
   }
+
+
+  async getUserRating(postsId) {
+    const reactions = await reactionModel.aggregate([
+      {
+        "$match": {
+          "post": { $in: postsId }
+        }
+      },
+      {
+        "$group": {
+          _id: null,
+          like: {
+            "$sum": {
+              "$cond": [
+                "$isLiked",
+                1,
+                0
+              ]
+            }
+          },
+          dislike: {
+            "$sum": {
+              "$cond": [
+                "$isLiked",
+                0,
+                1
+              ]
+            }
+          },
+        }
+      },
+      {
+        $project: {
+          _id: 0
+        }
+      }
+    ])
+
+    const likes = reactions[0].like
+    const dislikes = reactions[0].dislike
+    const sum = likes + dislikes
+
+    const c1 = parseFloat(likes / sum * 10).toFixed(2)
+    const c2 = parseFloat(10 - c1).toFixed(2)
+
+    return [c1, c2]
+  }
+
+  async getPersonalLikes(user) {
+    const reactions = await reactionModel.aggregate([
+      {
+        "$match": {
+          "user": ObjectId(user)
+        },
+
+      },
+      { $lookup: { from: 'posts', localField: 'post', foreignField: '_id', as: 'post' } },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          "postTitle": "$post.title",
+          "postId": "$post._id"
+        }
+      }
+    ])
+    return reactions
+  }
+
+  async deletePostReactions(postId) {
+    await reactionModel.deleteMany({ post: postId })
+  }
+
 }
+
 
 module.exports = new ReactionService()
