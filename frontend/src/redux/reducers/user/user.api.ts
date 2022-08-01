@@ -135,6 +135,11 @@ const extendedApi = mainApi.injectEndpoints({
         url: '/user/all'
       })
     }),
+    getUser: build.query({
+      query: (userId: string) => ({
+        url: `/user/data/${userId}`
+      })
+    }),
   }),
   overrideExisting: false,
 })
@@ -146,5 +151,6 @@ export const {
   useResetPasswordMutation,
   useSetConfirmCodeMutation,
   useEditUserDataMutation,
-  useGetUsersQuery
+  useGetUsersQuery,
+  useGetUserQuery
 } = extendedApi

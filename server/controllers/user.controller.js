@@ -176,6 +176,7 @@ class UserController {
 
     } catch (e) {
       debugger
+      console.log('e', e)
       next(e)
     }
   }

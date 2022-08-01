@@ -9,6 +9,8 @@ const ConfirmCodeService = require("../services/confirmCode.service")
 const nodemailerService = require("./nodemailer.service")
 const PostService = require('../services/post.service')
 
+const PostDataDTO = require('../dtos/postData.dto')
+
 class UserService {
 
   async registration(email, password) {
@@ -95,8 +97,9 @@ class UserService {
     user.rating = postData.userRating 
     user.comments = postData.comments 
     user.reactions = postData.reactions
+    debugger
 
-    return user
+    return new PostDataDTO(user)
   }
 
 

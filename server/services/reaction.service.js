@@ -146,10 +146,14 @@ class ReactionService {
         }
       }
     ])
-
-    const likes = reactions[0].like
-    const dislikes = reactions[0].dislike
+    debugger
+    const likes = reactions[0]?.like ? reactions[0].like : 0
+    const dislikes = reactions[0]?.dislike ? reactions[0].dislike : 0
     const sum = likes + dislikes
+
+    if (sum === 0) {
+      return [0, 0]
+    }
 
     const c1 = parseFloat(likes / sum * 10).toFixed(2)
     const c2 = parseFloat(10 - c1).toFixed(2)
@@ -171,7 +175,8 @@ class ReactionService {
           _id: 0,
           id: "$_id",
           "postTitle": "$post.title",
-          "postId": "$post._id"
+          "postId": "$post._id",
+          "isLiked": 1
         }
       }
     ])
