@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, Suspense, useContext } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, useContext, useRef } from 'react';
 import { IPost } from "../../interfaces/IPost";
 import { Link } from "react-router-dom";
 
@@ -13,6 +13,23 @@ interface IPostList {
   author?: string
 }
 
+function dateFormat(date: string) {
+  const formatter = new Intl.DateTimeFormat("ru")
+  const dateFormat = new Date(date)
+
+  return formatter.format(dateFormat)
+}
+
+function createPostPreview(body: string) {
+  const previewLimit = 250
+
+  if (body.length < previewLimit) {
+    return body 
+  } 
+
+  return `${body.substring(0, previewLimit)}...`
+}
+
 const PostList: React.FC<IPostList> = ({ author }) => {
 
   const { posts, hasMore } = useTypedSelector(state => state.postState)
@@ -21,6 +38,8 @@ const PostList: React.FC<IPostList> = ({ author }) => {
   const [filterName, setFilterName] = useState<string>("")
 
   const [postList, setPostList] = useState<IPost[]>([])
+
+  const upBtnRef = useRef(null)
 
   useEffect(() => {
     if (filterType === "date") {
@@ -57,8 +76,8 @@ const PostList: React.FC<IPostList> = ({ author }) => {
         }
         <div className="post__header">
           <h2 className="post__title">{postData.title}</h2>
-          <small>{postData.date}</small>
-          <p className="post__body">{postData.body}</p>
+          <small>{dateFormat(postData.date)}</small>
+          <p className="post__body" dangerouslySetInnerHTML={{ __html: createPostPreview(postData.body) }}></p>
         </div>
         <div className="post__footer">
           <Link to={`/post/${postData.id}`} className="btn post__btn">Read post</Link>
@@ -67,6 +86,13 @@ const PostList: React.FC<IPostList> = ({ author }) => {
       </div>
     )
   }
+
+
+  function onUpButton() {
+    window.scrollTo(0, 0)
+    
+  }
+
   return (
     <Suspense fallback={<FetchLoader />}>
       <Filter
@@ -88,6 +114,7 @@ const PostList: React.FC<IPostList> = ({ author }) => {
         :
         <h1 className="message-info">No have posts</h1>
       }
+      <button ref={upBtnRef} onClick={onUpButton} className='posts__up'>UP</button>
 
     </Suspense>
   )
