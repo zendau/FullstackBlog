@@ -12,20 +12,20 @@ class PostController {
   async create(req, res, next) {
     try {
       const schema = Joi.object({
-        author: Joi.objectId().required(),
         title: Joi.string().min(6).max(20).required(),
         body: Joi.string().required()
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { author, title, body } = req.body
+      const { title, body } = req.body
 
       const file = req.file
       if (file === undefined) {
         throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
       }
 
+      const author = req.user.payload.id
       const data = await PostService.create(author, title, body, file)
       res.json(data)
     } catch (e) {
@@ -62,7 +62,8 @@ class PostController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const data = await PostService.delete(req.params.id)
+      const userId = req.user.payload.id
+      const data = await PostService.delete(req.params.id, userId)
       res.json(data)
     } catch (e) {
       next(e)

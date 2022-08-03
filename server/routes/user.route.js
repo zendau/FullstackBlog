@@ -125,7 +125,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/all", authMiddleware, UserController.allUsers)
+router.get("/all", authMiddleware, UserController.userList)
 
 /**
  * @swagger

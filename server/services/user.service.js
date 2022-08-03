@@ -3,12 +3,12 @@ const ApiError = require("../exceprions/api.error")
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
 
-const UserDto = require("../dtos/user.dto")
 const TokenService = require("../services/token.service")
 const ConfirmCodeService = require("../services/confirmCode.service")
 const nodemailerService = require("./nodemailer.service")
 const PostService = require('../services/post.service')
 
+const UserDTO = require("../dtos/user.dto")
 const PostDataDTO = require('../dtos/postData.dto')
 
 class UserService {
@@ -24,11 +24,11 @@ class UserService {
     })
 
     debugger
-    const userDto = new UserDto(user)
+    const userDTO = new UserDTO(user)
 
-    const tokens = TokenService.generateTokens(userDto)
-    await TokenService.saveToken(userDto.id, tokens.refreshToken)
-    await ConfirmCodeService.createCode(userDto)
+    const tokens = TokenService.generateTokens(userDTO)
+    await TokenService.saveToken(userDTO.id, tokens.refreshToken)
+    await ConfirmCodeService.createCode(userDTO)
 
     return tokens
   }
@@ -46,10 +46,10 @@ class UserService {
       throw ApiError.HttpException("bad credentials")
     }
 
-    const userDto = new UserDto(user)
+    const userDTO = new UserDTO(user)
 
-    const tokens = TokenService.generateTokens(userDto)
-    await TokenService.saveToken(userDto.id, tokens.refreshToken)
+    const tokens = TokenService.generateTokens(userDTO)
+    await TokenService.saveToken(userDTO.id, tokens.refreshToken)
 
     return tokens
   }
@@ -64,30 +64,30 @@ class UserService {
       throw ApiError.UnauthorizedError()
     }
     const user = await userModel.findById(userData.id)
-    const userDto = new UserDto(user)
-    const tokens = TokenService.generateTokens({ ...userDto })
+    const userDTO = new UserDTO(user)
+    const tokens = TokenService.generateTokens({ ...userDTO })
 
-    await TokenService.saveToken(userDto.id, tokens.refreshToken)
+    await TokenService.saveToken(userDTO.id, tokens.refreshToken)
     return tokens
   }
 
-  async getAllUsers() {
+  async getUsersList() {
     const users = await userModel.find()
 
-    const userDto = users.map(user => new UserDto(user))
-    return userDto
+    const userDTO = users.map(user => new UserDTO(user))
+    return userDTO
   }
 
   async getById(id) {
     const user = await userModel.findById(id)
 
     if (user === null) {
-      throw ApiError.HttpException(`Wrong user id. User id ${fileId} is not found`)
+      throw ApiError.HttpException(`User id ${fileId} is not found`)
     }
 
-    const userDto = new UserDto(user)
+    const userDTO = new UserDTO(user)
 
-    return userDto
+    return userDTO
   }
 
   async getUserData(id) {
@@ -97,8 +97,6 @@ class UserService {
     user.rating = postData.userRating 
     user.comments = postData.comments 
     user.reactions = postData.reactions
-    debugger
-
     return new PostDataDTO(user)
   }
 
@@ -146,12 +144,12 @@ class UserService {
     }
 
     const updatedUserModel = await user.save()
-    const userDto = new UserDto(updatedUserModel)
+    const userDTO = new UserDTO(updatedUserModel)
 
     await ConfirmCodeService.deleteCode(code)
 
-    const tokens = TokenService.generateTokens(userDto)
-    await TokenService.saveToken(userDto.id, tokens.refreshToken)
+    const tokens = TokenService.generateTokens(userDTO)
+    await TokenService.saveToken(userDTO.id, tokens.refreshToken)
 
     return tokens
   }

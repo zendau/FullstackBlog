@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const reactionModel = require("../models/reaction.model")
-const ReactionDto = require("../dtos/reaction.dto");
+const ReactionDTO = require("../dtos/reaction.dto");
 
 class ReactionService {
 
@@ -99,14 +99,14 @@ class ReactionService {
     ])
 
     if (reactions.length === 0) {
-      return new ReactionDto({
+      return new ReactionDTO({
         like: 0,
         dislike: 0,
         user: [{ isLiked: null }]
       })
     }
 
-    return new ReactionDto(reactions[0])
+    return new ReactionDTO(reactions[0])
   }
 
 
@@ -146,7 +146,7 @@ class ReactionService {
         }
       }
     ])
-    debugger
+
     const likes = reactions[0]?.like ? reactions[0].like : 0
     const dislikes = reactions[0]?.dislike ? reactions[0].dislike : 0
     const sum = likes + dislikes
@@ -155,10 +155,10 @@ class ReactionService {
       return [0, 0]
     }
 
-    const c1 = parseFloat(likes / sum * 10).toFixed(2)
-    const c2 = parseFloat(10 - c1).toFixed(2)
+    const x1 = parseFloat(likes / sum * 10).toFixed(2)
+    const x2 = parseFloat(10 - x1).toFixed(2)
 
-    return [c1, c2]
+    return [x1, x2]
   }
 
   async getPersonalLikes(user) {

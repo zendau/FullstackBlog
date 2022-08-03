@@ -49,19 +49,23 @@
  */
 
 module.exports = class PostDto {
-  author
+  id
   title
-  body
   date
-  file
-  comments
-
+  body
 
   constructor(model) {
     this.id = model._id
     this.title = model.title
-    this.body = model.body
     this.date = model.createdDate
+    this.body = model.body
+    
+  }
+
+  setUserName(user) {
+    debugger
+    this.author = {}
+    this.author.email = user
   }
 
   setAuthor(author) {

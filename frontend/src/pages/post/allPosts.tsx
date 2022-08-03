@@ -5,6 +5,7 @@ import { useFetchPosts } from "@/hooks/useFetchPosts";
 const AllPosts: React.FC = () => {
 
   useFetchPosts()
+  console.log('enter')
 
   return (
     <PostList />

@@ -16,8 +16,8 @@ class CommentService {
       .populate("user")
       .execPopulate()
 
-    const inseredCommentDTO = new CommentDTO(commentPopulate)
-    return inseredCommentDTO
+    const commentDTO = new CommentDTO(commentPopulate)
+    return commentDTO
   }
 
   async edit(commentId, userId, newMessage) {
@@ -40,22 +40,22 @@ class CommentService {
       .populate("user")
       .execPopulate()
 
-    const editCommentDTO = new CommentDTO(commentPopulate)
-    return editCommentDTO
+    const commentDTO = new CommentDTO(commentPopulate)
+    return commentDTO
   }
 
   async delete(commentId, userId) {
-    const DeleteStatus = await commentModel.findOneAndDelete({
+    const deleteStatus = await commentModel.findOneAndDelete({
       $and: [
         { _id: commentId },
         { user: userId }
       ]
     })
-    if (DeleteStatus === null) {
+    if (deleteStatus === null) {
       throw ApiError.HttpException(`Comment id ${commentId} is not found. Or User with id ${userId} is not author of this post`)
     }
-    const deleteCommentDTO = new CommentDTO(DeleteStatus)
-    return deleteCommentDTO
+    const commentDTO = new CommentDTO(deleteStatus)
+    return commentDTO
   }
 
   async usersComments(userId) {

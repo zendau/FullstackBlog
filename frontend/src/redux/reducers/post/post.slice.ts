@@ -1,5 +1,5 @@
 import { IComment } from '@/interfaces/IComment';
-import { IPost } from '@/interfaces/post';
+import { IPost } from '@/interfaces/IPost';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { IPostState } from '@/interfaces/state/IPostState';
@@ -79,7 +79,8 @@ export const postSlice = createSlice({
     },
     setSearched: (state: IPostState, action: PayloadAction<boolean>) => {
       state.isSearched = action.payload
-    }
+    },
+    
   },
 })
 

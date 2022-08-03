@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, Suspense, useContext } from 'react';
-import { IPost } from "../../interfaces/post";
+import { IPost } from "../../interfaces/IPost";
 import { Link } from "react-router-dom";
 
 import "./postList.scss"
@@ -21,9 +21,6 @@ const PostList: React.FC<IPostList> = ({ author }) => {
   const [filterName, setFilterName] = useState<string>("")
 
   const [postList, setPostList] = useState<IPost[]>([])
-
-  
-
 
   useEffect(() => {
     if (filterType === "date") {
@@ -51,35 +48,24 @@ const PostList: React.FC<IPostList> = ({ author }) => {
 
   function generateCard(postData: IPost, isLast: boolean) {
 
-
-    if (isLast) {
-      return (
-        <div ref={observerCallback} key={postData.id} className="post">
-          <div className="post__header">
-            <h2 className="post__title">{postData.title}</h2>
-            <small>{postData.date}</small>
-            <p className="post__body">{postData.author.email}</p>
-          </div>
-          <div className="post__footer">
-            <Link to={`/post/${postData.id}`} className="btn post__btn">Read post</Link>
-            <p className="post__author">{postData.author.email}</p>
-          </div>
-        </div>)
-    } else {
-      return (
-        <div key={postData.id} className="post">
-          <div className="post__header">
-            <h2 className="post__title">{postData.title}</h2>
-            <small>{postData.date}</small>
-            <p className="post__body">{postData.author.email}</p>
-          </div>
-          <div className="post__footer">
-            <Link to={`/post/${postData.id}`} className="btn post__btn">Read post</Link>
-            <p className="post__author">{postData.author.email}</p>
-          </div>
-        </div>)
-    }
-
+    return (
+      <div key={postData.id} className="post">
+        {
+          isLast ?
+            <div ref={observerCallback}></div>
+            : ""
+        }
+        <div className="post__header">
+          <h2 className="post__title">{postData.title}</h2>
+          <small>{postData.date}</small>
+          <p className="post__body">{postData.body}</p>
+        </div>
+        <div className="post__footer">
+          <Link to={`/post/${postData.id}`} className="btn post__btn">Read post</Link>
+          <p className="post__author">{postData.author.email}</p>
+        </div>
+      </div>
+    )
   }
   return (
     <Suspense fallback={<FetchLoader />}>

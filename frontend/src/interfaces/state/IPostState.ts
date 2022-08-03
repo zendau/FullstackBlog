@@ -1,4 +1,4 @@
-import { IPost } from '@/interfaces/post';
+import { IPost } from '@/interfaces/IPost';
 
 export interface IPostState  {
   post: IPost | null

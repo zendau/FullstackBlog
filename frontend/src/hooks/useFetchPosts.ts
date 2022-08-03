@@ -5,26 +5,30 @@ import { useLazyGetLimitPostsQuery } from "@/redux/reducers/post/post.api";
 
 export const useFetchPosts = () => {
 
-  const [getLimitPosts, {isLoading}] = useLazyGetLimitPostsQuery()
+  const [getLimitPosts, { isLoading }] = useLazyGetLimitPostsQuery()
   const { hasMore, limit, pageNumber, isSearched } = useTypedSelector(state => state.postState)
-  const { setPageNumber } = useAction()
+  const { setPageNumber, clearPost } = useAction()
 
 
-  const { clearPost } = useAction()
+  console.log('enter fetch', hasMore, isSearched, pageNumber, limit)
   useEffect(() => {
-    console.log('3')
-    clearPost()
-    setPageNumber(1)
+
+    return () => {
+      clearPost()
+      setPageNumber(1)
+    }
 
   }, [limit])
 
   useEffect(() => {
-    console.log('trigger', hasMore, isSearched)
+    console.log('trigger', hasMore, isSearched, pageNumber, limit)
     if (hasMore && !isSearched) {
+      console.log('get query')
       getLimitPosts({
         pageNumber, limit
       })
     }
+
 
   }, [pageNumber, limit, hasMore, isSearched])
 

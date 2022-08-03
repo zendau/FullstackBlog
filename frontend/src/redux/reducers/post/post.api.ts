@@ -1,4 +1,4 @@
-import { IPost } from './../../../interfaces/post';
+import { IPost } from '../../../interfaces/IPost';
 import { ApiError } from '@/interfaces/api/ApiError';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
@@ -39,9 +39,7 @@ const extendedApi = mainApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
         try {
-          const { data } = await queryFulfilled;
-          console.log('data', data)
-          // dispatch(postActions.fetchPost(data));
+          await queryFulfilled;
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -49,6 +47,7 @@ const extendedApi = mainApi.injectEndpoints({
           }))
         }
       },
+
     }),
     getUserPosts: build.query({
       query: (postData: any) => ({

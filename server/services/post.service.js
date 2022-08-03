@@ -1,21 +1,19 @@
 const postModel = require('../models/post.model')
-const PostDto = require('../dtos/post.dto')
-const UserDto = require('../dtos/user.dto')
+const PostDTO = require('../dtos/post.dto')
+const UserDTO = require('../dtos/user.dto')
+const FileDTO = require("../dtos/file.dto")
 const ApiError = require('../exceprions/api.error')
 
-const UserService = require('./user.service')
 const FileService = require('./file.service')
 const ReactionService = require('./reaction.service')
 const CommentService = require('./comment.serice')
 
 const { ObjectId } = require('mongodb')
 
-const FileDto = require("../dtos/file.dto")
 
 class PostService {
   async create(author, title, body, file) {
 
-    await UserService.getById(author)
     const fileData = await FileService.create(file)
 
     const post = await postModel.create({
@@ -30,21 +28,15 @@ class PostService {
       .populate("file")
       .execPopulate()
 
-    const postDto = this.postDtoFromPopulate(postPopulate)
-    return postDto
+    const postDTO = this.createPostDTO(postPopulate)
+    return postDTO
   }
 
   async edit(postId, userId, title, body, newFile) {
 
-    const postData = await postModel.findById(postId)
+    const postData = await this.postExist(postId)
+    this.checkPostAuthor(userId, postData.author.toString())
 
-    if (postData === null) {
-      throw ApiError.HttpException(`Post with id ${postId} not found`)
-    }
-
-    if (postData.author.toString() !== userId) {
-      throw ApiError.HttpException(`User with id ${userId} not author this post`)
-    }
     if (newFile !== undefined) {
       await FileService.update(postData.file, newFile)
     }
@@ -59,21 +51,19 @@ class PostService {
 
     const post = await postData.save()
     const postPopulate = await post.populate("author").execPopulate()
-    const postDto = this.postDtoFromPopulate(postPopulate)
-    return postDto
+    const postDTO = this.createPostDTO(postPopulate)
+    return postDTO
   }
 
-  async delete(id) {
-    const postData = await postModel.findByIdAndDelete(id)
+  async delete(postId, userId) {
 
-    if (postData === null) {
-      throw ApiError.HttpException(`Post with id ${id} not found`)
-    }
+    const postData = await this.postExist(postId)
+    this.checkPostAuthor(userId, postData.author.toString())
 
-    await ReactionService.deletePostReactions(id)
+    postData.deleteOne()
+    await ReactionService.deletePostReactions(postId)
 
-    const postDto = this.postDtoFromPopulate(postData)
-    return postDto
+    return true
   }
 
   async postExist(postId) {
@@ -82,41 +72,9 @@ class PostService {
     if (post === null) {
       throw ApiError.HttpException(`Post with id ${postId} not found`)
     }
-    
+
     return post
   }
-
-
-  async getOne(postId, userId) {
-    debugger
-    const post = await this.postExist(postId)
-    const postDto = this.postDtoFromPopulate(post)
-
-    const reactionData = await ReactionService.getReactionsCount(postId, userId)
-    postDto.setReaction(reactionData)
-
-    const commentsData = await CommentService.getList(postId)
-    postDto.setComments(commentsData)
-
-    return postDto
-  }
-
-  async getAllPosts() {
-    const posts = await postModel.find().populate("author")
-    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-    return postsDto
-  }
-
-  postsToDTO(posts) {
-    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-    return postsDto
-  }
-
-  async getLimitPosts(currentPage, limit) {
-    const posts = await postModel.find().populate("author")
-    return this.getPosts(posts, currentPage, limit)
-  }
-
 
   async getUserPostData(userId) {
     const posts = await postModel.find().where("author").equals(userId)
@@ -129,70 +87,92 @@ class PostService {
     return { userRating, comments, reactions }
   }
 
-  async getLimitUserPosts(currentPage, limit, userId) {
-    const posts = await postModel.find().where("author").equals(userId).populate("author")
-    return this.getPosts(posts, currentPage, limit)
+  async getOne(postId) {
+    const post = await this.postExist(postId)
+    const postDTO = this.createPostDTO(post)
+    return postDTO
   }
 
   async searchBySubstring(substring) {
-    console.log('test', substring)
     const posts = await postModel.find({
-      title: {$regex: substring}
+      title: { $regex: substring }
     }).populate('author')
 
-    const postsDto = posts.map(post => this.postDtoFromPopulate(post))
-    return postsDto
+    const postsDTO = posts.map(post => this.createPostListDTO(post))
+    return postsDTO
   }
 
-  async getPosts(posts, currentPage, limit) {
-    const countPosts = posts.length
+  async getAllPosts() {
+    const posts = await postModel.find().populate("author")
+    const postsDTO = posts.map(post => this.createPostListDTO(post))
+    return postsDTO
+  }
 
-    const pages = Math.floor(countPosts / limit)
 
-    if (currentPage > pages) {
-      if (currentPage - 1 === pages) {
 
-        if (limit === 0 || limit > countPosts) {
+  async getLimitPosts(currentPage, limit) {
+    const postsData = await this.getPosts({}, currentPage, limit)
+    return postsData
+  }
 
-          const postsDto = await this.postsToDTO(posts)
 
-          return { nextPage: false, post: postsDto }
 
-        }
+  async getLimitUserPosts(currentPage, limit, userId) {
+    const postsData = await this.getPosts(
+      {
+        author: userId
+      },
+      currentPage, limit
+    )
+    return postsData
+  }
 
-        const pagesRemainder = countPosts - (pages * limit)
-        const postsOnPage = posts.splice(countPosts - pagesRemainder)
+  async getPosts(filter, currentPage, limit) {
+    const posts = await postModel.find(filter).skip((currentPage - 1) * limit).limit(parseInt(limit)).populate("author")
 
-        const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-        return { nextPage: false, post: postsDto }
+    const postsDTO = posts.map(post => this.createPostListDTO(post))
 
-      } else {
-        throw ApiError.PageNotFoundError("page out of range")
-      }
+    let nextPage = null
+
+    if (postsDTO.length == limit) {
+      nextPage = true
     } else {
+      nextPage = false
+    }
 
-      if (parseInt(limit) === 0 || limit > countPosts) {
+    return { nextPage, post: postsDTO }
+  }
 
-        const postsDto = await this.postsToDTO(posts)
-
-        return { nextPage: false, post: postsDto }
-
-      }
-
-      const postsOnPage = posts.splice((currentPage - 1) * limit, limit)
-
-      const postsDto = postsOnPage.map(post => this.postDtoFromPopulate(post))
-      return { nextPage: true, post: postsDto }
+  checkPostAuthor(userId, postAuthor) {
+    if (postAuthor !== userId) {
+      throw ApiError.HttpException(`User with id ${userId} not author this post`)
     }
   }
 
-  postDtoFromPopulate(postModel) {
-    const postDto = new PostDto(postModel)
-    const userDto = new UserDto(postModel.author)
-    const fileDto = new FileDto(postModel.file)
-    postDto.setAuthor(userDto)
-    postDto.setImage(fileDto)
-    return postDto
+  createPostListDTO(postModel) {
+    const postDTO = new PostDTO(postModel)
+    console.log('postModel.author', postModel.author)
+    console.log('postModel.body', postModel.body)
+    postDTO.setUserName(postModel.author.email)
+    return postDTO
+  }
+
+
+  async createPostDTO(postModel) {
+    const postDTO = new PostDTO(postModel)
+    const userDTO = new UserDTO(postModel.author)
+    const fileDTO = new FileDTO(postModel.file)
+    postDTO.setAuthor(userDTO)
+    postDTO.setImage(fileDTO)
+
+
+    const reactionData = await ReactionService.getReactionsCount(postDTO.id, postDTO.author.id)
+    postDTO.setReaction(reactionData)
+
+    const commentsData = await CommentService.getList(postDTO.id)
+    postDTO.setComments(commentsData)
+
+    return postDTO
   }
 
   async postReaction(postId, userId, isLiked) {

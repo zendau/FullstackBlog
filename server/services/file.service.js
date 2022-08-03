@@ -1,7 +1,7 @@
 const fileModel = require("../models/file.model")
 
 const ApiError = require("../exceprions/api.error")
-const FileDto = require("../dtos/file.dto")
+const FileDTO = require("../dtos/file.dto")
 
 const fs = require('fs')
 
@@ -15,7 +15,7 @@ class FileService {
       mimetype: file.mimetype
     })
 
-    const fileDTO = new FileDto(fileInsered)
+    const fileDTO = new FileDTO(fileInsered)
     return fileDTO
   }
 
@@ -24,10 +24,10 @@ class FileService {
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
-      throw ApiError.HttpException(`Wrong file id. File id ${fileId} is not found`)
+      throw ApiError.HttpException(`File id ${fileId} is not found`)
     }
 
-    const fileDTO = new FileDto(file)
+    const fileDTO = new FileDTO(file)
     return fileDTO
 
   }
@@ -35,7 +35,7 @@ class FileService {
   async getList() {
     const files = await fileModel.find()
 
-    const filesDTO = files.map(file => new FileDto(file))
+    const filesDTO = files.map(file => new FileDTO(file))
     return filesDTO
   }
 
@@ -54,7 +54,7 @@ class FileService {
     file.size = newFile.size
 
     const updatedData = await file.save()
-    const fileDTO = new FileDto(updatedData)
+    const fileDTO = new FileDTO(updatedData)
 
     this.removeFromStorage(oldFileName)
 
@@ -64,9 +64,9 @@ class FileService {
   removeFromStorage(filename) {
     fs.unlink(`${process.env.FILE_FOULDER}/${filename}`, (err) => {
       if (err && err.code == 'ENOENT') {
-        console.log("File doesn't exist, won't remove it")
+        console.error("File doesn't exist, won't remove it")
       } else if (err) {
-        console.log('Error occurred while trying to remove file')
+        console.error('Error occurred while trying to remove file')
       }
     })
   }
@@ -75,7 +75,7 @@ class FileService {
 
     const DeleteStatus = await fileModel.findByIdAndDelete(fileId)  
     if (DeleteStatus === null) {
-      throw ApiError.HttpException(`Wrong file id File id ${fileId} is not found`)
+      throw ApiError.HttpException(`File id ${fileId} is not found`)
     }
 
     this.removeFromStorage(DeleteStatus.fileName)

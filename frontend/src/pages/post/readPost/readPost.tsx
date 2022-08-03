@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from "react-router";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
-import { useHistory } from "react-router-dom"
 import FetchLoader from "../../../components/UI/fetchLoader/fetchLoader";
 
 import "./readPost.scss"
@@ -11,6 +10,7 @@ import Reaction from '@/components/post/reaction/reaction'
 import Comments from '@/components/post/comment/comments'
 
 import PostToolbar from '@/components/post/toolbar/toolbar'
+import { useAction } from '@/hooks/useAction';
 
 interface IParams {
   id: string
@@ -26,24 +26,13 @@ const ReadPost: React.FC = () => {
 
   const { id } = useParams<IParams>()
 
-  const { post, posts } = useTypedSelector(state => state.postState)
+  const { post } = useTypedSelector(state => state.postState)
   const { id: userId } = useTypedSelector(state => state.userState)
+  const [getPostLoad] = useLazyGetPostQuery()
 
-  const [getPost] = useLazyGetPostQuery()
-
-  function searcPost() {
-    const res = posts.filter(post => post.id === id)
-    const post = res[0]
-
-
-    if (post === undefined) {
-      getPost(id)
-    }
-
-  }
 
   useEffect(() => {
-    searcPost()
+    getPostLoad(id)
   }, [])
 
   return (

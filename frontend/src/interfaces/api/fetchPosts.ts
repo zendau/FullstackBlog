@@ -1,4 +1,4 @@
-import { IPost } from "../post";
+import { IPost } from "../IPost";
 
 export default interface IFetchPosts {
   nextPage: boolean,
