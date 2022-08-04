@@ -1,10 +1,10 @@
 import React from 'react';
 import PostList from "@/components/posts/postList";
-import { usefetchPosts } from "@/hooks/useFetchPosts";
+import { useFetchPosts } from "@/hooks/useFetchPosts";
 
 const AllPosts: React.FC = () => {
 
-  usefetchPosts()
+  useFetchPosts()
   console.log('enter')
 
   return (

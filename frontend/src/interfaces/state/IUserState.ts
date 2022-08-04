@@ -1,4 +1,4 @@
-import { IUser } from "@/interfaces/IUser";
+import { IUser } from "@/interfaces/user";
 
 export interface IUserState extends IUser  {
   isAuth: boolean

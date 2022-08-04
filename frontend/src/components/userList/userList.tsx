@@ -1,4 +1,4 @@
-import { IUser } from '@/interfaces/IUser'
+import { IUser } from '@/interfaces/user'
 import React from 'react'
 import { Link } from 'react-router-dom'
 

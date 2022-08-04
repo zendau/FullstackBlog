@@ -4,7 +4,7 @@ import AppRouter from "./router/AppRouter"
 
 import { Provider } from "react-redux";
 
-import "./styles/App.scss"
+import "./App.scss"
 import Loader from "./components/UI/loader/loader";
 
 

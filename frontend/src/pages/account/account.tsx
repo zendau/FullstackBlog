@@ -6,7 +6,7 @@ import ChangeUserData from "../../components/account/changeUserData";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm"
 import "./account.scss"
-import { IUser } from '@/interfaces/IUser';
+import { IUser } from '@/interfaces/user';
 import IFormikElements from '@/interfaces/formikElements';
 import { useEditUserDataMutation, useSetConfirmCodeMutation } from '@/redux/reducers/user/user.api';
 

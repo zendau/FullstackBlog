@@ -140,7 +140,7 @@ class PostService {
       nextPage = false
     }
 
-    return { nextPage, posts: postsDTO }
+    return { nextPage, post: postsDTO }
   }
 
   checkPostAuthor(userId, postAuthor) {

@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./Routes";
 
 import { useTypedSelector } from '@/hooks/useTypedSelector'
@@ -8,6 +13,7 @@ import RouterSwitch from "./RouterSwitch";
 import { useAction } from '@/hooks/useAction';
 
 
+import AllPost from '@/pages/post/allPosts'
 
 const AppRouter: React.FC = () => {
 
@@ -21,16 +27,12 @@ const AppRouter: React.FC = () => {
 
 
   return (
-    <Router>
-
-      {isAuth
-        ?
-        <RouterSwitch privateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
-        :
-        <RouterSwitch privateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} />
-      }
-
-    </Router>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<AllPost />}>
+      </Route>
+    </Routes>
+  </BrowserRouter>
   )
 }
 
