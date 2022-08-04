@@ -1,35 +1,42 @@
-import { IUser } from '@/interfaces/user';
+import { IUpdateUserRequest } from './../../../interfaces/api/user/IUpdateUserRequest';
+import { isApiError } from '@/utils/isApiError';
+import { IUserResponse } from '@/interfaces/api/user/IUserResponse';
+import { IUserRequest } from '@/interfaces/api/user/IUserRequest';
+import { IUser } from '@/interfaces/IUser';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { userActions } from '@/redux/reducers/user/user.slice';
 import jwt from 'jwt-decode'
+import { ApiError } from '@/interfaces/api/ApiError';
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
-    registerUser: build.mutation({
+    registerUser: build.mutation<IUserResponse | ApiError, IUserRequest>({
       query: (data) => ({
         url: '/user/register',
         method: 'POST',
         body: data
       }),
-      //transformResponse: (result: any) => result,
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const tokenDecode: any = jwt(data.accessToken)
-          localStorage.setItem("token", data.accessToken)
-          console.log('tokenDecode', tokenDecode)
-          dispatch(userActions.setUser(tokenDecode.payload));
+
+          if (!isApiError(data)) {
+            const tokenDecode: any = jwt(data.accessToken)
+            localStorage.setItem("token", data.accessToken)
+
+            dispatch(userActions.setUser(tokenDecode.payload));
+          }
+
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
             type: 'error'
           }));
-          console.log('error', e)
         }
       },
     }),
-    loginUser: build.mutation({
+    loginUser: build.mutation<IUserResponse | ApiError, IUserRequest>({
       query: (data) => ({
         url: '/user/login',
         method: 'POST',
@@ -38,9 +45,13 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const tokenDecode: any = jwt(data.accessToken)
-          localStorage.setItem("token", data.accessToken)
-          dispatch(userActions.setUser(tokenDecode.payload));
+
+          if (!isApiError(data)) {
+            const tokenDecode: any = jwt(data.accessToken)
+            localStorage.setItem("token", data.accessToken)
+            dispatch(userActions.setUser(tokenDecode.payload));
+          }
+
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -49,13 +60,12 @@ const extendedApi = mainApi.injectEndpoints({
         }
       },
     }),
-    logoutUser: build.mutation({
+    logoutUser: build.mutation<void | ApiError, void>({
       query: () => ({
         url: '/user/logout',
         method: 'GET'
       }),
       async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
-        debugger
         try {
           await queryFulfilled;
           localStorage.removeItem("token")
@@ -68,13 +78,13 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    setConfirmCode: build.mutation({
+    setConfirmCode: build.mutation<void | ApiError, { email: string }>({
       query: (data) => ({
         url: '/user/setConfirmCode',
         method: 'POST',
         body: data
       }),
-      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (e: any) {
@@ -85,7 +95,7 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    resetPassword: build.mutation({
+    resetPassword: build.mutation<{ message: string } | ApiError, void>({
       query: (data) => ({
         url: '/user/resetPassword',
         method: 'POST',
@@ -94,10 +104,14 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(alertActions.setError({
-            message: data,
-            type: 'success'
-          }));
+
+          if (!isApiError(data)) {
+            dispatch(alertActions.setError({
+              message: data.message,
+              type: 'success'
+            }));
+          }
+
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -106,22 +120,27 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    editUserData: build.mutation({
+    editUserData: build.mutation<IUserResponse | ApiError, IUpdateUserRequest>({
       query: (data) => ({
         url: '/user/saveNewData',
         method: 'PUT',
         body: data
       }),
-      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const tokenDecode: any = jwt(data.accessToken)
-          localStorage.setItem("token", data.accessToken)
-          dispatch(userActions.setUser(tokenDecode.payload));
-          dispatch(alertActions.setError({
-            message: 'Data updated successfully',
-            type: 'success'
-          }))
+
+          if (!isApiError(data)) {
+            const tokenDecode: any = jwt(data.accessToken)
+            localStorage.setItem("token", data.accessToken)
+
+            dispatch(userActions.setUser(tokenDecode.payload));
+            dispatch(alertActions.setError({
+              message: 'Data updated successfully',
+              type: 'success'
+            }))
+          }
+         
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -130,13 +149,13 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    getUsers: build.query<IUser[], void>({
+    getUsers: build.query<IUser[] | ApiError, void>({
       query: () => ({
         url: '/user/all'
       })
     }),
-    getUser: build.query({
-      query: (userId: string) => ({
+    getUser: build.query<IUser | ApiError, string>({
+      query: (userId) => ({
         url: `/user/data/${userId}`
       })
     }),
@@ -144,9 +163,9 @@ const extendedApi = mainApi.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { 
-  useRegisterUserMutation, 
-  useLoginUserMutation, 
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
   useLogoutUserMutation,
   useResetPasswordMutation,
   useSetConfirmCodeMutation,

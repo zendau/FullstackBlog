@@ -1,11 +1,10 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { RootState } from '../store'
 import { userActions } from "@/redux/reducers/user/user.slice"
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL,
   credentials: 'include',
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers) => {
     const token = localStorage.getItem('token')
     if (token) {
       headers.set('authentication', `Bearer ${token}`)

@@ -1,7 +1,7 @@
 import { IComment } from './IComment';
 import { IReaction } from './IReaction';
 import { IFile } from "./IFile";
-import { IUser } from "./user";
+import { IUser } from "./IUser";
 
 export interface IPost {
   title: string
