@@ -197,15 +197,15 @@ class PostController {
     try {
       const schema = Joi.object({
         commentId: Joi.objectId().required(),
-        newMessage: Joi.string().required()
+        message: Joi.string().required()
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { commentId, newMessage } = req.body
+      const { commentId, message } = req.body
       const userId = req.user.payload.id
 
-      const updatedStatus = await CommentService.edit(commentId, userId, newMessage)
+      const updatedStatus = await CommentService.edit(commentId, userId, message)
       res.json(updatedStatus)
     } catch (e) {
       next(e)

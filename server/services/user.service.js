@@ -210,7 +210,7 @@ class UserService {
 
     nodemailerService.sendNewPassword(newPaswword, email)
 
-    return `New password was send to ${email}`
+    return { message: `New password was send to ${email}` } 
   }
 
 }

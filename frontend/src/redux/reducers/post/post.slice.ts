@@ -17,13 +17,13 @@ export const postSlice = createSlice({
   name: 'post',
   initialState,
   reducers: {
-    fetchPost: (state: IPostState, action: PayloadAction<IPost[]>) => {
+    fetchPosts: (state: IPostState, action: PayloadAction<IPost[]>) => {
       state.posts.push(...action.payload)
     },
-    getPost: (state: IPostState, action: PayloadAction<IPost>) => {
+    setPost: (state: IPostState, action: PayloadAction<IPost>) => {
       state.post = action.payload
     },
-    clearPost: (state: IPostState) => {
+    clearPosts: (state: IPostState) => {
       state.posts = []
     },
     setHasMore: (state: IPostState, action: PayloadAction<boolean>) => {
@@ -66,10 +66,8 @@ export const postSlice = createSlice({
       state.post!.comments = state.post!.comments.filter(comment => comment.id !== action.payload.id)
     },
     setPageNumber: (state: IPostState, action: PayloadAction<number>) => {
-      console.log('set state', action.payload)
       state.pageNumber = action.payload
       state.hasMore = true
-      console.log('state', state.pageNumber)
     },
     incPageNumber: (state: IPostState) => {
       state.pageNumber++

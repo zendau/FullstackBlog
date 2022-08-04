@@ -1,43 +1,26 @@
-import { IPost } from '../../../interfaces/IPost';
+import { ICommentRequest } from '@/interfaces/api/post/ICommentRequest';
+import { IReactionRequest } from '@/interfaces/api/post/IReactionRequest';
+import { IPostLimitResponse } from '@/interfaces/api/post/IPostLimitResponse';
+import { IPost } from '@/interfaces/IPost';
 import { ApiError } from '@/interfaces/api/ApiError';
 import { mainApi } from '@/redux/api/base.api'
 import { alertActions } from '@/redux/reducers/alert/alert.slice';
 import { postActions } from '@/redux/reducers/post/post.slice';
+import { IPostRequest } from '@/interfaces/api/post/IPostRequest'
+import { IPostLimitRequest } from '@/interfaces/api/post/IPostLimitRequest';
+import { IComment } from '@/interfaces/IComment';
+import { isApiError } from '@/utils/isApiError';
+
 
 const extendedApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
-    createPost: build.mutation<IPost | ApiError, any>({
+    createPost: build.mutation<IPost | ApiError, IPostRequest>({
       query: (data) => ({
         url: '/post/create',
         method: 'POST',
         body: data
       }),
-    }),
-    editPost: build.mutation({
-      query: (data) => ({
-        url: '/post/edit',
-        method: 'PATCH',
-        body: data
-      }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log('data', data)
-          // dispatch(postActions.fetchPost(data));
-        } catch (e: any) {
-          dispatch(alertActions.setError({
-            message: e.error.data.message,
-            type: 'error'
-          }))
-        }
-      },
-    }),
-    deletePost: build.mutation({
-      query: (postId) => ({
-        url: `/post/delete/${postId}`,
-        method: 'DELETE',
-      }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (e: any) {
@@ -47,10 +30,42 @@ const extendedApi = mainApi.injectEndpoints({
           }))
         }
       },
-
     }),
-    getUserPosts: build.query({
-      query: (postData: any) => ({
+    editPost: build.mutation<IPost | ApiError, IPostRequest>({
+      query: (data) => ({
+        url: '/post/edit',
+        method: 'PATCH',
+        body: data
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      },
+    }),
+    deletePost: build.mutation<IPost | ApiError, string>({
+      query: (postId) => ({
+        url: `/post/delete/${postId}`,
+        method: 'DELETE',
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (e: any) {
+          dispatch(alertActions.setError({
+            message: e.error.data.message,
+            type: 'error'
+          }))
+        }
+      },
+    }),
+    getUserPosts: build.query<IPostLimitResponse | ApiError, IPostLimitRequest>({
+      query: (postData) => ({
         url: '/post/getUserPosts/',
         params: {
           currentPage: postData.currentPage,
@@ -58,14 +73,14 @@ const extendedApi = mainApi.injectEndpoints({
           userId: postData.userId,
         }
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('data', data)
-          console.log('4')
-          dispatch(postActions.clearPost())
-          dispatch(postActions.setHasMore(data.nextPage))
-          dispatch(postActions.fetchPost(data.post))
+
+          if (!isApiError(data)) {
+            dispatch(postActions.setHasMore(data.nextPage))
+            dispatch(postActions.fetchPosts(data.posts))
+          }
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -74,21 +89,21 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    getLimitPosts: build.query({
-      query: (postData: any) => ({
+    getLimitPosts: build.query<IPostLimitResponse | ApiError, IPostLimitRequest>({
+      query: (postData) => ({
         url: '/post/getLimitPosts/',
         params: {
-          currentPage: postData.pageNumber,
+          currentPage: postData.currentPage,
           limit: postData.limit
         }
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('data', data)
-          //dispatch(postActions.clearPost())
-          dispatch(postActions.setHasMore(data.nextPage))
-          dispatch(postActions.fetchPost(data.post))
+          if (!isApiError(data)) {
+            dispatch(postActions.setHasMore(data.nextPage))
+            dispatch(postActions.fetchPosts(data.posts))
+          }
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -97,17 +112,19 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    getAllPosts: build.query({
+    getAllPosts: build.query<{ posts: IPost[] } | ApiError, void>({
       query: () => ({
         url: '/post/getAllPosts/'
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('data', data)
-          console.log('5')
-          dispatch(postActions.clearPost())
-          dispatch(postActions.fetchPost(data.post))
+
+          if (!isApiError(data)) {
+            dispatch(postActions.clearPosts())
+            dispatch(postActions.fetchPosts(data.posts))
+          }
+
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -116,15 +133,14 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    getPost: build.query({
-      query: (id: string) => ({
+    getPost: build.query<IPost | ApiError, string>({
+      query: (id) => ({
         url: `/post/get/${id}`
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('data', data)
-          dispatch(postActions.getPost(data))
+          dispatch(postActions.setPost(data as IPost))
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -133,15 +149,15 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    setReaction: build.mutation({
-      query: (reactionData: { isLiked: boolean | null, postId: string }) => ({
+    setReaction: build.mutation<boolean | ApiError, IReactionRequest>({
+      query: (reactionData) => ({
         url: '/post/reacting',
         method: 'PATCH',
         params: reactionData
       })
     }),
-    addComment: build.mutation({
-      query: (commentData: { postId: string, message: string}) => ({
+    addComment: build.mutation<IComment | ApiError, ICommentRequest>({
+      query: (commentData) => ({
         url: '/post/addComment',
         method: 'POST',
         body: commentData
@@ -149,7 +165,11 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(postActions.addComment(data))
+          
+          if (!isApiError(data)) {
+            dispatch(postActions.addComment(data))
+          }
+          
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -158,8 +178,8 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    editComment: build.mutation({
-      query: (commentData: { commentId: string, newMessage: string}) => ({
+    editComment: build.mutation<IComment | ApiError, ICommentRequest>({
+      query: (commentData) => ({
         url: '/post/editComment',
         method: 'PUT',
         body: commentData
@@ -167,7 +187,10 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(postActions.editComment(data))
+
+          if (!isApiError(data)) {
+            dispatch(postActions.editComment(data))
+          }
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -176,8 +199,8 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    deleteComment: build.mutation({
-      query: (commentData: { commentId: string }) => ({
+    deleteComment: build.mutation<IComment | ApiError, { commentId: string }>({
+      query: (commentData) => ({
         url: '/post/deleteComment',
         method: 'DELETE',
         body: commentData
@@ -185,7 +208,11 @@ const extendedApi = mainApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(postActions.deleteComment(data))
+
+          if (!isApiError(data)) {
+            dispatch(postActions.deleteComment(data))
+          }
+        
         } catch (e: any) {
           dispatch(alertActions.setError({
             message: e.error.data.message,
@@ -194,8 +221,8 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    searchPosts: build.query({
-      query: (substring: string) => ({
+    searchPosts: build.query<IPost[] | ApiError, string>({
+      query: (substring) => ({
         url: `/post/search/${substring}`
       })
     })
