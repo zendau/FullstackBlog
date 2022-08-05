@@ -6,6 +6,7 @@ import { useAction } from '@/hooks/useAction';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useSearchPostsQuery } from '@/redux/reducers/post/post.api';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { isApiError } from '@/utils/isApiError';
 
 interface IFilter {
   filterType: string
@@ -25,13 +26,13 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
   })
 
   const { limit, isSearched } = useTypedSelector((state) => state.postState)
-  const { clearPost, fetchPosts, setLimit, setPageNumber, setSearched } = useAction()
+  const { clearPosts, fetchPosts, setLimit, setPageNumber, setSearched } = useAction()
 
   useEffect(() => {
 
-    if (data !== undefined) {
+    if (data !== undefined && !isApiError(data)) {
       console.log('1')
-      clearPost()
+      clearPosts()
       setSearched(true)
       fetchPosts(data)
     }
@@ -47,7 +48,7 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
       console.log('test111')
       setSearched(false)
       console.log('2')
-      clearPost()
+      clearPosts()
       setPageNumber(1)
     }
 

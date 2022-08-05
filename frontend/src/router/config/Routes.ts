@@ -1,16 +1,14 @@
-import Account from "../pages/account/account"
-import Login from "../pages/auth/login"
-import CreatePost from "../pages/post/createPost/createPost";
-import AllPosts from "../pages/post/allPosts";
-import ReadPost from "../pages/post/readPost/readPost";
-import Post from "../pages/post/post";
-import { ITypeRoutes } from "../interfaces/router";
-import User from "../pages/user/user";
-import EditPost from "../pages/post/editPost";
-import Register from "../pages/auth/register";
-import Users from "../pages/users/users";
-import ResetPassword from "@/pages/auth/resetPassword";
-
+import { ITypeRoutes } from "@/interfaces/IRouter";
+import Account from "@/pages/account/account"
+import Login from "@/pages/auth/login"
+import Register from "@/pages/auth/register"
+import ResetPassword from "@/pages/auth/resetPassword"
+import CreatePost from "@/pages/post/createPost/createPost";
+import AllPosts from "@/pages/post/allPosts";
+import ReadPost from "@/pages/post/readPost/readPost";
+import EditPost from '@/pages/post/editPost';
+import Users from "@/pages/users/users"
+import User from "@/pages/user/user"
 
 export const postRoutes: ITypeRoutes[] = [
   {
@@ -33,7 +31,7 @@ export const privateRoutes: ITypeRoutes[] = [
     path: "/account", component: Account, exact: true,
   },
   {
-    path: "/post", component: Post, exact: false
+    path: "/post", children: postRoutes, exact: false
   },
   {
     path: "/user/:userId", component: User, exact: true

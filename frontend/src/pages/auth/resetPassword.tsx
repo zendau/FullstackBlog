@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import "./auth.scss"
 import { useHistory } from "react-router-dom";
-import IFormikElements from "@/interfaces/formikElements";
+import IFormikElements from "@/interfaces/IFormikAuth";
 import { useResetPasswordMutation, useSetConfirmCodeMutation } from "@/redux/reducers/user/user.api";
 import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm";
 import ResetPasswordForm from "@/components/Auth/resetPasswordForm/resetPasswordForm";

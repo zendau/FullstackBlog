@@ -1,5 +1,5 @@
 export default interface IFormikElements {
-  email?: string
+  email: string
   password?: string
   confirmPassword?: string
 }

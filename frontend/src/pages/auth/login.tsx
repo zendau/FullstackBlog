@@ -3,7 +3,7 @@ import AlertMessage from "@/components/UI/Alert/Alert";
 import "./auth.scss"
 import LoginForm from "@/components/Auth/loginForm/loginForm";
 import { useHistory } from "react-router-dom";
-import IFormikElements from "@/interfaces/formikElements";
+import IFormikElements from "@/interfaces/IFormikAuth";
 import { useLoginUserMutation } from "@/redux/reducers/user/user.api";
 
 
@@ -22,7 +22,7 @@ const Login: React.FC = () => {
   const formikSubmit = (values: IFormikElements) => {
     userLogin({
       email: values.email,
-      password: values.password
+      password: values.password as string
     })
   }
 

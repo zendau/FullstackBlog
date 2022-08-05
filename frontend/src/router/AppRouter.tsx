@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
-import { privateRoutes, publicRoutes } from "./Routes";
+import { privateRoutes, publicRoutes } from "./config/Routes";
 
 import { useTypedSelector } from '@/hooks/useTypedSelector'
-import { privatePaths, publicPaths } from "./NavPaths"
+import { privatePaths, publicPaths } from "./config/NavPaths"
 import RouterSwitch from "./RouterSwitch";
 import { useAction } from '@/hooks/useAction';
 
@@ -25,9 +25,9 @@ const AppRouter: React.FC = () => {
 
       {isAuth
         ?
-        <RouterSwitch privateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
+        <RouterSwitch isPrivateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
         :
-        <RouterSwitch privateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} />
+        <RouterSwitch isPrivateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} />
       }
 
     </Router>

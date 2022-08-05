@@ -95,13 +95,13 @@ const extendedApi = mainApi.injectEndpoints({
         }
       }
     }),
-    resetPassword: build.mutation<{ message: string } | ApiError, void>({
+    resetPassword: build.mutation<{ message: string } | ApiError, { confirmCode: string, email: string }>({
       query: (data) => ({
         url: '/user/resetPassword',
         method: 'POST',
         body: data
       }),
-      async onQueryStarted(args: void, { dispatch, queryFulfilled }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
 

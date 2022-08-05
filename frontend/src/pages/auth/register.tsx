@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import RegisterForm from "@/components/Auth/registerForm/registerForm";
 import "./auth.scss"
-import IFormikElements from "@/interfaces/formikElements";
+import IFormikElements from "@/interfaces/IFormikAuth";
 import { useHistory } from "react-router-dom";
 import { useRegisterUserMutation } from "@/redux/reducers/user/user.api";
 
@@ -21,7 +21,7 @@ const Register: React.FC = () => {
   const formikSubmit = (values: IFormikElements) => {
     userRegister({
       email: values.email,
-      password: values.password
+      password: values.password as string
     })
   }
 

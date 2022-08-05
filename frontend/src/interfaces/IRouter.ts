@@ -8,7 +8,7 @@ export interface INavPaths {
 
 export interface ITypeRoutes {
   path: string
-  component: React.FC
+  component?: React.FC
   exact: boolean
-  child?: ITypeRoutes[]
+  children?: ITypeRoutes[]
 }
