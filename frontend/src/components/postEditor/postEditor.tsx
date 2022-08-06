@@ -10,7 +10,6 @@ import AlertMessage from "@/components/UI/Alert/Alert";
 import draftToHtml from 'draftjs-to-html';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { ApiError } from "@/interfaces/api/ApiError";
-import { IPost } from "@/interfaces/IPost";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./postEditor.scss"
@@ -26,7 +25,6 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
   const fileImg = useRef<HTMLImageElement>(null)
   const [file, setFile] = useState<any>()
 
-  const { id } = useTypedSelector(state => state.userState)
   const { post } = useTypedSelector(state => state.postState)
 
   const [savePost, { data, error }] = savePostRequest()

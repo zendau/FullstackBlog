@@ -9,8 +9,6 @@ interface IErrorMessageProps {
 
 const AlertMessage: React.FC<IErrorMessageProps> = memo(({ timeout }) => {
 
-
-
   const { clearError } = useAction()
 
   const { message, type } = useTypedSelector(state => state.alertState)
@@ -27,11 +25,11 @@ const AlertMessage: React.FC<IErrorMessageProps> = memo(({ timeout }) => {
   }, [message])
 
   return (
-    <p dangerouslySetInnerHTML={ { __html: message } } className={`
+    <p dangerouslySetInnerHTML={{ __html: message }} className={`
       alert-message 
       ${message && "alert-message--active"}
       alert-message--${type}
-      ` }></p>
+      `}></p>
   );
 })
 

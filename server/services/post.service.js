@@ -28,7 +28,7 @@ class PostService {
       .populate("file")
       .execPopulate()
 
-    const postDTO = this.createPostDTO(postPopulate)
+    const postDTO = this.createPostDTO(postPopulate, author)
     return postDTO
   }
 
@@ -87,9 +87,9 @@ class PostService {
     return { userRating, comments, reactions }
   }
 
-  async getOne(postId) {
+  async getOne(postId, userId) {
     const post = await this.postExist(postId)
-    const postDTO = this.createPostDTO(post)
+    const postDTO = this.createPostDTO(post, userId)
     return postDTO
   }
 
@@ -158,7 +158,7 @@ class PostService {
   }
 
 
-  async createPostDTO(postModel) {
+  async createPostDTO(postModel, userId) {
     const postDTO = new PostDTO(postModel)
     const userDTO = new UserDTO(postModel.author)
     const fileDTO = new FileDTO(postModel.file)
@@ -166,7 +166,7 @@ class PostService {
     postDTO.setImage(fileDTO)
 
 
-    const reactionData = await ReactionService.getReactionsCount(postDTO.id, postDTO.author.id)
+    const reactionData = await ReactionService.getReactionsCount(postDTO.id, userId)
     postDTO.setReaction(reactionData)
 
     const commentsData = await CommentService.getList(postDTO.id)

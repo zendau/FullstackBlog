@@ -46,7 +46,7 @@ const Account: React.FC = () => {
       <div className="account__wrapper">
         <h1 className="account__main-title">{state.email}'s account</h1>
         <h2 className="account__status">Your account is {state.isActivated ? "activated" : "not activated"}</h2>
-        <Link className="btn account__get-posts" to={`/user/${state.id}`}>Get only my posts</Link>
+        <Link className="btn account__get-posts" to={`/user/${state.id}/posts`}>Get only my posts</Link>
         <div className="account__change-data-container">
           <h2 className="account__title">Change user email and password</h2>
           <AlertMessage timeout={5000} />

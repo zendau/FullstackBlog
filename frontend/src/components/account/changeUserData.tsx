@@ -13,14 +13,6 @@ const ChangeUserData = ({ onSubmit }: Props) => {
 
   const { setError } = useAction()
 
-  // const schema = yup.lazy((value) =>
-  //   yup.object().shape({
-  //     email: value.email?.length > 0 && yup.string().email(),
-  //     password: value.password?.length > 0 && ,
-  //     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  //   })
-  // );
-
   const schema = yup.object({
     email: yup.string().email(),
     password: yup.string().min(6),
@@ -40,7 +32,6 @@ const ChangeUserData = ({ onSubmit }: Props) => {
   useEffect(() => {
 
     if (formikForm.isSubmitting && formikForm.errors) {
-      console.log(formikForm)
       const errors: string = Object.values(formikForm.errors).map((value) => `<span>${value}</span>`).join('')
 
       setError({

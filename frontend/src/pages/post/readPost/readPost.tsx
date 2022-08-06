@@ -7,16 +7,11 @@ import { useLazyGetPostQuery } from '@/redux/reducers/post/post.api';
 import Reaction from '@/components/post/reaction/reaction'
 import Comments from '@/components/post/comment/comments'
 import PostToolbar from '@/components/post/toolbar/toolbar'
+import { dateFormat } from "@/utils/dateFormat";
 
 interface IParams {
   id: string
 }
-
-function convertDate(date: string): string {
-  const convertedDate = new Date(date)
-  return new Intl.DateTimeFormat("en-US").format(convertedDate)
-}
-
 
 const ReadPost: React.FC = () => {
 
@@ -44,7 +39,7 @@ const ReadPost: React.FC = () => {
                 <Reaction />
                 <div className="read-post__post-data">
                   <p className="read-post__post-author">{post.author.email}</p>
-                  <small className="read-post__post-date">{convertDate(post.date)}</small>
+                  <small className="read-post__post-date">{dateFormat(post.date)}</small>
                 </div>
                 <PostToolbar postIdAuthor={post.author.id} postId={post.id} userId={userId} />
               </div>

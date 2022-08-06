@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-
 import "./filter.scss"
+import React, { useEffect, useState } from 'react';
 
 import { useAction } from '@/hooks/useAction';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -31,23 +30,16 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
   useEffect(() => {
 
     if (data !== undefined && !isApiError(data)) {
-      console.log('1')
       clearPosts()
       setSearched(true)
       fetchPosts(data)
     }
-
-    console.log('data', data)
-
   }, [data])
 
   useEffect(() => {
-    console.log('debounce value', value, value.length, isSearched)
 
     if (isSearched && value.length === 0) {
-      console.log('test111')
       setSearched(false)
-      console.log('2')
       clearPosts()
       setPageNumber(1)
     }
@@ -56,17 +48,11 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
 
 
   function onChangeValue(event: any) {
-    console.log("change type")
     setFilterType(event.target.value)
   }
 
   function onSelectValue(event: any) {
     setLimit(parseInt(event.target.value))
-  }
-
-  function test(e: any) {
-
-    console.log('value', value)
   }
 
   return (

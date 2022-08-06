@@ -46,6 +46,7 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
+    console.log('||||', postId, userId)
     const reactions = await reactionModel.aggregate([
       {
         "$match": {
@@ -97,7 +98,7 @@ class ReactionService {
         }
       }
     ])
-
+    console.log('reactions', reactions)
     if (reactions.length === 0) {
       return new ReactionDTO({
         like: 0,
@@ -180,6 +181,7 @@ class ReactionService {
         }
       }
     ])
+    console.log('!!!!!!',reactions)
     return reactions
   }
 

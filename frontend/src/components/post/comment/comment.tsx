@@ -1,11 +1,11 @@
+import React, { useMemo, useRef, useState } from 'react'
 import { useAction } from '@/hooks/useAction'
 import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { IComment } from '@/interfaces/IComment'
 import { useDeleteCommentMutation, useEditCommentMutation } from '@/redux/reducers/post/post.api'
-import React, { useMemo, useRef, useState } from 'react'
 
 
-const Comment = ({id, edited, message,user}: IComment) => {
+const Comment = ({ id, edited, message, user }: IComment) => {
 
   const { setError } = useAction()
   const [isEdit, setIsEdit] = useState(false)
@@ -37,10 +37,10 @@ const Comment = ({id, edited, message,user}: IComment) => {
 
     editComment({
       commentId: id,
-      newMessage: message as string,
+      message: message as string,
     })
 
-  } 
+  }
 
   function switchEditStatus() {
 
@@ -61,19 +61,16 @@ const Comment = ({id, edited, message,user}: IComment) => {
   const isAuthor = useMemo(() => userId === user.id, [])
 
   return (
-    <li style={{'border': '1px solid black'}}>
+    <li style={{ 'border': '1px solid black' }}>
+      {edited ? <small>edited</small> : ''}
       {
         isAuthor ?
-        <div>
-        {edited ? <small>edited</small> : ''}
-        <div>
-          <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
-          <button onClick={onDeleteComment}>delete</button>
-        </div>
-      </div>
-      : ""
+          <div>
+            <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
+            <button onClick={onDeleteComment}>delete</button>
+          </div>
+          : ""
       }
-
       <h3>{user.email}</h3>
       <p className='new-line' ref={messageRef} contentEditable={isEdit} suppressContentEditableWarning={true}>{message}</p>
     </li>

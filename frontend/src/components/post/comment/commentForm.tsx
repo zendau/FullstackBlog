@@ -1,10 +1,7 @@
-import TextInput from '@/components/UI/input/textInput'
 import { useAction } from '@/hooks/useAction'
 import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { useAddCommentMutation } from '@/redux/reducers/post/post.api'
-import { useFormik } from 'formik'
-import React, { useEffect, useRef } from 'react'
-import * as yup from 'yup'
+import React, { useRef } from 'react'
 
 
 const CommentForm = () => {
@@ -13,7 +10,6 @@ const CommentForm = () => {
   const messageRef = useRef<HTMLDivElement>(null)
 
   const { post } = useTypedSelector(state => state.postState)
-
 
   const [addComment] = useAddCommentMutation()
 
@@ -37,7 +33,6 @@ const CommentForm = () => {
       })
       return
     }
-
 
     addComment({
       postId: post!.id,
