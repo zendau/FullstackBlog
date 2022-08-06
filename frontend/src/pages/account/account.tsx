@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useTypedSelector } from "../../hooks/useTypedSelector"
-import { useAction } from "../../hooks/useAction"
+import React, { useState } from 'react'
 import { Link } from "react-router-dom"
-import ChangeUserData from "../../components/account/changeUserData";
+import { useTypedSelector } from "@/hooks/useTypedSelector"
+import ChangeUserData from "@/components/account/changeUserData";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm"
-import "./account.scss"
-import { IUser } from '@/interfaces/IUser';
-import IFormikElements from '@/interfaces/formikElements';
+import IFormikElements from '@/interfaces/IFormikAuth';
 import { useEditUserDataMutation, useSetConfirmCodeMutation } from '@/redux/reducers/user/user.api';
+import "./account.scss"
 
 const Account: React.FC = () => {
 
@@ -21,8 +19,7 @@ const Account: React.FC = () => {
 
   const [editUserData, setEditUserData] = useState<any>(null)
 
-   // TODO: добавить тип
-   const submitEditData = (values: any, { setSubmitting }: any) => {
+   const submitEditData = (values: { confirmCode: string }) => {
   
     editUser({
       ...(editUserData.email && { newEmail: editUserData.email }),
@@ -32,13 +29,11 @@ const Account: React.FC = () => {
     })
   }
 
-  // TODO: добавить тип
-  const submitConfirmCode = (values: IFormikElements, { setSubmitting }: any) => {
+  const submitConfirmCode = (values: IFormikElements) => {
     
     confirmCode({
       email: state.email
     })
-    debugger
     setEditUserData({
       email: values.email,
       password: values.password
@@ -52,9 +47,7 @@ const Account: React.FC = () => {
         <h1 className="account__main-title">{state.email}'s account</h1>
         <h2 className="account__status">Your account is {state.isActivated ? "activated" : "not activated"}</h2>
         <Link className="btn account__get-posts" to={`/user/${state.id}`}>Get only my posts</Link>
-
         <div className="account__change-data-container">
-
           <h2 className="account__title">Change user email and password</h2>
           <AlertMessage timeout={5000} />
           {

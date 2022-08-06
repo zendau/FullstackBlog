@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AlertMessage from "@/components/UI/Alert/Alert";
-import "./auth.scss"
-import { useHistory } from "react-router-dom";
 import IFormikElements from "@/interfaces/IFormikAuth";
 import { useResetPasswordMutation, useSetConfirmCodeMutation } from "@/redux/reducers/user/user.api";
 import ConfirmCodeForm from "@/components/confirmCodeForm/confirmCodeForm";
 import ResetPasswordForm from "@/components/Auth/resetPasswordForm/resetPasswordForm";
+import "./auth.scss"
 
 
 const ResetPassword: React.FC = () => {
@@ -16,16 +15,14 @@ const ResetPassword: React.FC = () => {
   const [confirmCode] = useSetConfirmCodeMutation()
   const [userEmail, setUserEmail] = useState<any>('')
 
-  // TODO: добавить тип
-  const submitResetPassword = (values: any, { setSubmitting }: any) => {
+  const submitResetPassword = (values: { email: string, confirmCode: string }) => {
     resetPassword({
       email: userEmail,
       confirmCode: values.confirmCode
     })
   }
 
-  // TODO: добавить тип
-  const submitConfirmCode = (values: IFormikElements, { setSubmitting }: any) => {
+  const submitConfirmCode = (values: IFormikElements) => {
     confirmCode({
       email: values.email
     })

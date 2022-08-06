@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import AlertMessage from "@/components/UI/Alert/Alert";
-import "./auth.scss"
-import LoginForm from "@/components/Auth/loginForm/loginForm";
 import { useHistory } from "react-router-dom";
+import AlertMessage from "@/components/UI/Alert/Alert";
+import LoginForm from "@/components/Auth/loginForm/loginForm";
 import IFormikElements from "@/interfaces/IFormikAuth";
 import { useLoginUserMutation } from "@/redux/reducers/user/user.api";
+import "./auth.scss"
 
 
 

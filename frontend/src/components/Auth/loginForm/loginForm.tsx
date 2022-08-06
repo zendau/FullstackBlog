@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import TextInput from '@/components/UI/input/textInput';
 
 import * as yup from 'yup'
-import IFormikElements from '@/interfaces/formikElements';
+import IFormikElements from '@/interfaces/IFormikAuth';
 import { useAction } from "@/hooks/useAction";
 import { NavLink } from 'react-router-dom';
 

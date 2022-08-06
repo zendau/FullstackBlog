@@ -3,8 +3,6 @@ import { Redirect, Switch, Route } from "react-router-dom"
 import Navbar from "@/components/navbar/Navbar";
 import { INavPaths, ITypeRoutes } from "@/interfaces/IRouter";
 import { RenderRoute } from './RenderRoute';
-import NotFound from "@/components/404";
-
 
 interface IRouterSwitchProps {
   typeRoutes: ITypeRoutes[]
@@ -30,8 +28,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = ({ redirect, typeRoutes, path
               component={route.component}
             />)
         }
-        <Redirect exact from="/" to={redirect} />
-        <Route path="*" component={NotFound} />
+        <Redirect from="*" to={redirect} />
       </Switch>
     </>
 

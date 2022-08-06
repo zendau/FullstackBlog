@@ -1,3 +1,4 @@
+import { IUserData } from './../../../interfaces/IUserData';
 import { IUpdateUserRequest } from './../../../interfaces/api/user/IUpdateUserRequest';
 import { isApiError } from '@/utils/isApiError';
 import { IUserResponse } from '@/interfaces/api/user/IUserResponse';
@@ -154,7 +155,7 @@ const extendedApi = mainApi.injectEndpoints({
         url: '/user/all'
       })
     }),
-    getUser: build.query<IUser | ApiError, string>({
+    getUser: build.query<IUserData | ApiError, string>({
       query: (userId) => ({
         url: `/user/data/${userId}`
       })

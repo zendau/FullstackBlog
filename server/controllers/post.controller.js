@@ -130,13 +130,13 @@ class PostController {
     try {
       const schema = Joi.object({
         currentPage: Joi.number().required(),
-        limit: Joi.number().required()
+        limit: Joi.number().required(),
+        userId: Joi.objectId().required()
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const userId = req.user.payload.id
-      const { currentPage, limit } = req.query
+      const { currentPage, limit, userId } = req.query
       const data = await PostService.getLimitUserPosts(currentPage, limit, userId)
       
       res.json(data)

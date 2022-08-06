@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useEditPostMutation, useLazyGetPostQuery } from "@/redux/reducers/post/post.api";
 import PostEditor from "@/components/postEditor/postEditor";
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import htmlToDraft from 'html-to-draftjs';
-import { useParams } from 'react-router-dom';
 
 interface IParams {
   id: string

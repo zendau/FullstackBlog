@@ -1,36 +1,42 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAction } from "./useAction";
 import { useTypedSelector } from "./useTypedSelector";
-import { useLazyGetLimitPostsQuery } from "@/redux/reducers/post/post.api";
+import { useLazyGetLimitPostsQuery, useLazyGetLimitUserPostsQuery } from "@/redux/reducers/post/post.api";
 
-export const usefetchPosts = () => {
+export const usefetchPosts = (userId?: string) => {
 
-  const [getLimitPosts, { isLoading }] = useLazyGetLimitPostsQuery()
+  const [getLimitPosts] = useLazyGetLimitPostsQuery()
+  const [getLimitUserPosts] = useLazyGetLimitUserPostsQuery()
   const { hasMore, limit, pageNumber, isSearched } = useTypedSelector(state => state.postState)
   const { setPageNumber, clearPosts } = useAction()
 
+  const [isCleared, setIsCleared] = useState(false)
 
-  console.log('enter fetch', hasMore, isSearched, pageNumber, limit)
   useEffect(() => {
-
+    setIsCleared(true)
     return () => {
       clearPosts()
       setPageNumber(1)
+      
     }
 
   }, [limit])
 
   useEffect(() => {
-    console.log('trigger', hasMore, isSearched, pageNumber, limit)
-    if (hasMore && !isSearched) {
-      console.log('get query')
-      getLimitPosts({
-        currentPage: pageNumber, 
-        limit
-      })
+    if (hasMore && !isSearched && isCleared) {
+      if (userId) {
+        getLimitUserPosts({
+          userId,
+          currentPage: pageNumber,
+          limit
+        })
+      } else {
+        getLimitPosts({
+          currentPage: pageNumber,
+          limit
+        })
+      }
     }
-
-
-  }, [pageNumber, limit, hasMore, isSearched])
+  }, [pageNumber, limit, hasMore, isSearched, isCleared])
 
 }

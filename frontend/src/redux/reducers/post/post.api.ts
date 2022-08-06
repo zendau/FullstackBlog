@@ -64,7 +64,7 @@ const extendedApi = mainApi.injectEndpoints({
         }
       },
     }),
-    getUserPosts: build.query<IPostLimitResponse | ApiError, IPostLimitRequest>({
+    getLimitUserPosts: build.query<IPostLimitResponse | ApiError, IPostLimitRequest>({
       query: (postData) => ({
         url: '/post/getUserPosts/',
         params: {
@@ -234,7 +234,7 @@ export const {
   useCreatePostMutation,
   useEditPostMutation,
   useDeletePostMutation,
-  useLazyGetUserPostsQuery,
+  useLazyGetLimitUserPostsQuery,
   useLazyGetLimitPostsQuery,
   useGetAllPostsQuery,
   useLazyGetPostQuery,

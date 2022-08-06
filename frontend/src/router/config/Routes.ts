@@ -1,14 +1,16 @@
 import { ITypeRoutes } from "@/interfaces/IRouter";
-import Account from "@/pages/account/account"
-import Login from "@/pages/auth/login"
-import Register from "@/pages/auth/register"
-import ResetPassword from "@/pages/auth/resetPassword"
-import CreatePost from "@/pages/post/createPost/createPost";
-import AllPosts from "@/pages/post/allPosts";
-import ReadPost from "@/pages/post/readPost/readPost";
-import EditPost from '@/pages/post/editPost';
-import Users from "@/pages/users/users"
-import User from "@/pages/user/user"
+import { lazy } from "react";
+const Account = lazy(() => import("@/pages/account/account"))
+const Login = lazy(() => import("@/pages/auth/login"))
+const Register = lazy(() => import("@/pages/auth/register"))
+const ResetPassword = lazy(() => import("@/pages/auth/resetPassword"))
+const CreatePost = lazy(() => import("@/pages/post/createPost/createPost"))
+const AllPosts = lazy(() => import("@/pages/post/allPosts/allPosts"))
+const ReadPost = lazy(() => import("@/pages/post/readPost/readPost"))
+const EditPost = lazy(() => import('@/pages/post/editPost/editPost'))
+const Users = lazy(() => import("@/pages/users/users"))
+const User = lazy(() => import("@/pages/user/user"))
+const UserPosts = lazy(() => import('@/pages/post/userPosts/userPosts'))
 
 export const postRoutes: ITypeRoutes[] = [
   {
@@ -35,6 +37,9 @@ export const privateRoutes: ITypeRoutes[] = [
   },
   {
     path: "/user/:userId", component: User, exact: true
+  },
+  {
+    path: "/user/:userId/posts", component: UserPosts, exact: true
   },
   {
     path: "/users", component: Users, exact: true

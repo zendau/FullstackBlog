@@ -24,7 +24,9 @@ export const postSlice = createSlice({
       state.post = action.payload
     },
     clearPosts: (state: IPostState) => {
+      console.log('start clear posts')
       state.posts = []
+      console.log('end clear posts', state.posts)
     },
     setHasMore: (state: IPostState, action: PayloadAction<boolean>) => {
       state.hasMore = action.payload

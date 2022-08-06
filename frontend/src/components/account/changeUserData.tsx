@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAction } from "@/hooks/useAction";
-import IFormikElements from '@/interfaces/formikElements';
+import IFormikElements from '@/interfaces/IFormikAuth';
 import * as yup from 'yup'
 import { useFormik } from 'formik';
 import TextInput from '@/components/UI/input/textInput';

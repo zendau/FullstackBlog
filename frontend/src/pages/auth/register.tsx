@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import RegisterForm from "@/components/Auth/registerForm/registerForm";
-import "./auth.scss"
 import IFormikElements from "@/interfaces/IFormikAuth";
-import { useHistory } from "react-router-dom";
 import { useRegisterUserMutation } from "@/redux/reducers/user/user.api";
+import "./auth.scss"
 
 
 const Register: React.FC = () => {
