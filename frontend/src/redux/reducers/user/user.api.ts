@@ -30,7 +30,7 @@ const extendedApi = mainApi.injectEndpoints({
           }
 
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -54,7 +54,7 @@ const extendedApi = mainApi.injectEndpoints({
           }
 
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -72,7 +72,7 @@ const extendedApi = mainApi.injectEndpoints({
           localStorage.removeItem("token")
           dispatch(userActions.logout())
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -89,7 +89,48 @@ const extendedApi = mainApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
+    }),
+    resendConfirmCode: build.query<{ message: string } | ApiError, void>({
+      query: () => ({
+        url: '/user/getActivateCode',
+        method: 'GET'
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (!isApiError(data)) {
+            dispatch(alertActions.setAlert({
+              message: data.message,
+              type: 'success'
+            }));
+          }
+        } catch (e: any) {
+          dispatch(alertActions.setAlert({
+            message: e.error.data.message,
+            type: 'error'
+          }));
+        }
+      }
+    }),
+    activateAccount: build.mutation<boolean | ApiError, { confirmCode: string }>({
+      query: (data) => ({
+        url: '/user/activate',
+        method: 'POST',
+        body: data
+      }),
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+           await queryFulfilled;
+        } catch (e: any) {
+          console.log('eee', e)
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -107,14 +148,14 @@ const extendedApi = mainApi.injectEndpoints({
           const { data } = await queryFulfilled;
 
           if (!isApiError(data)) {
-            dispatch(alertActions.setError({
+            dispatch(alertActions.setAlert({
               message: data.message,
               type: 'success'
             }));
           }
 
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -136,14 +177,14 @@ const extendedApi = mainApi.injectEndpoints({
             localStorage.setItem("token", data.accessToken)
 
             dispatch(userActions.setUser(tokenDecode.payload));
-            dispatch(alertActions.setError({
+            dispatch(alertActions.setAlert({
               message: 'Data updated successfully',
               type: 'success'
             }))
           }
          
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }));
@@ -172,5 +213,7 @@ export const {
   useSetConfirmCodeMutation,
   useEditUserDataMutation,
   useGetUsersQuery,
-  useGetUserQuery
+  useGetUserQuery,
+  useLazyResendConfirmCodeQuery,
+  useActivateAccountMutation
 } = extendedApi

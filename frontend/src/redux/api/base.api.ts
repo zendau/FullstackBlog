@@ -27,7 +27,6 @@ const baseQueryWithReauth: BaseQueryFn<
       localStorage.setItem('token', accessToken)
       result = await baseQuery(args, api, extraOptions)
     } else {
-      console.log('user is not login')
       api.dispatch(userActions.logout())
     }
   }

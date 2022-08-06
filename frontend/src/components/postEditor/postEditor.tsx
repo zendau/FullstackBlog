@@ -36,7 +36,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
 
     const postBody = draftToHtml(convertToRaw(body.getCurrentContent()))
     if (postBody.length <= 0) {
-      setError({
+      setAlert({
         message: 'post body is required',
         type: 'error'
       })
@@ -53,7 +53,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
     }
 
     if (file === undefined && isCreate) {
-      setError({
+      setAlert({
         message: 'File is required',
         type: 'error'
       })
@@ -78,7 +78,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
   }
 
 
-  const { setError } = useAction()
+  const { setAlert } = useAction()
 
   const schema = yup.object({
     title: yup.string().required().min(6),
@@ -98,7 +98,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
 
       const errors: string = Object.values(formikForm.errors).map((value) => `<span>${value}</span>`).join('')
 
-      setError({
+      setAlert({
         message: errors,
         type: 'error'
       })
@@ -118,7 +118,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
 
   useEffect(() => {
     if (error !== undefined) {
-      setError({
+      setAlert({
         message: (error as ApiError).data.message,
         type: 'error'
       })

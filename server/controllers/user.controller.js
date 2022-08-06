@@ -130,13 +130,7 @@ class UserController {
 
   async repeatConfirmCode(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
-      const userId = req.params.id
+      const userId = req.user.payload.id
       const status = await UserService.repeatConfirmCode(userId)
       return res.json(status)
 

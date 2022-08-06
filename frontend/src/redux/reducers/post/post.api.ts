@@ -24,7 +24,7 @@ const extendedApi = mainApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -41,7 +41,7 @@ const extendedApi = mainApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -57,7 +57,7 @@ const extendedApi = mainApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -82,7 +82,7 @@ const extendedApi = mainApi.injectEndpoints({
             dispatch(postActions.fetchPosts(data.posts))
           }
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -105,7 +105,7 @@ const extendedApi = mainApi.injectEndpoints({
             dispatch(postActions.fetchPosts(data.posts))
           }
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -126,7 +126,7 @@ const extendedApi = mainApi.injectEndpoints({
           }
 
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -142,7 +142,7 @@ const extendedApi = mainApi.injectEndpoints({
           const { data } = await queryFulfilled;
           dispatch(postActions.setPost(data as IPost))
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -171,7 +171,7 @@ const extendedApi = mainApi.injectEndpoints({
           }
           
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -192,7 +192,7 @@ const extendedApi = mainApi.injectEndpoints({
             dispatch(postActions.editComment(data))
           }
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))
@@ -214,7 +214,7 @@ const extendedApi = mainApi.injectEndpoints({
           }
         
         } catch (e: any) {
-          dispatch(alertActions.setError({
+          dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
           }))

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./config/Routes";
 
@@ -12,22 +12,22 @@ import { useAction } from '@/hooks/useAction';
 const AppRouter: React.FC = () => {
 
   const { isAuth } = useTypedSelector(state => state.userState)
-
-
+  
+  
+  const path = useMemo(() => window.location.pathname, [])
   const { checkAuth } = useAction()
   useEffect(() => {
     checkAuth()
   }, [])
-
 
   return (
     <Router>
 
       {isAuth
         ?
-        <RouterSwitch isPrivateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} />
+        <RouterSwitch isPrivateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} path={path} />
         :
-        <RouterSwitch isPrivateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} />
+        <RouterSwitch isPrivateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} path={path} />
       }
 
     </Router>

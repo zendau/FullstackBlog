@@ -268,7 +268,7 @@ router.post('/activate', authMiddleware, UserController.activateAccount)
  *         description: Unexpected error
  */
 
-router.get('/getActivateCode/:id', authMiddleware, UserController.repeatConfirmCode)
+router.get('/getActivateCode', authMiddleware, UserController.repeatConfirmCode)
 
 /**
  * @swagger

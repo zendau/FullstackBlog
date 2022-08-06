@@ -43,7 +43,7 @@ class ConfirmCodeService {
 
   async repeatCode(id, email) {
     const codeData = await confirmCodeModel.findOne({ user: id })
-
+    
     if (!codeData) {
       throw ApiError.HttpException('Confirm code was not found')
     }

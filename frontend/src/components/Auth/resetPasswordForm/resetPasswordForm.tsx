@@ -12,7 +12,7 @@ interface Props {
 
 const resetPasswordForm = ({ onSubmit }: Props) => {
 
-  const { setError } = useAction()
+  const { setAlert } = useAction()
 
   const schema = yup.object({
     email: yup.string().required().email(),
@@ -32,7 +32,7 @@ const resetPasswordForm = ({ onSubmit }: Props) => {
 
       const errors: string = Object.values(formikForm.errors).map((value) => `<span>${value}</span>`).join('')
 
-      setError({
+      setAlert({
         message: errors,
         type: 'error'
       })

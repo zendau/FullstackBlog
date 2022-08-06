@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 
 const CommentForm = () => {
 
-  const { setError } = useAction()
+  const { setAlert } = useAction()
   const messageRef = useRef<HTMLDivElement>(null)
 
   const { post } = useTypedSelector(state => state.postState)
@@ -17,7 +17,7 @@ const CommentForm = () => {
     e.preventDefault()
 
     if (messageRef.current === null) {
-      setError({
+      setAlert({
         message: 'Undefined error',
         type: 'error'
       })
@@ -27,7 +27,7 @@ const CommentForm = () => {
     const message = messageRef.current.textContent
 
     if (message!.length <= 0) {
-      setError({
+      setAlert({
         message: 'Comment is required',
         type: 'error'
       })

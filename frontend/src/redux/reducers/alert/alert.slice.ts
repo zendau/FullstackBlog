@@ -11,7 +11,7 @@ export const alertSlice = createSlice({
   name: 'alert',
   initialState,
   reducers: {
-    setError: (state: IAlert, action: PayloadAction<IAlert>) => {
+    setAlert: (state: IAlert, action: PayloadAction<IAlert>) => {
       state.message = action.payload.message
       state.type = action.payload.type
     },

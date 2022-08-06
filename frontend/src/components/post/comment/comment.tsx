@@ -7,7 +7,7 @@ import { useDeleteCommentMutation, useEditCommentMutation } from '@/redux/reduce
 
 const Comment = ({ id, edited, message, user }: IComment) => {
 
-  const { setError } = useAction()
+  const { setAlert } = useAction()
   const [isEdit, setIsEdit] = useState(false)
   const messageRef = useRef<HTMLDivElement>(null)
 
@@ -18,7 +18,7 @@ const Comment = ({ id, edited, message, user }: IComment) => {
 
   function editMessage() {
     if (messageRef.current === null) {
-      setError({
+      setAlert({
         message: 'Undefined error',
         type: 'error'
       })
@@ -28,7 +28,7 @@ const Comment = ({ id, edited, message, user }: IComment) => {
     const message = messageRef.current.textContent
 
     if (message!.length <= 0) {
-      setError({
+      setAlert({
         message: 'Comment is required',
         type: 'error'
       })

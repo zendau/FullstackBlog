@@ -22,6 +22,10 @@ export const userSlice = createSlice({
       state.isAuth = true
     },
     logout: () => initialState,
+    activate: (state: IUserState) => {
+      state.isActivated = true
+      localStorage.removeItem('token')
+    },
     checkAuth: (state: IUserState) => {
       const accessToken = localStorage.getItem('token')
 

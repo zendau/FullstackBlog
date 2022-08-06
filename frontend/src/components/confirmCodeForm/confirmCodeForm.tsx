@@ -35,7 +35,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
       />
 
 
-      <button className="btn auth__btn" type="submit" disabled={formikForm.isSubmitting}>
+      <button className="btn auth__btn" type="submit">
         Confirm
       </button>
     </form>

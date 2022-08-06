@@ -175,7 +175,7 @@ class UserService {
     const userData = await this.getById(id)
 
     await ConfirmCodeService.repeatCode(id, userData.email)
-    return true
+    return { message: `Confirm code was resend is your email` }
   }
 
   async getByEmail(email) {
