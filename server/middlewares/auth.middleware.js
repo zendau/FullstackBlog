@@ -18,10 +18,10 @@ module.exports = function (req, res, next) {
 			return next(ApiError.UnauthorizedError())
 		}
 
-		// const isActivate = userData.payload.isActivated
-		// if (!isActivate) {
-		// 	return next(ApiError.ForbiddenError())
-		// }
+		const isActivate = userData.payload.isActivated
+		if (!isActivate) {
+			return next(ApiError.ForbiddenError())
+		}
 
 		req.user = userData
 		next()

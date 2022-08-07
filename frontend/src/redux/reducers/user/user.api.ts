@@ -129,7 +129,6 @@ const extendedApi = mainApi.injectEndpoints({
         try {
            await queryFulfilled;
         } catch (e: any) {
-          console.log('eee', e)
           dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'

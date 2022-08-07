@@ -21,9 +21,9 @@ const AppRouter: React.FC = () => {
 
   function checkAuthStatus() {
     if (isAuth === true) {
-      return (<RouterSwitch isPrivateType={true} appRoutes={privateRoutes} navbarPaths={privatePaths} />)
+      return (<RouterSwitch isPrivateType={true} appRoutes={privateRoutes} navbarPaths={privatePaths} redirect='/post/all' />)
     } else if (isAuth === false) {
-      return (<RouterSwitch isPrivateType={false} appRoutes={publicRoutes} navbarPaths={publicPaths} />)
+      return (<RouterSwitch isPrivateType={false} appRoutes={publicRoutes} navbarPaths={publicPaths} redirect='/login' />)
     } else {
       return (<InternalServerError/>)
     }

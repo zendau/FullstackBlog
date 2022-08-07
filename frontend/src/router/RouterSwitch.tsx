@@ -1,5 +1,5 @@
 import React, { lazy } from 'react'
-import { Route, Switch } from "react-router-dom"
+import { Redirect, Route, Switch } from "react-router-dom"
 import Navbar from "@/components/navbar/Navbar";
 import { INavPaths, IAppRoutes } from "@/interfaces/IRouter";
 import { RenderRoute } from './RenderRoute';
@@ -11,9 +11,10 @@ interface IRouterSwitchProps {
   appRoutes: IAppRoutes[]
   navbarPaths: INavPaths[]
   isPrivateType: boolean
+  redirect: string
 }
 
-const RouterSwitch: React.FC<IRouterSwitchProps> = ({ appRoutes, navbarPaths, isPrivateType }) => {
+const RouterSwitch: React.FC<IRouterSwitchProps> = ({ appRoutes, navbarPaths, isPrivateType, redirect }) => {
 
 
   const { isActivated, isAuth } = useTypedSelector(state => state.userState)
@@ -36,6 +37,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = ({ appRoutes, navbarPaths, is
               component={route.component}
             />)
         }
+        <Redirect from='/' exact to={redirect} />
         <Route path='*' component={PageNotFound} />
       </Switch>
     </>

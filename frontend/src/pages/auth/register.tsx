@@ -14,7 +14,7 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      push("/account")
+      push("/post/all")
     }
   }, [isSuccess])
 

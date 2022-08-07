@@ -3,16 +3,17 @@ import AlertMessage from '@/components/UI/Alert/Alert'
 import { useAction } from '@/hooks/useAction'
 import { useActivateAccountMutation, useLazyResendConfirmCodeQuery } from '@/redux/reducers/user/user.api'
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import "../auth/auth.scss"
 
 
-type Props = {}
 
-const CofirmAccount = (props: Props) => {
+const CofirmAccount = () => {
 
   const [resendConfirmCode] = useLazyResendConfirmCodeQuery()
-  const [activateAccount, { data, isSuccess }] = useActivateAccountMutation()
+  const [activateAccount, { isSuccess }] = useActivateAccountMutation()
   const { activate } = useAction()
+  const { push} = useHistory()
 
   function onResendCode() {
     resendConfirmCode()
@@ -27,8 +28,12 @@ const CofirmAccount = (props: Props) => {
   useEffect(() => {
     if (isSuccess) {
       activate()
+      push("/post/all")
     }
   }, [isSuccess])
+
+
+
 
   return (
     <section className="auth-container">

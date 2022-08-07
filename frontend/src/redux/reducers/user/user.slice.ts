@@ -21,10 +21,12 @@ export const userSlice = createSlice({
       state.isActivated = action.payload.isActivated
       state.isAuth = true
     },
-    logout: () => initialState,
+    logout: (state: IUserState) => {
+      state = initialState
+      state.isAuth = false
+    },
     activate: (state: IUserState) => {
       state.isActivated = true
-      localStorage.removeItem('token')
     },
     checkAuth: (state: IUserState) => {
       const accessToken = localStorage.getItem('token')
