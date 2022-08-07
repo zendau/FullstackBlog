@@ -1,8 +1,8 @@
 import React from 'react'
-import { ITypeRoutes } from "@/interfaces/IRouter"
+import { IAppRoutes } from "@/interfaces/IRouter"
 import { Route, Switch } from "react-router-dom"
 
-const renderChildren = (childs: ITypeRoutes[]) => (
+const renderChildren = (childs: IAppRoutes[]) => (
   <Switch>
     {
       childs.map((route) =>
@@ -17,11 +17,7 @@ const renderChildren = (childs: ITypeRoutes[]) => (
   </Switch>
 )
 
-interface Props {
-  route: ITypeRoutes
-}
-
-export const RenderRoute = (route: ITypeRoutes) => {
+export const RenderRoute = (route: IAppRoutes) => {
   return (
     <>
       {route.children

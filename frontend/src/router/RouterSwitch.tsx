@@ -1,40 +1,33 @@
-import React, { lazy, useEffect } from 'react'
-import { Redirect, Switch, Route, useHistory } from "react-router-dom"
+import React, { lazy } from 'react'
+import { Route, Switch } from "react-router-dom"
 import Navbar from "@/components/navbar/Navbar";
-import { INavPaths, ITypeRoutes } from "@/interfaces/IRouter";
+import { INavPaths, IAppRoutes } from "@/interfaces/IRouter";
 import { RenderRoute } from './RenderRoute';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 const ConfirmCode = lazy(() => import('@/pages/confirmAccount/cofirmAccount'))
+import PageNotFound from '@/pages/errors/pageNotFound'
 
 interface IRouterSwitchProps {
-  typeRoutes: ITypeRoutes[]
-  redirect: string
-  paths: INavPaths[]
+  appRoutes: IAppRoutes[]
+  navbarPaths: INavPaths[]
   isPrivateType: boolean
-  path: string
 }
 
-const RouterSwitch: React.FC<IRouterSwitchProps> = ({ redirect, typeRoutes, paths, isPrivateType, path }) => {
+const RouterSwitch: React.FC<IRouterSwitchProps> = ({ appRoutes, navbarPaths, isPrivateType }) => {
 
-  const history = useHistory()
+
   const { isActivated, isAuth } = useTypedSelector(state => state.userState)
 
-  useEffect(() => {
-    
-    history.push(path)
-  }, [])
 
-  
-  console.log('test')
   if (!isActivated && isAuth) {
     return (<ConfirmCode/>)
   }
   return (
     <>
-      <Navbar paths={paths} privateType={isPrivateType} />
+      <Navbar paths={navbarPaths} privateType={isPrivateType} />
       <Switch>
         {
-          typeRoutes.map(route =>
+          appRoutes.map(route =>
             <RenderRoute
               key={route.path}
               exact={route.exact}
@@ -43,7 +36,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = ({ redirect, typeRoutes, path
               component={route.component}
             />)
         }
-        <Redirect from="*" to={redirect} />
+        <Route path='*' component={PageNotFound} />
       </Switch>
     </>
 

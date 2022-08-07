@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./config/Routes";
 
@@ -7,29 +7,31 @@ import { privatePaths, publicPaths } from "./config/NavPaths"
 import RouterSwitch from "./RouterSwitch";
 import { useAction } from '@/hooks/useAction';
 
+import InternalServerError from '@/pages/errors/internalServerError';
 
 
 const AppRouter: React.FC = () => {
 
   const { isAuth } = useTypedSelector(state => state.userState)
-  
-  
-  const path = useMemo(() => window.location.pathname, [])
+
   const { checkAuth } = useAction()
   useEffect(() => {
     checkAuth()
   }, [])
 
+  function checkAuthStatus() {
+    if (isAuth === true) {
+      return (<RouterSwitch isPrivateType={true} appRoutes={privateRoutes} navbarPaths={privatePaths} />)
+    } else if (isAuth === false) {
+      return (<RouterSwitch isPrivateType={false} appRoutes={publicRoutes} navbarPaths={publicPaths} />)
+    } else {
+      return (<InternalServerError/>)
+    }
+  }
+
   return (
     <Router>
-
-      {isAuth
-        ?
-        <RouterSwitch isPrivateType={true} typeRoutes={privateRoutes} redirect='/post/all' paths={privatePaths} path={path} />
-        :
-        <RouterSwitch isPrivateType={false} typeRoutes={publicRoutes} redirect='/login' paths={publicPaths} path={path} />
-      }
-
+      {checkAuthStatus()}
     </Router>
   )
 }

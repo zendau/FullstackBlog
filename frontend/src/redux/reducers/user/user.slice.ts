@@ -8,7 +8,7 @@ const initialState: IUserState = {
   id: "",
   email: "",
   isActivated: false,
-  isAuth: false
+  isAuth: null
 }
 
 export const userSlice = createSlice({
@@ -18,7 +18,7 @@ export const userSlice = createSlice({
     setUser: (state: IUserState, action: PayloadAction<any>) => {
       state.email = action.payload.email
       state.id = action.payload.id
-      state.isActivated = action.payload.id
+      state.isActivated = action.payload.isActivated
       state.isAuth = true
     },
     logout: () => initialState,
