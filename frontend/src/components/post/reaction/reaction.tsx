@@ -1,12 +1,15 @@
 import { useAction } from '@/hooks/useAction'
 import { useTypedSelector } from '@/hooks/useTypedSelector'
-import { IReaction } from '@/interfaces/IReaction'
 import { useSetReactionMutation } from '@/redux/reducers/post/post.api'
-import React, { useMemo, useState } from 'react'
-import { boolean } from 'yup'
+import React from 'react'
 
 
-const Reaction =  () => {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
+
+import './reaction.scss'
+
+const Reaction = () => {
 
   const { post } = useTypedSelector(state => state.postState)
   const { setLiked } = useAction()
@@ -48,13 +51,13 @@ const Reaction =  () => {
   }
 
   return (
-    <div>
-      <div onClick={setLike} style={{ backgroundColor: isLiked === true ? 'red' : 'white' }}>
-        <img src='/src/assets/like.svg' alt="like" />
+    <div className='reaction__container'>
+      <div className='reaction__item' onClick={setLike} style={{ color: isLiked === true ? 'red' : 'black' }}>
+        <FontAwesomeIcon icon={faThumbsUp} />
         <span>{like}</span>
       </div>
-      <div onClick={setDislike} style={{ backgroundColor: isLiked === false ? 'red' : 'white' }}>
-        <img src='/src/assets/dislike.svg' alt="dislike" />
+      <div className='reaction__item' onClick={setDislike} style={{ color: isLiked === false ? 'red' : 'black' }}>
+        <FontAwesomeIcon icon={faThumbsDown} />
         <span>{dislike}</span>
       </div>
 

@@ -41,11 +41,12 @@ const ReadPost: React.FC = () => {
                   <p className="read-post__post-author">{post.author.email}</p>
                   <small className="read-post__post-date">{dateFormat(post.date)}</small>
                 </div>
-                <PostToolbar postIdAuthor={post.author.id} postId={post.id} userId={userId} />
               </div>
+              <PostToolbar postIdAuthor={post.author.id} postId={post.id} userId={userId} />
               <h1 className="read-post__title">{post.title}</h1>
-              <img src={`${import.meta.env.VITE_API_URL}/image/${post.file.fileName}`} alt="img" />
+              <img className="read-post__img" src={`${import.meta.env.VITE_API_URL}/image/${post.file.fileName}`} alt="img" />
               <div className="read-post__body" dangerouslySetInnerHTML={{ __html: post.body }}></div>
+              <hr />
               <Comments />
             </div>
           </section>

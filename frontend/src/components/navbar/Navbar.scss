@@ -35,7 +35,7 @@
       background-color: $nav-hover-bgc;
 
       a {
-        color: $nav-hover-color;
+        color: $btn-second-btn;
       }
 
 
@@ -44,7 +44,7 @@
     &--active {
 
 
-      color: $nav-hover-color;
+      color: $btn-second-btn;
 
       &:after {
         content: "";
@@ -52,7 +52,7 @@
         width: 100%;
         height: 2px;
         position: absolute;
-        background-color: $nav-hover-color;
+        background-color: $btn-second-btn;
         top: 58px;
         left: 0;
       }
@@ -132,7 +132,7 @@
         text-align: center;
         width: 100%;
         justify-content: center;
-        background-color: #fff;
+        background-color: $main-color;
         border-bottom: none;
 
         &:after {

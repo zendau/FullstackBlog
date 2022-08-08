@@ -4,6 +4,10 @@ import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { IComment } from '@/interfaces/IComment'
 import { useDeleteCommentMutation, useEditCommentMutation } from '@/redux/reducers/post/post.api'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+
+import "./comment.scss"
 
 const Comment = ({ id, edited, message, user }: IComment) => {
 
@@ -61,18 +65,24 @@ const Comment = ({ id, edited, message, user }: IComment) => {
   const isAuthor = useMemo(() => userId === user.id, [])
 
   return (
-    <li style={{ 'border': '1px solid black' }}>
-      {edited ? <small>edited</small> : ''}
-      {
-        isAuthor ?
-          <div>
-            <button onClick={switchEditStatus}>{isEdit ? 'save' : 'edit'}</button>
-            <button onClick={onDeleteComment}>delete</button>
-          </div>
-          : ""
-      }
-      <h3>{user.email}</h3>
-      <p className='new-line' ref={messageRef} contentEditable={isEdit} suppressContentEditableWarning={true}>{message}</p>
+    <li className='comment__item'>
+      <div className='comment__header'>
+        <h3>{user.email}</h3>
+        {
+          isAuthor ?
+            <div className='comment__toolbar'>
+              
+              <button onClick={switchEditStatus}>{isEdit ? <FontAwesomeIcon icon={faSave} /> : <FontAwesomeIcon icon={faEdit} />}</button>
+              <button onClick={onDeleteComment}><FontAwesomeIcon icon={faTrash} /></button>
+              {edited ? <small>Edited</small> : ''}
+            </div>
+            : ""
+        }
+        
+      </div>
+
+
+      <p className='comment__body' ref={messageRef} contentEditable={isEdit} suppressContentEditableWarning={true}>{message}</p>
     </li>
   )
 }

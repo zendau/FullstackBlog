@@ -67,7 +67,7 @@ const loginForm = ({ onSubmit }: Props) => {
         Login
         {formikForm.isSubmitting}
       </button>
-      <NavLink to='/forgot'>forgot password ?</NavLink>
+      <NavLink to='/forgot' className="btn auth__btn auth__btn--second">Forgot password ?</NavLink>
     </form>
   )
 }

@@ -14,6 +14,8 @@ import { ApiError } from "@/interfaces/api/ApiError";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./postEditor.scss"
 import htmlToDraft from 'html-to-draftjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   savePostRequest: () => any
@@ -161,8 +163,12 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
           value={formikForm.values.title}
           setValue={formikForm.handleChange}
         />
-        <input type="file" name="file" onChange={uploadImg} accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" />
-        <img ref={fileImg}  />
+        <input id='file' className='post-editor__file-input' type="file" name="file" onChange={uploadImg} accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" />
+        <label htmlFor="file" className='post-editor__file-label'>
+        <FontAwesomeIcon  icon={faFileArrowUp} />
+          Select file
+        </label>
+        <img ref={fileImg} />
         <Editor
           editorState={body}
           toolbarClassName="toolbarClassName"

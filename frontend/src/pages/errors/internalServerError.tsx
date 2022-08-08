@@ -4,7 +4,9 @@ import React from 'react'
 
 const InternalServerError = () => {
   return (
-    <div>500 - InternalServerError</div>
+    <div className='error-message'>
+      <h1>Internal server error</h1>
+    </div> 
   )
 }
 

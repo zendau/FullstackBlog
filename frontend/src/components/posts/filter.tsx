@@ -14,7 +14,7 @@ interface IFilter {
   setFilterName: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Filter: React.FC<IFilter> = ({ setFilterType }) => {
+const Filter: React.FC<IFilter> = ({ setFilterType, filterType }) => {
 
   const [searchPost, setSearchPost] = useState('')
   const [filterStatus, setFilterStatus] = useState(false)
@@ -55,6 +55,12 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
     setLimit(parseInt(event.target.value))
   }
 
+  function resetFilter() {
+    setSearchPost('')
+    setFilterType('')
+    setLimit(5)
+  }
+
   return (
     <section className="filter-container">
 
@@ -66,19 +72,19 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
             <input id="filterSearch" type="text" value={searchPost} onChange={(e) => setSearchPost(e.target.value)} />
           </div>
 
-          <div className="filter__sort" onChange={onChangeValue}>
+          <div className="filter__sort">
             <p>Sort by type</p>
 
             <input type="radio" id="sortDate"
-              name="sortType" value="date" />
+              name="sortType" value="date" checked={filterType === 'date'} onChange={onChangeValue} />
             <label htmlFor="sortDate">By date</label>
 
             <input type="radio" id="sortTitle"
-              name="sortType" value="titleName" />
+              name="sortType" value="titleName" checked={filterType === 'titleName'} onChange={onChangeValue} />
             <label htmlFor="sortTitle">By title name</label>
 
             <input type="radio" id="sortAuthor"
-              name="sortType" value="authorName" />
+              name="sortType" value="authorName" checked={filterType === 'authorName'} onChange={onChangeValue} />
             <label htmlFor="sortAuthor">By author name</label>
           </div>
 
@@ -92,6 +98,7 @@ const Filter: React.FC<IFilter> = ({ setFilterType }) => {
               <option value={0}>All</option>
             </select>
           </div>
+          <button className="btn btn__filter" onClick={resetFilter}>Reset</button>
         </div>
       </div>
 

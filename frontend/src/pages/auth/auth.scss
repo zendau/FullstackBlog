@@ -25,16 +25,23 @@
 
 
   &__btn {
-    background-color: #ff4500!important;
-    color: $main-color!important;
-    width: 200px!important;
-    height: 40px!important;
-    line-height: 0!important;
+    background-color: $btn-main-bgc;
+    color: $main-color !important;
+    width: 200px !important;
+    height: 40px !important;
+    line-height: 0 !important;
     box-sizing: border-box;
     padding: 10px;
     margin-top: 25px;
     align-self: center;
     transition: .5s ease;
+
+    &--second {
+      padding: 0;
+      background-color: $btn-second-btn !important;
+      height: 40px !important;
+      line-height: 40px !important;
+    }
 
     &:hover {
       opacity: .8;
@@ -46,6 +53,6 @@
   .auth {
     &-container {
       margin-top: 10%;
-      }
+    }
   }
 }

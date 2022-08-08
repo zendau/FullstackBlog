@@ -46,8 +46,8 @@
     display: block;
     text-align: center;
     line-height: 29px;
-    background-color: $nav-hover-color !important;
-    color: #fff !important;
+    background-color: $btn-second-btn !important;
+    color: $main-color !important;
     padding: 5px;
 
     &:hover {
@@ -73,7 +73,7 @@
   }
 
   &__btn {
-    background-color: #ff4500 !important;
+    background-color: $btn-main-bgc !important;
     color: $main-color !important;
     width: 200px !important;
     height: 40px !important;

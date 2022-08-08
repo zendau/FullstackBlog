@@ -11,12 +11,12 @@ const Comments = (props: Props) => {
   const { post } = useTypedSelector(state => state.postState)
 
   return (
-    <div>
-      <h2>Comments {post?.comments.length}</h2>
+    <>
+      <h2 className='comments__title'>Comments: {post?.comments.length}</h2>
       <AlertMessage timeout={5000} />
       <CommentForm />
       <CommentList/>
-    </div>
+    </>
   )
 }
 

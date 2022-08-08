@@ -1,10 +1,9 @@
 import { useTypedSelector } from '@/hooks/useTypedSelector'
 import React from 'react'
 import Comment from './comment'
+import "./comment.scss"
 
-type Props = {}
-
-const CommentList = (props: Props) => {
+const CommentList = () => {
 
   const { post } = useTypedSelector(state => state.postState)
 
@@ -13,7 +12,7 @@ const CommentList = (props: Props) => {
   }
 
   return (
-    <ul>
+    <ul className='comments__container'>
       {post.comments.map((comment) =>
         <Comment key={comment.id} id={comment.id} edited={comment.edited} message={comment.message} user={comment.user} />
       )}

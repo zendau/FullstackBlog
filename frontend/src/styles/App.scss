@@ -10,7 +10,7 @@
 }
 
 body {
-  background-color: #f4f4f4;
+  background-color: $main-bgc;
 }
 
 header {
@@ -41,11 +41,15 @@ input, textarea {
   border: none;
   height: 29px;
   background-color: #F2BB7B;
-  color: #4A403A;
+  color: #000;
   font-size: 16px;
   cursor: pointer;
   text-align: center;
   line-height: 29px;
+
+  &__filter {
+    margin-top: 10px;
+  }
 
   &:disabled, &[disabled] {
     cursor: not-allowed;
@@ -53,23 +57,25 @@ input, textarea {
 
 }
 
-.new-line {
-  white-space:pre;
-  display: inline-block;
-  width: 100%;
- }
+
 
 .message-info {
   margin-top: 35px;
   text-align: center;
 }
 
+.error-message {
+  display: flex;
+  height: 80vh;
+  justify-content: center;
+  align-items: center;
+}
 
 .alert-message {
   margin-top: 15px;
   min-height: 40px;
   width: 250px;
-  color: #fff;
+  color: $main-color;
   text-align: center;
   font-size: 16px;
   border-radius: 3%;
@@ -126,3 +132,4 @@ input, textarea {
     margin-bottom: 2px;
   }
 }
+

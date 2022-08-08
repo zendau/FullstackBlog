@@ -3,6 +3,7 @@ import { useTypedSelector } from '@/hooks/useTypedSelector'
 import { useAddCommentMutation } from '@/redux/reducers/post/post.api'
 import React, { useRef } from 'react'
 
+import './comment.scss'
 
 const CommentForm = () => {
 
@@ -25,7 +26,7 @@ const CommentForm = () => {
     }
 
     const message = messageRef.current.textContent
-
+    messageRef.current.textContent = ''
     if (message!.length <= 0) {
       setAlert({
         message: 'Comment is required',
@@ -44,9 +45,9 @@ const CommentForm = () => {
 
 return (
   <form onSubmit={onSubmit}>
-    <div ref={messageRef} style={{ 'display': 'inline-block', 'width': '100%', 'whiteSpace': 'pre', 'height': '200px', 'maxHeight': '300px', 'overflow': 'auto', 'border': '1px solid black' }} contentEditable></div>
-    <button className="btn auth__btn" type="submit" disabled={false}>
-      Send
+    <div ref={messageRef} className='comment__form' contentEditable></div>
+    <button className="btn auth__btn comment__btn" type="submit" disabled={false}>
+      Send comment
     </button>
   </form>
 )

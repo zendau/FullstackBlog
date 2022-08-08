@@ -6,6 +6,9 @@ import Filter from "./filter";
 import FetchLoader from "@/components/UI/fetchLoader/fetchLoader";
 import PostCard from './postCard'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+
 
 interface IPostList {
   author?: string
@@ -21,6 +24,7 @@ const PostList: React.FC<IPostList> = ({ author }) => {
   const [postList, setPostList] = useState<IPost[]>([])
 
   const upBtnRef = useRef(null)
+  const [isShowUpBtn, setIsShowUpBtn] = useState(false)
 
   useEffect(() => {
     if (filterType === "date") {
@@ -53,6 +57,23 @@ const PostList: React.FC<IPostList> = ({ author }) => {
 
   }
 
+  const onScroll = () => {
+    if (window.pageYOffset === 0) {
+      setIsShowUpBtn(false)
+    } else {
+      setIsShowUpBtn(true)
+    }
+  }; 
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+    }
+
+  }, []);
+
   return (
     <Suspense fallback={<FetchLoader />}>
       <Filter
@@ -72,7 +93,16 @@ const PostList: React.FC<IPostList> = ({ author }) => {
         </section>
         : <h1 className="message-info">No have posts</h1>
       }
-      <button ref={upBtnRef} onClick={onUpButton} className='posts__up'>UP</button>
+
+      {
+        isShowUpBtn
+          ? <button ref={upBtnRef} onClick={onUpButton} className='posts__up'>
+            <FontAwesomeIcon icon={faAngleUp}/>
+            </button>
+          : ""
+      }
+
+
 
     </Suspense>
   )

@@ -4,6 +4,7 @@
     justify-content: center;
     margin-top: 25px;
   }
+
   &__wrapper {
     width: 1000px;
     display: flex;
@@ -12,18 +13,23 @@
 
   &__title {
     text-align: center;
-    margin-top: 20px;
+    margin: 20px 0;
 
   }
 
   &__body {
-    margin-top: 15px;
+    margin-top: 25px;
     min-width: 100%;
     max-width: 100%;
     font-size: 18px;
     box-sizing: border-box;
     padding: 8px 16px;
     text-align: justify;
+  }
+
+  &__img {
+    width: 100%;
+    height: auto;
   }
 
 
@@ -40,6 +46,8 @@
 
   &__btn-container {
     display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
 
   }
 
@@ -52,10 +60,16 @@
   }
 }
 
+hr {
+  margin: 15px;
+}
+
 @media (max-width: 720px) {
 
   .read-post {
-    &__title, &__body {
+
+    &__title,
+    &__body {
       font-size: 18px;
     }
 
@@ -68,14 +82,21 @@
       margin-top: 10px;
     }
 
+    &__img {
+      width: 95%;
+      height: auto;
+      margin: 0 auto;
+    }
+
     &__post-data {
       justify-content: center;
     }
 
-    &__edit, &__delete {
-      width: 130px!important;
-      height: 40px!important;
-      line-height: 40px!important;
+    &__edit,
+    &__delete {
+      width: 130px !important;
+      height: 40px !important;
+      line-height: 40px !important;
     }
 
     &__edit {
