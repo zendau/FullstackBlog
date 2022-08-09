@@ -35,7 +35,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
       />
 
 
-      <button className="btn auth__btn" type="submit">
+      <button className="btn btn__confirm" type="submit">
         Confirm
       </button>
     </form>

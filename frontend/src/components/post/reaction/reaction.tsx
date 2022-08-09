@@ -52,7 +52,7 @@ const Reaction = () => {
 
   return (
     <div className='reaction__container'>
-      <div className='reaction__item' onClick={setLike} style={{ color: isLiked === true ? 'red' : 'black' }}>
+      <div className='reaction__item' onClick={setLike} style={{ color: isLiked === true ? 'green' : 'black' }}>
         <FontAwesomeIcon icon={faThumbsUp} />
         <span>{like}</span>
       </div>

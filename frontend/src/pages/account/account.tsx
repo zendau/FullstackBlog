@@ -24,7 +24,6 @@ const Account: React.FC = () => {
     editUser({
       ...(editUserData.email && { newEmail: editUserData.email }),
       ...(editUserData.password && { newPassword: editUserData.password }),
-      userId: state.id,
       code: values.confirmCode
     })
   }

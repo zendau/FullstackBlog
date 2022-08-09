@@ -5,6 +5,23 @@
     list-style: none;
     margin: 15px 0;
   }
+
+  &__list {
+    width: 100%;
+  }
+
+  &__title {
+    margin: 15px 0;
+
+    &--second {
+      margin: 15px 0;
+    }
+  }
+
+  &__empty {
+    margin: 15px 0;
+    text-align: center;
+  }
 }
 
 .comment {
@@ -16,6 +33,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 300px;
+    border: 1px solid #bebebe;
   }
 
   &__header {
@@ -72,12 +90,21 @@
     background-color: rgba(255, 255, 255, 0.514);
     border-radius: 6px;
     padding: 5px;
+    border: 1px solid #bebebe;
   }
 
   &__btn {
     margin: 10px auto;
   }
 
+  &__link {
+    color: black;
+    font-weight: bold;
+  }
+
+  &__title {
+    margin-left: 5px;
+  }
 
 }
 

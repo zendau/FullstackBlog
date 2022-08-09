@@ -1,5 +1,5 @@
-import { IUserData } from './../../../interfaces/IUserData';
-import { IUpdateUserRequest } from './../../../interfaces/api/user/IUpdateUserRequest';
+import { IUserData } from '@/interfaces/IUserData';
+import { IUpdateUserRequest } from '@/interfaces/api/user/IUpdateUserRequest';
 import { isApiError } from '@/utils/isApiError';
 import { IUserResponse } from '@/interfaces/api/user/IUserResponse';
 import { IUserRequest } from '@/interfaces/api/user/IUserRequest';

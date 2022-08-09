@@ -7,6 +7,9 @@ import Reactions from '@/components/user/reactions/reactions'
 import { isApiError } from '@/utils/isApiError'
 import AlertMessage from '@/components/UI/Alert/Alert'
 
+import '@/pages/account/account.scss'
+import './user.scss'
+
 interface IParams {
   userId: string
 }
@@ -28,28 +31,31 @@ const User = () => {
 
 
   return (
-    <div>
-      {data.email}
-      <ul>
-        <li>{data.rating[0]}:</li>
-        <li>{data.rating[1]}</li>
-      </ul>
-      <button onClick={() => setIsShowComments(!isShowComments)}>Show {isShowComments ? 'reactions' : 'comments'}</button>
-      {
-        isShowComments
-          ?
-          <>
-            <h2>Comments</h2>
+    <section className="user__container">
+      <div className="user__wrapper">
+        <h1 className="account__main-title">{data.email}'s account</h1>
+        <div className="user__rating-container">
+          <h2 className="user__rating-title">Rating: </h2>
+          <ul className='user__rating-values'>
+            <li>{data.rating[0]}</li>
+            <li>:</li>
+            <li>{data.rating[1]}</li>
+          </ul>
+        </div>
+
+        <Link className="btn account__get-posts user__btn" to={`/user/${userId}/posts`}>Show posts</Link>
+
+        <button className='btn account__btn' onClick={() => setIsShowComments(!isShowComments)}>Show {isShowComments ? 'reactions' : 'comments'}</button>
+        {
+          isShowComments
+            ?
             <Comments comments={data.comments} />
-          </>
-          :
-          <>
-            <h2>Reactions</h2>
+            :
             <Reactions reactions={data.reactions} />
-          </>
-      }
-      <Link to={`/user/${userId}/posts`}>Show posts</Link>
-    </div>
+
+        }
+      </div>
+    </section>
   )
 }
 

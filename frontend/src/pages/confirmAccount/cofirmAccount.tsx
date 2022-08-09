@@ -41,7 +41,7 @@ const CofirmAccount = () => {
         <div className="auth__form-container">
           <AlertMessage timeout={5000} />
           <ConfirmCodeForm onSubmit={formikSubmit} />
-          <button onClick={onResendCode}>Resend confirm code</button>
+          <button className='btn btn__confirm' onClick={onResendCode}>Resend confirm code</button>
         </div>
       </div>
     </section>

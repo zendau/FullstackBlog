@@ -51,6 +51,15 @@ input, textarea {
     margin-top: 10px;
   }
 
+  &__confirm {
+    margin: 15px auto;
+    width: 200px;
+    background-color: #C36839;
+    color: #fff;
+    padding: 20px;
+    line-height: 0;
+  }
+
   &:disabled, &[disabled] {
     cursor: not-allowed;
   }

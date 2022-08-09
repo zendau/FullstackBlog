@@ -8,7 +8,7 @@ const CommentList = () => {
   const { post } = useTypedSelector(state => state.postState)
 
   if (post?.comments === undefined || post?.comments.length === 0) {
-    return (<div>No have comment yet</div>)
+    return (<h3 className='comments__empty'>No have comment yet</h3>)
   }
 
   return (

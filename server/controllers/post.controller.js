@@ -90,7 +90,6 @@ class PostController {
 
   async getPostsBySubString(req, res, next) {
     try {
-      debugger
       const schema = Joi.object({
         substring: Joi.string().min(3).max(20).required(),
       })
@@ -107,7 +106,6 @@ class PostController {
   }
 
   async reactionPost(req, res, next) {
-    debugger
     try {      
       const schema = Joi.object({
         postId: Joi.objectId().required(),

@@ -63,7 +63,6 @@ module.exports = class PostDto {
   }
 
   setUserName(user) {
-    debugger
     this.author = {}
     this.author.email = user
   }

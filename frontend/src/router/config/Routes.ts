@@ -1,4 +1,4 @@
-import { ITypeRoutes } from "@/interfaces/IRouter";
+import { IAppRoutes } from "@/interfaces/IRouter";
 import { lazy } from "react";
 const Account = lazy(() => import("@/pages/account/account"))
 const Login = lazy(() => import("@/pages/auth/login"))
@@ -12,7 +12,7 @@ const Users = lazy(() => import("@/pages/users/users"))
 const User = lazy(() => import("@/pages/user/user"))
 const UserPosts = lazy(() => import('@/pages/post/userPosts/userPosts'))
 
-export const postRoutes: ITypeRoutes[] = [
+export const postRoutes: IAppRoutes[] = [
   {
     path: "/post/create", component: CreatePost, exact: true
   },
@@ -28,7 +28,7 @@ export const postRoutes: ITypeRoutes[] = [
 ]
 
 
-export const privateRoutes: ITypeRoutes[] = [
+export const privateRoutes: IAppRoutes[] = [
   {
     path: "/account", component: Account, exact: true,
   },
@@ -47,7 +47,7 @@ export const privateRoutes: ITypeRoutes[] = [
 
 ]
 
-export const publicRoutes: ITypeRoutes[] = [
+export const publicRoutes: IAppRoutes[] = [
   {
     path: "/login", component: Login, exact: true
   },

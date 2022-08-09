@@ -151,8 +151,6 @@ class PostService {
 
   createPostListDTO(postModel) {
     const postDTO = new PostDTO(postModel)
-    console.log('postModel.author', postModel.author)
-    console.log('postModel.body', postModel.body)
     postDTO.setUserName(postModel.author.email)
     return postDTO
   }

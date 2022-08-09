@@ -9,4 +9,38 @@
     font-size: 26px;
     cursor: pointer;
   }
+
+  &__title {
+    margin: 15px 0;
+  }
+
+  &__list {
+    list-style: none;
+    width: 40%;
+    li {
+      display: grid;
+      grid-template-columns: 1fr 40px;
+      width: 100%;
+      margin: 5px 0;
+      a {
+        text-decoration: none;
+        color: black;
+        width: fit-content;
+        transition: .2s ease;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 720px) {
+  .reaction {
+    &__list {
+      width: 100%;
+    }
+  }
 }

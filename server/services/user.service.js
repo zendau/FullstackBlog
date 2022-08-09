@@ -23,7 +23,6 @@ class UserService {
       password: hashPass
     })
 
-    debugger
     const userDTO = new UserDTO(user)
 
     const tokens = TokenService.generateTokens(userDTO)
@@ -124,7 +123,6 @@ class UserService {
   }
 
   async saveNewUserData(userId, code, newEmail, newPassword) {
-    debugger
     await ConfirmCodeService.checkCode(code)
 
     const user = await userModel.findById(userId)
