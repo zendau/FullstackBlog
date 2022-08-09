@@ -46,7 +46,7 @@ class PostController {
       const { postId, title, body } = req.body
       const userId = req.user.payload.id
       const file = req.file
-
+      debugger
       const data = await PostService.edit(postId, userId, title, body, file)
       res.json(data)
     } catch (e) {

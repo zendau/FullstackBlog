@@ -12,30 +12,29 @@ interface Props {
 }
 
 const Reactions = ({ reactions }: Props) => {
+
+  if (reactions.length > 0) {
+    return (
+      <>
+        <h2 className='reaction__title' >Reactions: {reactions.length}</h2>
+        <ul className='reaction__list'>
+          {
+            reactions.map((reaction) =>
+              <li key={reaction.id}>
+                <Link to={`/post/${reaction.postId}`}>
+                  <h3>{reaction.postTitle}</h3>
+                </Link>
+                <p>{reaction.isLiked ? <FontAwesomeIcon color='green' icon={faThumbsUp} /> : <FontAwesomeIcon color='red' icon={faThumbsDown} />}</p>
+              </li>
+            )
+          }
+        </ul>
+      </>
+    )
+  }
+
   return (
-    <>
-      {
-        reactions.length > 0
-          ? <>
-            <h2 className='reaction__title' >Reactions: {reactions.length}</h2>
-            <ul className='reaction__list'>
-              {
-                reactions.map((reaction) =>
-                  <li key={reaction.id}>
-                    <Link to={`/post/${reaction.postId}`}>
-                      <h3>{reaction.postTitle}</h3>
-                    </Link>
-                    <p>{reaction.isLiked ? <FontAwesomeIcon color='green' icon={faThumbsUp} /> : <FontAwesomeIcon color='red' icon={faThumbsDown} />}</p>
-                  </li>
-                )
-              }
-            </ul>
-          </>
-          : <h3 className='comments__empty' >This user has no reactions yet</h3>
-      }
-
-    </>
-
+    <h3 className='comments__empty' >This user has no reactions yet</h3>
   )
 }
 

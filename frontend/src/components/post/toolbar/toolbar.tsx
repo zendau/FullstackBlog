@@ -8,7 +8,7 @@ interface Props {
   postIdAuthor: string
 }
 
-const PostToolbar = ({ userId, postId, postIdAuthor}: Props) => {
+const PostToolbar = ({ userId, postId, postIdAuthor }: Props) => {
 
   const checkStatus = useMemo(() => userId === postIdAuthor, [userId, postIdAuthor])
 
@@ -20,16 +20,17 @@ const PostToolbar = ({ userId, postId, postIdAuthor}: Props) => {
     history.push('/post/all')
   }
 
+  if (checkStatus) {
+    return (
+      <div className="read-post__btn-container">
+        <Link className="btn read-post__edit" to={"/post/edit/" + postId}>Edit post</Link>
+        <button className="btn read-post__delete" onClick={onClickDeletePost}>Delete post</button>
+      </div>
+    )
+  }
+
   return (
     <>
-      {
-        checkStatus ?
-          <div className="read-post__btn-container">
-            <Link className="btn read-post__edit" to={"/post/edit/" + postId}>Edit post</Link>
-            <button className="btn read-post__delete" onClick={onClickDeletePost}>Delete post</button>
-          </div> :
-          ""
-      }
     </>
   )
 }

@@ -22,7 +22,6 @@ export const userSlice = createSlice({
       state.isAuth = true
     },
     logout: (state: IUserState) => {
-      state = initialState
       state.isAuth = false
     },
     activate: (state: IUserState) => {

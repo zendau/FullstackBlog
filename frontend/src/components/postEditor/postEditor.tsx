@@ -176,7 +176,7 @@ const PostEditor = ({ savePostRequest, isCreate }: Props) => {
           editorClassName="editorClassName"
           onEditorStateChange={setBody}
         />
-        <button type="submit" className="btn post-editor__create" disabled={!formikForm.dirty}>
+        <button type="submit" className="btn post-editor__create">
           {isCreate ? 'Create post' : 'Edit post'}
         </button>
       </form>

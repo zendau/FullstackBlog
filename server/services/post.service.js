@@ -35,7 +35,7 @@ class PostService {
   async edit(postId, userId, title, body, newFile) {
 
     const postData = await this.postExist(postId)
-    this.checkPostAuthor(userId, postData.author.toString())
+    this.checkPostAuthor(userId, postData.author.id.toString())
 
     if (newFile !== undefined) {
       await FileService.update(postData.file, newFile)
@@ -58,7 +58,7 @@ class PostService {
   async delete(postId, userId) {
 
     const postData = await this.postExist(postId)
-    this.checkPostAuthor(userId, postData.author.toString())
+    this.checkPostAuthor(userId, postData.author.id.toString())
 
     postData.deleteOne()
     await ReactionService.deletePostReactions(postId)

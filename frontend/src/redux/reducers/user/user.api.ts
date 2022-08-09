@@ -72,6 +72,7 @@ const extendedApi = mainApi.injectEndpoints({
           localStorage.removeItem("token")
           dispatch(userActions.logout())
         } catch (e: any) {
+          console.log('e', e)
           dispatch(alertActions.setAlert({
             message: e.error.data.message,
             type: 'error'
