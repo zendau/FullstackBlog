@@ -17,7 +17,7 @@ const { Schema, model } = require("mongoose");
  */
 
 const TagSchema = new Schema({
-  title: { type: Schema.Types.String, require: true },
+  title: { type: Schema.Types.String, require: true, unique: true },
 });
 
 module.exports = model("Tags", TagSchema);
