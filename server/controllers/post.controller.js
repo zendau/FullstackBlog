@@ -12,11 +12,14 @@ class PostController {
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
         body: Joi.string().required(),
+        timeRead: Joi.number().required()
       });
       const { error } = schema.validate(req.body);
       if (error) throw ApiError.HttpException(error.details[0].message);
 
-      const { title, body } = req.body;
+      debugger;
+
+      const { title, body, timeRead } = req.body;
 
       const file = req.file;
       if (file === undefined) {
