@@ -5,7 +5,7 @@ import TextInput from '@/components/UI/input/textInput';
 import * as yup from 'yup'
 import IFormikElements from '@/interfaces/IFormikAuth';
 import { useAction } from "@/hooks/useAction";
-import { NavLink } from 'react-router-dom';
+import { Link  } from 'react-router-dom';
 
 interface Props {
   onSubmit: (values: IFormikElements, { setSubmitting }: any) => void
@@ -58,7 +58,7 @@ const loginForm = ({ onSubmit }: Props) => {
         name="password"
         title="Password"
         id="pass"
-        letters={40}
+        letters={30}
         value={formikForm.values.password}
         setValue={formikForm.handleChange}
       />
@@ -67,7 +67,7 @@ const loginForm = ({ onSubmit }: Props) => {
         Login
         {formikForm.isSubmitting}
       </button>
-      <NavLink to='/forgot' className="btn auth__btn auth__btn--second">Forgot password ?</NavLink>
+      <Link  to='/forgot' className="btn auth__btn auth__btn--second">Forgot password ?</Link>
     </form>
   )
 }

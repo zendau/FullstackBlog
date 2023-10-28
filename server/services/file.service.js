@@ -73,7 +73,7 @@ class FileService {
 
   async delete(fileId) {
 
-    const DeleteStatus = await fileModel.findByIdAndDelete(fileId)  
+    const DeleteStatus = await fileModel.findByIdAndDelete(fileId)
     if (DeleteStatus === null) {
       throw ApiError.HttpException(`File id ${fileId} is not found`)
     }

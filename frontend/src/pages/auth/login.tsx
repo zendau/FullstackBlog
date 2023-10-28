@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import LoginForm from "@/components/Auth/loginForm/loginForm";
 import IFormikElements from "@/interfaces/IFormikAuth";
@@ -10,12 +10,11 @@ import "./auth.scss"
 
 const Login: React.FC = () => {
 
-  const { push } = useHistory()
+  const navigate = useNavigate()
   const [userLogin, { isSuccess }] = useLoginUserMutation()
-
   useEffect(() => {
     if (isSuccess) {
-      push("/account")
+      navigate("/account")
     }
   }, [isSuccess])
 

@@ -1,196 +1,208 @@
-const postModel = require('../models/post.model')
-const PostDTO = require('../dtos/post.dto')
-const UserDTO = require('../dtos/user.dto')
-const FileDTO = require("../dtos/file.dto")
-const ApiError = require('../exceprions/api.error')
+const postModel = require("../models/post.model");
+const PostDTO = require("../dtos/post.dto");
+const UserDTO = require("../dtos/user.dto");
+const FileDTO = require("../dtos/file.dto");
+const ApiError = require("../exceprions/api.error");
 
-const FileService = require('./file.service')
-const ReactionService = require('./reaction.service')
-const CommentService = require('./comment.serice')
+const FileService = require("./file.service");
+const ReactionService = require("./reaction.service");
+const CommentService = require("./comment.serice");
 
-const { ObjectId } = require('mongodb')
-
+const { ObjectId } = require("mongodb");
 
 class PostService {
   async create(author, title, body, file) {
-
-    const fileData = await FileService.create(file)
+    const fileData = await FileService.create(file);
 
     const post = await postModel.create({
       author,
       title,
       body,
-      file: fileData.id
-    })
+      file: fileData.id,
+    });
 
     const postPopulate = await post
       .populate("author")
       .populate("file")
-      .execPopulate()
+      .execPopulate();
 
-    const postDTO = this.createPostDTO(postPopulate, author)
-    return postDTO
+    const postDTO = this.createPostDTO(postPopulate, author);
+    return postDTO;
   }
 
   async edit(postId, userId, title, body, newFile) {
-
-    const postData = await this.postExist(postId)
-    this.checkPostAuthor(userId, postData.author.id.toString())
+    const postData = await this.postExist(postId);
+    this.checkPostAuthor(userId, postData.author.id.toString());
 
     if (newFile !== undefined) {
-      await FileService.update(postData.file, newFile)
+      await FileService.update(postData.file, newFile);
     }
 
     if (title !== undefined) {
-      postData.title = title
+      postData.title = title;
     }
 
     if (body !== undefined) {
-      postData.body = body
+      postData.body = body;
     }
 
-    const post = await postData.save()
-    const postPopulate = await post.populate("author").execPopulate()
-    const postDTO = this.createPostDTO(postPopulate)
-    return postDTO
+    const post = await postData.save();
+    const postPopulate = await post.populate("author").execPopulate();
+    const postDTO = this.createPostDTO(postPopulate);
+    return postDTO;
   }
 
   async delete(postId, userId) {
+    const postData = await this.postExist(postId);
+    this.checkPostAuthor(userId, postData.author.id.toString());
 
-    const postData = await this.postExist(postId)
-    this.checkPostAuthor(userId, postData.author.id.toString())
+    postData.deleteOne();
+    await ReactionService.deletePostReactions(postId);
 
-    postData.deleteOne()
-    await ReactionService.deletePostReactions(postId)
-
-    return true
+    return true;
   }
 
   async postExist(postId) {
-    const post = await postModel.findById(postId).populate("author").populate('file')
+    const post = await postModel
+      .findById(postId)
+      .populate("author")
+      .populate("file");
 
     if (post === null) {
-      throw ApiError.HttpException(`Post with id ${postId} not found`)
+      throw ApiError.HttpException(`Post with id ${postId} not found`);
     }
 
-    return post
+    return post;
   }
 
   async getUserPostData(userId) {
-    const posts = await postModel.find().where("author").equals(userId)
-    const postsId = posts.map(post => ObjectId(post._id))
+    const posts = await postModel.find().where("author").equals(userId);
+    const postsId = posts.map((post) => ObjectId(post._id));
 
-    const comments = await CommentService.usersComments(userId)
-    const userRating = await ReactionService.getUserRating(postsId)
-    const reactions = await ReactionService.getPersonalLikes(userId)
+    const comments = await CommentService.usersComments(userId);
+    const userRating = await ReactionService.getUserRating(postsId);
+    const reactions = await ReactionService.getPersonalLikes(userId);
 
-    return { userRating, comments, reactions }
+    return { userRating, comments, reactions };
   }
 
   async getOne(postId, userId) {
-    const post = await this.postExist(postId)
-    const postDTO = this.createPostDTO(post, userId)
-    return postDTO
+    const post = await this.postExist(postId);
+    const postDTO = this.createPostDTO(post, userId);
+    return postDTO;
   }
 
   async searchBySubstring(substring) {
-    const posts = await postModel.find({
-      title: { $regex: substring }
-    }).populate('author')
+    const posts = await postModel
+      .find({
+        title: { $regex: substring },
+      })
+      .populate("author");
 
-    const postsDTO = posts.map(post => this.createPostListDTO(post))
-    return postsDTO
+    const postsDTO = posts.map((post) => this.createPostListDTO(post));
+    return postsDTO;
   }
 
   async getAllPosts() {
-    const posts = await postModel.find().populate("author")
-    const postsDTO = posts.map(post => this.createPostListDTO(post))
-    return postsDTO
+    const posts = await postModel.find().populate("author");
+    const postsDTO = posts.map((post) => this.createPostListDTO(post));
+    return postsDTO;
   }
-
-
 
   async getLimitPosts(currentPage, limit) {
-    const postsData = await this.getPosts({}, currentPage, limit)
-    return postsData
+    const postsData = await this.getPosts({}, currentPage, limit);
+    return postsData;
   }
-
-
 
   async getLimitUserPosts(currentPage, limit, userId) {
     const postsData = await this.getPosts(
       {
-        author: userId
+        author: userId,
       },
-      currentPage, limit
-    )
-    return postsData
+      currentPage,
+      limit
+    );
+    return postsData;
   }
 
   async getPosts(filter, currentPage, limit) {
-    const posts = await postModel.find(filter).skip((currentPage - 1) * limit).limit(parseInt(limit)).populate("author")
+    const posts = await postModel
+      .find(filter)
+      .skip((currentPage - 1) * limit)
+      .limit(parseInt(limit))
+      .populate("author");
 
-    const postsDTO = posts.map(post => this.createPostListDTO(post))
+    const postsDTO = posts.map((post) => this.createPostListDTO(post));
 
-    let nextPage = null
+    let nextPage = null;
 
     if (postsDTO.length == limit) {
-      nextPage = true
+      nextPage = true;
     } else {
-      nextPage = false
+      nextPage = false;
     }
 
-    return { nextPage, posts: postsDTO }
+    return { nextPage, posts: postsDTO };
   }
 
   checkPostAuthor(userId, postAuthor) {
     if (postAuthor !== userId) {
-      throw ApiError.HttpException(`User with id ${userId} not author this post`)
+      throw ApiError.HttpException(
+        `User with id ${userId} not author this post`
+      );
     }
   }
 
   createPostListDTO(postModel) {
-    const postDTO = new PostDTO(postModel)
-    postDTO.setUserName(postModel.author.email)
-    return postDTO
+    const postDTO = new PostDTO(postModel);
+    postDTO.setUserName(postModel.author.email);
+    return postDTO;
   }
 
-
   async createPostDTO(postModel, userId) {
-    const postDTO = new PostDTO(postModel)
-    const userDTO = new UserDTO(postModel.author)
-    const fileDTO = new FileDTO(postModel.file)
-    postDTO.setAuthor(userDTO)
-    postDTO.setImage(fileDTO)
+    const postDTO = new PostDTO(postModel);
+    const userDTO = new UserDTO(postModel.author);
+    const fileDTO = new FileDTO(postModel.file);
+    postDTO.setAuthor(userDTO);
+    postDTO.setImage(fileDTO);
 
+    const reactionData = await ReactionService.getReactionsCount(
+      postDTO.id,
+      userId
+    );
+    postDTO.setReaction(reactionData);
 
-    const reactionData = await ReactionService.getReactionsCount(postDTO.id, userId)
-    postDTO.setReaction(reactionData)
+    const commentsData = await CommentService.getList(postDTO.id);
+    postDTO.setComments(commentsData);
 
-    const commentsData = await CommentService.getList(postDTO.id)
-    postDTO.setComments(commentsData)
-
-    return postDTO
+    return postDTO;
   }
 
   async postReaction(postId, userId, isLiked) {
-    const reactionStatus = await ReactionService.setReaction(postId, userId, isLiked)
+    const reactionStatus = await ReactionService.setReaction(
+      postId,
+      userId,
+      isLiked
+    );
 
     if (!reactionStatus) {
-      await this.postExist(postId)
-      await ReactionService.add(postId, userId, isLiked)
+      await this.postExist(postId);
+      await ReactionService.add(postId, userId, isLiked);
     }
 
-    return true
+    return true;
   }
 
   async addPostComment(userId, postId, message) {
-    await this.postExist(postId)
+    await this.postExist(postId);
 
-    const inseredCommentDTO = await CommentService.create(userId, postId, message)
-    return inseredCommentDTO
+    const inseredCommentDTO = await CommentService.create(
+      userId,
+      postId,
+      message
+    );
+    return inseredCommentDTO;
   }
-
 }
 
-module.exports = new PostService()
+module.exports = new PostService();

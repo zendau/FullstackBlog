@@ -31,7 +31,7 @@ const TextInput: React.FC<ITextInput> = memo(({ title, letters, id, value, setVa
   function changeValue(e: ChangeEvent<HTMLInputElement>) {
 
     const newValue = e.target.value
-    
+
     const chars = letters - newValue.length
 
 
@@ -50,4 +50,4 @@ const TextInput: React.FC<ITextInput> = memo(({ title, letters, id, value, setVa
   );
 })
 
-export default TextInput;
+export default memo(TextInput);

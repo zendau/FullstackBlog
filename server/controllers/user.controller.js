@@ -19,6 +19,7 @@ class UserController {
       res.cookie("JWTRefreshToken", data.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
       res.json(data)
     } catch (e) {
+      console.log('EEER', e)
       next(e)
     }
   }
@@ -65,7 +66,7 @@ class UserController {
   async logoutUser(req, res, next) {
     try {
       const { JWTRefreshToken } = req.cookies
-      
+
       const resLogout = await UserService.logout(JWTRefreshToken)
       res.clearCookie("JWTRefreshToken")
       return res.json(resLogout)
@@ -76,8 +77,8 @@ class UserController {
 
   async setConfirmCode(req, res, next) {
     try {
-      const schema = Joi.object({ 
-        email: Joi.string().email().required() 
+      const schema = Joi.object({
+        email: Joi.string().email().required()
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)

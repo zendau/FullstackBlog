@@ -13,7 +13,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
   const schema = yup.object({
     confirmCode: yup.string().required(),
   });
-  
+
   const formikForm = useFormik({
     initialValues: {
       confirmCode: ''
@@ -21,7 +21,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
     onSubmit,
     validationSchema: schema
   })
-  
+
   return (
     <form onSubmit={formikForm.handleSubmit}>
       <TextInput
@@ -29,7 +29,7 @@ const confirmCodeForm = ({ onSubmit } : Props) => {
         name="confirmCode"
         title="Confirm code"
         id="confirmCode"
-        letters={36}
+        letters={7}
         value={formikForm.values.confirmCode}
         setValue={formikForm.handleChange}
       />

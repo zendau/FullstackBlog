@@ -150,7 +150,7 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", authMiddleware, PostController.getOne)
+router.get("/get/:id", PostController.getOne)
 
 router.get("/search/:substring", PostController.getPostsBySubString)
 
@@ -195,7 +195,7 @@ router.get("/search/:substring", PostController.getPostsBySubString)
  *         description: Unexpected error
  */
 
-router.get("/getUserPosts/", authMiddleware, PostController.getUserPosts)
+router.get("/getUserPosts/", PostController.getUserPosts)
 
 /**
  * @swagger
@@ -222,7 +222,7 @@ router.get("/getUserPosts/", authMiddleware, PostController.getUserPosts)
  *         description: Unexpected error
  */
 
-router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
+router.get("/getAllPosts", PostController.getAllPosts)
 
 /**
  * @swagger
@@ -260,7 +260,7 @@ router.get("/getAllPosts", authMiddleware, PostController.getAllPosts)
  *         description: Unexpected error
  */
 
-router.get("/getLimitPosts", authMiddleware, PostController.getLimitPosts)
+router.get("/getLimitPosts", PostController.getLimitPosts)
 
 /**
  * @swagger

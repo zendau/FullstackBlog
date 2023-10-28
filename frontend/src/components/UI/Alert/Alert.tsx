@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useAction } from '@/hooks/useAction';
-
+import { useLocation } from "react-router-dom"
 
 interface IErrorMessageProps {
   timeout: number
@@ -15,6 +15,16 @@ const AlertMessage: React.FC<IErrorMessageProps> = memo(({ timeout }) => {
 
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()
 
+  const location = useLocation()
+
+  useEffect(
+    () => {
+      clearError()
+    },
+    [location]
+  )
+
+
   useEffect(() => {
 
     if (message) {
@@ -26,7 +36,7 @@ const AlertMessage: React.FC<IErrorMessageProps> = memo(({ timeout }) => {
 
   return (
     <p dangerouslySetInnerHTML={{ __html: message }} className={`
-      alert-message 
+      alert-message
       ${message && "alert-message--active"}
       alert-message--${type}
       `}></p>

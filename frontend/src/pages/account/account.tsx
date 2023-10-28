@@ -20,7 +20,7 @@ const Account: React.FC = () => {
   const [editUserData, setEditUserData] = useState<any>(null)
 
    const submitEditData = (values: { confirmCode: string }) => {
-  
+
     editUser({
       ...(editUserData.email && { newEmail: editUserData.email }),
       ...(editUserData.password && { newPassword: editUserData.password }),
@@ -29,7 +29,7 @@ const Account: React.FC = () => {
   }
 
   const submitConfirmCode = (values: IFormikElements) => {
-    
+
     confirmCode({
       email: state.email
     })

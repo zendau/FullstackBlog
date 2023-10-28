@@ -46,7 +46,7 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
-  
+
     const reactions = await reactionModel.aggregate([
       {
         "$match": {

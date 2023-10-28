@@ -93,8 +93,8 @@ class UserService {
     const user = await this.getById(id)
 
     const postData = await PostService.getUserPostData(id)
-    user.rating = postData.userRating 
-    user.comments = postData.comments 
+    user.rating = postData.userRating
+    user.comments = postData.comments
     user.reactions = postData.reactions
     return new PostDataDTO(user)
   }
@@ -208,7 +208,7 @@ class UserService {
 
     nodemailerService.sendNewPassword(newPaswword, email)
 
-    return { message: `New password was send to ${email}` } 
+    return { message: `New password was send to ${email}` }
   }
 
 }

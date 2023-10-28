@@ -1,29 +1,27 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AlertMessage from "@/components/UI/Alert/Alert";
 import RegisterForm from "@/components/Auth/registerForm/registerForm";
 import IFormikElements from "@/interfaces/IFormikAuth";
 import { useRegisterUserMutation } from "@/redux/reducers/user/user.api";
-import "./auth.scss"
-
+import "./auth.scss";
 
 const Register: React.FC = () => {
-
-  const { push } = useHistory()
-  const [userRegister, { isSuccess }] = useRegisterUserMutation()
+  const navigate = useNavigate();
+  const [userRegister, { isSuccess }] = useRegisterUserMutation();
 
   useEffect(() => {
     if (isSuccess) {
-      push("/post/all")
+      navigate("/post/all");
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
   const formikSubmit = (values: IFormikElements) => {
     userRegister({
       email: values.email,
-      password: values.password as string
-    })
-  }
+      password: values.password as string,
+    });
+  };
 
   return (
     <section className="auth-container">
@@ -34,7 +32,7 @@ const Register: React.FC = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

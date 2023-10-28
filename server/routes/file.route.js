@@ -1,10 +1,10 @@
-const Router = require('express').Router
-const FileController = require('../controllers/file.controller')
-const router = new Router()
+const Router = require("express").Router;
+const FileController = require("../controllers/file.controller");
+const router = new Router();
 
-const authMiddleware = require("../middlewares/auth.middleware")
+const authMiddleware = require("../middlewares/auth.middleware");
 
-const multer = require('../middlewares/multer.middleware')
+const multer = require("../middlewares/multer.middleware");
 
 /**
  * @swagger
@@ -41,9 +41,9 @@ const multer = require('../middlewares/multer.middleware')
  *         description: User is not auth
  *       500:
  *         description: Unexpected error
- */
+ */ 
 
-router.post("/add", authMiddleware, multer, FileController.add)
+router.post("/add", authMiddleware, multer, FileController.add);
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.post("/add", authMiddleware, multer, FileController.add)
  *       500:
  *         description: Unexpected error
  */
-router.get("/get/:id", authMiddleware, FileController.getOne)
+router.get("/get/:id", authMiddleware, FileController.getOne);
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.get("/get/:id", authMiddleware, FileController.getOne)
  *         description: Unexpected error
  */
 
-router.get("/list", authMiddleware, FileController.getList)
+router.get("/list", authMiddleware, FileController.getList);
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get("/list", authMiddleware, FileController.getList)
  *         description: Unexpected error
  */
 
-router.put("/update/:id", authMiddleware, multer, FileController.update)
+router.put("/update/:id", authMiddleware, multer, FileController.update);
 
 /**
  * @swagger
@@ -156,8 +156,7 @@ router.put("/update/:id", authMiddleware, multer, FileController.update)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", authMiddleware, FileController.delete)
-
+router.delete("/delete/:id", authMiddleware, FileController.delete);
 
 /**
  * @swagger
@@ -176,6 +175,6 @@ router.delete("/delete/:id", authMiddleware, FileController.delete)
  *         description: Unexpected error
  */
 
-router.get("/download/:id", FileController.download)
+router.get("/download/:id", FileController.download);
 
-module.exports = router
+module.exports = router;
