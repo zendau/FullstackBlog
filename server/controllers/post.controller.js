@@ -8,18 +8,20 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 class PostController {
   async create(req, res, next) {
+    debugger;
     try {
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
         body: Joi.string().required(),
-        timeRead: Joi.number().required()
+        timeRead: Joi.number().required(),
+        tags: Joi.array().required(),
       });
       const { error } = schema.validate(req.body);
       if (error) throw ApiError.HttpException(error.details[0].message);
 
       debugger;
 
-      const { title, body, timeRead } = req.body;
+      const postData = req.body;
 
       const file = req.file;
       if (file === undefined) {
@@ -29,7 +31,7 @@ class PostController {
       }
 
       const author = req.user.payload.id;
-      const data = await PostService.create(author, title, body, file);
+      const data = await PostService.create(author, postData, file);
       res.json(data);
     } catch (e) {
       next(e);

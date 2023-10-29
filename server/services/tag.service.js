@@ -3,20 +3,29 @@ const PostModel = require("../models/post.model");
 
 class TagService {
   async insertTags(tagsList) {
-    const updateQueries = tagsList.map((tag) => ({
-      updateOne: {
-        filter: { title: tag },
-        update: { $setOnInsert: { title: tag } },
-        upsert: true,
-      },
-    }));
-
+    debugger;
     try {
-      const res = await TagModel.bulkWrite(updateQueries);
+      // Ищем существующие теги в базе данных
+      const existingTags = await TagModel.find({ title: { $in: tagsList } });
 
-      console.log("success insert/update tag's list", res);
-    } catch (e) {
-      console.error("tag insert/update error", e);
+      // Список существующих тегов
+      const existingTagNames = existingTags.map((tag) => tag.title);
+
+      // Теги, которых нет в базе данных
+      const newTags = tagsList.filter((tag) => !existingTagNames.includes(tag));
+
+      // Создаем новые теги
+      const newTagDocs = await TagModel.insertMany(
+        newTags.map((tag) => ({ title: tag }))
+      );
+
+      // Массив идентификаторов всех тегов (включая уже существующие)
+      const allTagIds = existingTags.concat(newTagDocs).map((tag) => tag._id);
+
+      return allTagIds;
+    } catch (err) {
+      console.error("Ошибка:", err);
+      // Обработка ошибки
     }
   }
 

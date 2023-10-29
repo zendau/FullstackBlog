@@ -5,25 +5,31 @@ const FileDTO = require("../dtos/file.dto");
 const ApiError = require("../exceprions/api.error");
 
 const FileService = require("./file.service");
+const TagService = require("./tag.service");
 const ReactionService = require("./reaction.service");
 const CommentService = require("./comment.serice");
 
 const { ObjectId } = require("mongodb");
 
 class PostService {
-  async create(author, title, body, file) {
+  async create(author, postData, file) {
     const fileData = await FileService.create(file);
+    debugger;
+    const tagsList = await TagService.insertTags(postData.tags);
 
     const post = await postModel.create({
       author,
-      title,
-      body,
+      title: postData.title,
+      body: postData.body,
+      tags: tagsList,
+      timeRead: postData.timeRead,
       file: fileData.id,
     });
 
     const postPopulate = await post
       .populate("author")
       .populate("file")
+      .populate('tags')
       .execPopulate();
 
     const postDTO = this.createPostDTO(postPopulate, author);
