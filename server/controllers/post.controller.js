@@ -81,11 +81,13 @@ class PostController {
       if (error) throw ApiError.HttpException(error.details[0].message);
 
       const { id } = req.params;
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+
 
       // const userId = req.user.payload.id;
       const userId = 0;
 
-      const data = await PostService.getOne(id, userId);
+      const data = await PostService.getOne(id, userId, ip);
       res.json(data);
     } catch (e) {
       next(e);

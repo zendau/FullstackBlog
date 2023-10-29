@@ -8,6 +8,7 @@ const FileService = require("./file.service");
 const TagService = require("./tag.service");
 const ReactionService = require("./reaction.service");
 const CommentService = require("./comment.serice");
+const UserPostReadService = require("./userPostRead.service");
 
 const { ObjectId } = require("mongodb");
 
@@ -92,9 +93,16 @@ class PostService {
     return { userRating, comments, reactions };
   }
 
-  async getOne(postId, userId) {
+  async getOne(postId, userId, ip) {
     const post = await this.postExist(postId);
     const postDTO = await this.getExtendedPostDTO(post, userId);
+
+    const checkStatus = await UserPostReadService.chechIsReadStatus(postId, ip);
+
+    if (checkStatus) {
+      UserPostReadService.setIsReadStatus(postId, ip);
+    }
+
     return postDTO;
   }
 
