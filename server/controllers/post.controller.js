@@ -8,7 +8,6 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 class PostController {
   async create(req, res, next) {
-    debugger;
     try {
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
@@ -18,8 +17,6 @@ class PostController {
       });
       const { error } = schema.validate(req.body);
       if (error) throw ApiError.HttpException(error.details[0].message);
-
-      debugger;
 
       const postData = req.body;
 
@@ -51,7 +48,7 @@ class PostController {
       const { postId, title, body } = req.body;
       const userId = req.user.payload.id;
       const file = req.file;
-      debugger;
+
       const data = await PostService.edit(postId, userId, title, body, file);
       res.json(data);
     } catch (e) {

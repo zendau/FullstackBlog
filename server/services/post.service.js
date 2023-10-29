@@ -14,7 +14,6 @@ const { ObjectId } = require("mongodb");
 class PostService {
   async create(author, postData, file) {
     const fileData = await FileService.create(file);
-    debugger;
     const tagsList = await TagService.insertTags(postData.tags);
 
     const post = await postModel.create({
@@ -29,16 +28,16 @@ class PostService {
     const postPopulate = await post
       .populate("author")
       .populate("file")
-      .populate('tags')
+      .populate("tags")
       .execPopulate();
 
-    const postDTO = this.createPostDTO(postPopulate, author);
+    const postDTO = await this.getExtendedPostDTO(postPopulate, author);
     return postDTO;
   }
 
   async edit(postId, userId, title, body, newFile) {
     const postData = await this.postExist(postId);
-    this.checkPostAuthor(userId, postData.author.id.toString());
+    this.checkPostAuthor(userId, postData.author.id);
 
     if (newFile !== undefined) {
       await FileService.update(postData.file, newFile);
@@ -54,13 +53,13 @@ class PostService {
 
     const post = await postData.save();
     const postPopulate = await post.populate("author").execPopulate();
-    const postDTO = this.createPostDTO(postPopulate);
+    const postDTO = await this.getExtendedPostDTO(postPopulate);
     return postDTO;
   }
 
   async delete(postId, userId) {
     const postData = await this.postExist(postId);
-    this.checkPostAuthor(userId, postData.author.id.toString());
+    this.checkPostAuthor(userId, postData.author.id);
 
     postData.deleteOne();
     await ReactionService.deletePostReactions(postId);
@@ -72,7 +71,8 @@ class PostService {
     const post = await postModel
       .findById(postId)
       .populate("author")
-      .populate("file");
+      .populate("file")
+      .populate("tags");
 
     if (post === null) {
       throw ApiError.HttpException(`Post with id ${postId} not found`);
@@ -94,7 +94,7 @@ class PostService {
 
   async getOne(postId, userId) {
     const post = await this.postExist(postId);
-    const postDTO = this.createPostDTO(post, userId);
+    const postDTO = await this.getExtendedPostDTO(post, userId);
     return postDTO;
   }
 
@@ -152,7 +152,7 @@ class PostService {
   }
 
   checkPostAuthor(userId, postAuthor) {
-    if (postAuthor !== userId) {
+    if (postAuthor.toString() !== userId) {
       throw ApiError.HttpException(
         `User with id ${userId} not author this post`
       );
@@ -165,12 +165,16 @@ class PostService {
     return postDTO;
   }
 
-  async createPostDTO(postModel, userId) {
+  async getExtendedPostDTO(postModel, userId) {
     const postDTO = new PostDTO(postModel);
     const userDTO = new UserDTO(postModel.author);
     const fileDTO = new FileDTO(postModel.file);
+
+    const tagsList = postModel.tags.map((tag) => tag.title);
+
     postDTO.setAuthor(userDTO);
     postDTO.setImage(fileDTO);
+    postDTO.setTags(tagsList);
 
     const reactionData = await ReactionService.getReactionsCount(
       postDTO.id,

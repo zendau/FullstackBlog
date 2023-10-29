@@ -49,37 +49,40 @@
  */
 
 module.exports = class PostDto {
-  id
-  title
-  date
-  body
+  id;
+  title;
+  date;
+  body;
 
   constructor(model) {
-    this.id = model._id
-    this.title = model.title
-    this.date = model.createdDate
-    this.body = model.body
-    
+    this.id = model._id;
+    this.title = model.title;
+    this.date = model.createdDate;
+    this.body = model.body;
   }
 
   setUserName(user) {
-    this.author = {}
-    this.author.email = user
+    this.author = {};
+    this.author.email = user;
   }
 
   setAuthor(author) {
-    this.author = author
+    this.author = author;
   }
 
   setImage(file) {
-    this.file = file
+    this.file = file;
   }
 
   setReaction(reaction) {
-    this.reaction = reaction
+    this.reaction = reaction;
   }
 
   setComments(comments) {
-    this.comments = comments
+    this.comments = comments;
   }
-}
+
+  setTags(tagsList) {
+    this.tags = tagsList;
+  }
+};

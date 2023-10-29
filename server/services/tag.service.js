@@ -1,9 +1,9 @@
 const TagModel = require("../models/tag.model");
 const PostModel = require("../models/post.model");
+const ApiError = require("../exceprions/api.error");
 
 class TagService {
   async insertTags(tagsList) {
-    debugger;
     try {
       // Ищем существующие теги в базе данных
       const existingTags = await TagModel.find({ title: { $in: tagsList } });
@@ -24,7 +24,7 @@ class TagService {
 
       return allTagIds;
     } catch (err) {
-      console.error("Ошибка:", err);
+      throw ApiError.HttpException("error adding tags");
       // Обработка ошибки
     }
   }
