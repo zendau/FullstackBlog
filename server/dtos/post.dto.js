@@ -74,8 +74,8 @@ module.exports = class PostDto {
     this.file = file;
   }
 
-  setReaction(reaction) {
-    this.reaction = reaction;
+  setLikes(likes) {
+    this.likes = likes;
   }
 
   setComments(comments) {

@@ -188,7 +188,7 @@ class PostService {
       postDTO.id,
       userId
     );
-    postDTO.setReaction(reactionData);
+    postDTO.setLikes(reactionData);
 
     const commentsData = await CommentService.getList(postDTO.id);
     postDTO.setComments(commentsData);

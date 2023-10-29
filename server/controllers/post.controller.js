@@ -83,9 +83,9 @@ class PostController {
       const { id } = req.params;
       const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
 
+      debugger
 
-      // const userId = req.user.payload.id;
-      const userId = 0;
+      const userId = req.user.payload.id;
 
       const data = await PostService.getOne(id, userId, ip);
       res.json(data);

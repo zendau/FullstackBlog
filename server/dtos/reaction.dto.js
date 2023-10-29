@@ -26,8 +26,8 @@
   isLiked
 
   constructor(model) {
-    this.like = model.like
-    this.dislike = model.dislike
+    this.counterLikes = model.counterLikes
+    this.counterDislikes = model.counterDislikes
     this.isLiked = model.user[0]?.isLiked
   }
 }
