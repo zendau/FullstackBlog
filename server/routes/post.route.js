@@ -1,9 +1,10 @@
-const Router = require('express').Router
-const PostController = require('../controllers/post.controller')
-const router = new Router()
+const Router = require("express").Router;
+const PostController = require("../controllers/post.controller");
+const router = new Router();
 
-const authMiddleware = require("../middlewares/auth.middleware")
-const multer = require('../middlewares/multer.middleware')
+const authMiddleware = require("../middlewares/auth.middleware");
+const jwtDataMiddleware = require("../middlewares/jwtData.middleware");
+const multer = require("../middlewares/multer.middleware");
 
 /**
  * @swagger
@@ -48,7 +49,7 @@ const multer = require('../middlewares/multer.middleware')
  *         description: Unexpected error
  */
 
-router.post("/create", authMiddleware, multer, PostController.create)
+router.post("/create", authMiddleware, multer, PostController.create);
 
 /**
  * @swagger
@@ -86,7 +87,7 @@ router.post("/create", authMiddleware, multer, PostController.create)
  *         description: Unexpected error
  */
 
-router.patch("/edit", authMiddleware, multer, PostController.edit)
+router.patch("/edit", authMiddleware, multer, PostController.edit);
 
 /**
  * @swagger
@@ -114,7 +115,7 @@ router.patch("/edit", authMiddleware, multer, PostController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", authMiddleware, PostController.delete)
+router.delete("/delete/:id", authMiddleware, PostController.delete);
 
 /**
  * @swagger
@@ -150,9 +151,9 @@ router.delete("/delete/:id", authMiddleware, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", PostController.getOne)
+router.get("/get/:id", jwtDataMiddleware, PostController.getOne);
 
-router.get("/search/:substring", PostController.getPostsBySubString)
+router.get("/search/:substring", PostController.getPostsBySubString);
 
 /**
  * @swagger
@@ -195,7 +196,7 @@ router.get("/search/:substring", PostController.getPostsBySubString)
  *         description: Unexpected error
  */
 
-router.get("/getUserPosts/", PostController.getUserPosts)
+router.get("/getUserPosts/", PostController.getUserPosts);
 
 /**
  * @swagger
@@ -222,7 +223,7 @@ router.get("/getUserPosts/", PostController.getUserPosts)
  *         description: Unexpected error
  */
 
-router.get("/getAllPosts", PostController.getAllPosts)
+router.get("/getAllPosts", PostController.getAllPosts);
 
 /**
  * @swagger
@@ -260,7 +261,7 @@ router.get("/getAllPosts", PostController.getAllPosts)
  *         description: Unexpected error
  */
 
-router.get("/getLimitPosts", PostController.getLimitPosts)
+router.get("/getLimitPosts", PostController.getLimitPosts);
 
 /**
  * @swagger
@@ -296,7 +297,7 @@ router.get("/getLimitPosts", PostController.getLimitPosts)
  *         description: Unexpected error
  */
 
-router.patch("/reacting", authMiddleware, PostController.reactionPost)
+router.patch("/reacting", authMiddleware, PostController.reactionPost);
 
 /**
  * @swagger
@@ -334,7 +335,7 @@ router.patch("/reacting", authMiddleware, PostController.reactionPost)
  *         description: Unexpected error
  */
 
-router.post('/addComment', authMiddleware, PostController.addPostComment)
+router.post("/addComment", authMiddleware, PostController.addPostComment);
 
 /**
  * @swagger
@@ -372,7 +373,7 @@ router.post('/addComment', authMiddleware, PostController.addPostComment)
  *         description: Unexpected error
  */
 
-router.put('/editComment', authMiddleware, PostController.editPostComment)
+router.put("/editComment", authMiddleware, PostController.editPostComment);
 
 /**
  * @swagger
@@ -403,6 +404,10 @@ router.put('/editComment', authMiddleware, PostController.editPostComment)
  *         description: Unexpected error
  */
 
-router.delete('/deleteComment', authMiddleware, PostController.deletePostComment)
+router.delete(
+  "/deleteComment",
+  authMiddleware,
+  PostController.deletePostComment
+);
 
-module.exports = router
+module.exports = router;

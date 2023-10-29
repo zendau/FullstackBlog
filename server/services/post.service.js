@@ -203,7 +203,7 @@ class PostService {
       isLiked
     );
 
-    if (!reactionStatus) {
+    if (!reactionStatus && isLiked !== 'null') {
       await this.postExist(postId);
       await ReactionService.add(postId, userId, isLiked);
     }
