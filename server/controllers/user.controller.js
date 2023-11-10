@@ -114,7 +114,7 @@ class UserController {
   async activateAccount(req, res, next) {
     try {
       const schema = Joi.object({
-        confirmCode: Joi.string().required()
+        confirmCode: Joi.number().required()
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)

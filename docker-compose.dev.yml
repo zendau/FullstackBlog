@@ -7,6 +7,11 @@ services:
     volumes:
       - mongodb:/data/db
 
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - 1025:1025
+      - 8025:8025
   # mongo-express:
   #   image: mongo-express
   #   ports:

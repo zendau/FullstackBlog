@@ -9,6 +9,9 @@ Joi.objectId = require("joi-objectid")(Joi);
 class PostController {
   async create(req, res, next) {
     try {
+
+      debugger
+
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
         body: Joi.string().required(),
@@ -27,8 +30,15 @@ class PostController {
         );
       }
 
-      const author = req.user.payload.id;
-      const data = await PostService.create(author, postData, file);
+      const { id, isActivated } = req.user.payload;
+
+      if (!isActivated) {
+        res.json({ message: 'For this action you need to activate your account' })
+        return
+      }
+
+
+      const data = await PostService.create(id, postData, file);
       res.json(data);
     } catch (e) {
       next(e);
