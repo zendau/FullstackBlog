@@ -6,10 +6,16 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "debug": "cross-env NODE_ENV=development nodemon --inspect index.js"
+    "debug": "cross-env NODE_ENV=development nodemon --inspect index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write ."
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=19.0.0"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
@@ -29,6 +35,12 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "eslint": "^8.53.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "nodemon": "^2.0.12",
+    "prettier": "^3.0.3"
   }
 }

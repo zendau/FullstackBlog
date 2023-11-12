@@ -1,30 +1,30 @@
-const TagModel = require("../models/tag.model");
-const PostModel = require("../models/post.model");
-const ApiError = require("../exceprions/api.error");
+const TagModel = require("../models/tag.model")
+const PostModel = require("../models/post.model")
+const ApiError = require("../exceprions/api.error")
 
 class TagService {
   async insertTags(tagsList) {
     try {
       // Ищем существующие теги в базе данных
-      const existingTags = await TagModel.find({ title: { $in: tagsList } });
+      const existingTags = await TagModel.find({ title: { $in: tagsList } })
 
       // Список существующих тегов
-      const existingTagNames = existingTags.map((tag) => tag.title);
+      const existingTagNames = existingTags.map((tag) => tag.title)
 
       // Теги, которых нет в базе данных
-      const newTags = tagsList.filter((tag) => !existingTagNames.includes(tag));
+      const newTags = tagsList.filter((tag) => !existingTagNames.includes(tag))
 
       // Создаем новые теги
       const newTagDocs = await TagModel.insertMany(
-        newTags.map((tag) => ({ title: tag }))
-      );
+        newTags.map((tag) => ({ title: tag })),
+      )
 
       // Массив идентификаторов всех тегов (включая уже существующие)
-      const allTagIds = existingTags.concat(newTagDocs).map((tag) => tag._id);
+      const allTagIds = existingTags.concat(newTagDocs).map((tag) => tag._id)
 
-      return allTagIds;
+      return allTagIds
     } catch (err) {
-      throw ApiError.HttpException("error adding tags");
+      throw ApiError.HttpException("error adding tags")
       // Обработка ошибки
     }
   }
@@ -33,11 +33,12 @@ class TagService {
     try {
       const res = await PostModel.findByIdAndUpdate(postId, {
         $pull: { tags: tagTitle },
-      });
+      })
+      return res
     } catch (e) {
-      console.error("tag remove post tag error", e);
+      console.error("tag remove post tag error", e)
     }
   }
 }
 
-module.exports = new TagService();
+module.exports = new TagService()

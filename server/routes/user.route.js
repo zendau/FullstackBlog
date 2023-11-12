@@ -1,5 +1,5 @@
-const Router = require('express').Router
-const UserController = require('../controllers/user.controller')
+const Router = require("express").Router
+const UserController = require("../controllers/user.controller")
 const router = new Router()
 
 const { authGuard } = require("../middlewares/auth.middleware")
@@ -242,7 +242,7 @@ router.put("/saveNewData", authGuard, UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post('/activate', authGuard, UserController.activateAccount)
+router.post("/activate", authGuard, UserController.activateAccount)
 
 /**
  * @swagger
@@ -268,7 +268,7 @@ router.post('/activate', authGuard, UserController.activateAccount)
  *         description: Unexpected error
  */
 
-router.get('/getActivateCode', authGuard, UserController.repeatConfirmCode)
+router.get("/getActivateCode", authGuard, UserController.repeatConfirmCode)
 
 /**
  * @swagger
@@ -296,7 +296,7 @@ router.get('/getActivateCode', authGuard, UserController.repeatConfirmCode)
  *         description: Unexpected error
  */
 
-router.post('/resetPassword', UserController.resetPassword)
+router.post("/resetPassword", UserController.resetPassword)
 
 /**
  * @swagger
@@ -326,6 +326,6 @@ router.post('/resetPassword', UserController.resetPassword)
  *         description: Unexpected error
  */
 
-router.get('/data/:id', UserController.getUserById)
+router.get("/data/:id", UserController.getUserById)
 
 module.exports = router

@@ -1,10 +1,10 @@
-const Router = require("express").Router;
-const FileController = require("../controllers/file.controller");
-const router = new Router();
+const Router = require("express").Router
+const FileController = require("../controllers/file.controller")
+const router = new Router()
 
-const { authGuard } = require("../middlewares/auth.middleware");
+const { authGuard } = require("../middlewares/auth.middleware")
 
-const multer = require("../middlewares/multer.middleware");
+const multer = require("../middlewares/multer.middleware")
 
 /**
  * @swagger
@@ -43,7 +43,7 @@ const multer = require("../middlewares/multer.middleware");
  *         description: Unexpected error
  */
 
-router.post("/add", authGuard, multer, FileController.add);
+router.post("/add", authGuard, multer, FileController.add)
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.post("/add", authGuard, multer, FileController.add);
  *       500:
  *         description: Unexpected error
  */
-router.get("/get/:id", authGuard, FileController.getOne);
+router.get("/get/:id", authGuard, FileController.getOne)
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.get("/get/:id", authGuard, FileController.getOne);
  *         description: Unexpected error
  */
 
-router.get("/list", authGuard, FileController.getList);
+router.get("/list", authGuard, FileController.getList)
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get("/list", authGuard, FileController.getList);
  *         description: Unexpected error
  */
 
-router.put("/update/:id", authGuard, multer, FileController.update);
+router.put("/update/:id", authGuard, multer, FileController.update)
 
 /**
  * @swagger
@@ -156,7 +156,7 @@ router.put("/update/:id", authGuard, multer, FileController.update);
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", authGuard, FileController.delete);
+router.delete("/delete/:id", authGuard, FileController.delete)
 
 /**
  * @swagger
@@ -175,6 +175,6 @@ router.delete("/delete/:id", authGuard, FileController.delete);
  *         description: Unexpected error
  */
 
-router.get("/download/:id", FileController.download);
+router.get("/download/:id", FileController.download)
 
-module.exports = router;
+module.exports = router

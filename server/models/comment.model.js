@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require("mongoose")
 
 /**
  * @swagger
@@ -27,12 +27,10 @@ const { Schema, model } = require('mongoose')
  */
 
 const CommentSchema = new Schema({
-  post: { type: Schema.Types.ObjectId, ref: 'Posts', required: true },
-  user: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
-  message: { type: Schema.Types.String, require: true},
-  edited: { type: Schema.Types.Boolean, default: 'false'}
+  post: { type: Schema.Types.ObjectId, ref: "Posts", required: true },
+  user: { type: Schema.Types.ObjectId, ref: "Users", required: true },
+  message: { type: Schema.Types.String, require: true },
+  edited: { type: Schema.Types.Boolean, default: "false" },
 })
 
 module.exports = model("Comments", CommentSchema)
-
-

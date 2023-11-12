@@ -1,5 +1,5 @@
 # Base image
-FROM node:14
+FROM node:19
 
 # Make folder to put our files in
 RUN mkdir -p /app

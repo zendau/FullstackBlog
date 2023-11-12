@@ -1,21 +1,21 @@
-const postModel = require("../models/post.model");
-const PostDTO = require("../dtos/post.dto");
-const UserDTO = require("../dtos/user.dto");
-const FileDTO = require("../dtos/file.dto");
-const ApiError = require("../exceprions/api.error");
+const postModel = require("../models/post.model")
+const PostDTO = require("../dtos/post.dto")
+const UserDTO = require("../dtos/user.dto")
+const FileDTO = require("../dtos/file.dto")
+const ApiError = require("../exceprions/api.error")
 
-const FileService = require("./file.service");
-const TagService = require("./tag.service");
-const ReactionService = require("./reaction.service");
-const CommentService = require("./comment.serice");
-const UserPostReadService = require("./userPostRead.service");
+const FileService = require("./file.service")
+const TagService = require("./tag.service")
+const ReactionService = require("./reaction.service")
+const CommentService = require("./comment.serice")
+const UserPostReadService = require("./userPostRead.service")
 
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb")
 
 class PostService {
   async create(author, postData, file) {
-    const fileData = await FileService.create(file);
-    const tagsList = await TagService.insertTags(postData.tags);
+    const fileData = await FileService.create(file)
+    const tagsList = await TagService.insertTags(postData.tags)
 
     const post = await postModel.create({
       author,
@@ -24,48 +24,48 @@ class PostService {
       tags: tagsList,
       timeRead: postData.timeRead,
       file: fileData.id,
-    });
+    })
 
     const postPopulate = await post
       .populate("author")
       .populate("file")
       .populate("tags")
-      .execPopulate();
+      .execPopulate()
 
-    const postDTO = await this.getExtendedPostDTO(postPopulate, author);
-    return postDTO;
+    const postDTO = await this.getExtendedPostDTO(postPopulate, author)
+    return postDTO
   }
 
   async edit(postId, userId, title, body, newFile) {
-    const postData = await this.postExist(postId);
-    this.checkPostAuthor(userId, postData.author.id);
+    const postData = await this.postExist(postId)
+    this.checkPostAuthor(userId, postData.author.id)
 
     if (newFile !== undefined) {
-      await FileService.update(postData.file, newFile);
+      await FileService.update(postData.file, newFile)
     }
 
     if (title !== undefined) {
-      postData.title = title;
+      postData.title = title
     }
 
     if (body !== undefined) {
-      postData.body = body;
+      postData.body = body
     }
 
-    const post = await postData.save();
-    const postPopulate = await post.populate("author").execPopulate();
-    const postDTO = await this.getExtendedPostDTO(postPopulate);
-    return postDTO;
+    const post = await postData.save()
+    const postPopulate = await post.populate("author").execPopulate()
+    const postDTO = await this.getExtendedPostDTO(postPopulate)
+    return postDTO
   }
 
   async delete(postId, userId) {
-    const postData = await this.postExist(postId);
-    this.checkPostAuthor(userId, postData.author.id);
+    const postData = await this.postExist(postId)
+    this.checkPostAuthor(userId, postData.author.id)
 
-    postData.deleteOne();
-    await ReactionService.deletePostReactions(postId);
+    postData.deleteOne()
+    await ReactionService.deletePostReactions(postId)
 
-    return true;
+    return true
   }
 
   async postExist(postId) {
@@ -73,37 +73,37 @@ class PostService {
       .findById(postId)
       .populate("author")
       .populate("file")
-      .populate("tags");
+      .populate("tags")
 
     if (post === null) {
-      throw ApiError.HttpException(`Post with id ${postId} not found`);
+      throw ApiError.HttpException(`Post with id ${postId} not found`)
     }
 
-    return post;
+    return post
   }
 
   async getUserPostData(userId) {
-    const posts = await postModel.find().where("author").equals(userId);
-    const postsId = posts.map((post) => ObjectId(post._id));
+    const posts = await postModel.find().where("author").equals(userId)
+    const postsId = posts.map((post) => ObjectId(post._id))
 
-    const comments = await CommentService.usersComments(userId);
-    const userRating = await ReactionService.getUserRating(postsId);
-    const reactions = await ReactionService.getPersonalLikes(userId);
+    const comments = await CommentService.usersComments(userId)
+    const userRating = await ReactionService.getUserRating(postsId)
+    const reactions = await ReactionService.getPersonalLikes(userId)
 
-    return { userRating, comments, reactions };
+    return { userRating, comments, reactions }
   }
 
   async getOne(postId, userId, ip) {
-    const post = await this.postExist(postId);
-    const postDTO = await this.getExtendedPostDTO(post, userId);
+    const post = await this.postExist(postId)
+    const postDTO = await this.getExtendedPostDTO(post, userId)
 
-    const checkStatus = await UserPostReadService.chechIsReadStatus(postId, ip);
+    const checkStatus = await UserPostReadService.chechIsReadStatus(postId, ip)
 
     if (checkStatus) {
-      UserPostReadService.setIsReadStatus(postId, ip);
+      UserPostReadService.setIsReadStatus(postId, ip)
     }
 
-    return postDTO;
+    return postDTO
   }
 
   async searchBySubstring(substring) {
@@ -111,21 +111,21 @@ class PostService {
       .find({
         title: { $regex: substring },
       })
-      .populate("author");
+      .populate("author")
 
-    const postsDTO = posts.map((post) => this.createPostListDTO(post));
-    return postsDTO;
+    const postsDTO = posts.map((post) => this.createPostListDTO(post))
+    return postsDTO
   }
 
   async getAllPosts() {
-    const posts = await postModel.find().populate("author");
-    const postsDTO = posts.map((post) => this.createPostListDTO(post));
-    return postsDTO;
+    const posts = await postModel.find().populate("author")
+    const postsDTO = posts.map((post) => this.createPostListDTO(post))
+    return postsDTO
   }
 
   async getLimitPosts(currentPage, limit) {
-    const postsData = await this.getPosts({}, currentPage, limit);
-    return postsData;
+    const postsData = await this.getPosts({}, currentPage, limit)
+    return postsData
   }
 
   async getLimitUserPosts(currentPage, limit, userId) {
@@ -134,9 +134,9 @@ class PostService {
         author: userId,
       },
       currentPage,
-      limit
-    );
-    return postsData;
+      limit,
+    )
+    return postsData
   }
 
   async getPosts(filter, currentPage, limit) {
@@ -144,83 +144,83 @@ class PostService {
       .find(filter)
       .skip((currentPage - 1) * limit)
       .limit(parseInt(limit))
-      .populate("author");
+      .populate("author")
 
-    const postsDTO = posts.map((post) => this.createPostListDTO(post));
+    const postsDTO = posts.map((post) => this.createPostListDTO(post))
 
-    let nextPage = null;
+    let nextPage = null
 
     if (postsDTO.length == limit) {
-      nextPage = true;
+      nextPage = true
     } else {
-      nextPage = false;
+      nextPage = false
     }
 
-    return { nextPage, posts: postsDTO };
+    return { nextPage, posts: postsDTO }
   }
 
   checkPostAuthor(userId, postAuthor) {
     if (postAuthor.toString() !== userId) {
       throw ApiError.HttpException(
-        `User with id ${userId} not author this post`
-      );
+        `User with id ${userId} not author this post`,
+      )
     }
   }
 
   createPostListDTO(postModel) {
-    const postDTO = new PostDTO(postModel);
-    postDTO.setUserName(postModel.author.email);
-    return postDTO;
+    const postDTO = new PostDTO(postModel)
+    postDTO.setUserName(postModel.author.email)
+    return postDTO
   }
 
   async getExtendedPostDTO(postModel, userId) {
-    const postDTO = new PostDTO(postModel);
-    const userDTO = new UserDTO(postModel.author);
-    const fileDTO = new FileDTO(postModel.file);
+    const postDTO = new PostDTO(postModel)
+    const userDTO = new UserDTO(postModel.author)
+    const fileDTO = new FileDTO(postModel.file)
 
-    const tagsList = postModel.tags.map((tag) => tag.title);
+    const tagsList = postModel.tags.map((tag) => tag.title)
 
-    postDTO.setAuthor(userDTO);
-    postDTO.setImage(fileDTO);
-    postDTO.setTags(tagsList);
+    postDTO.setAuthor(userDTO)
+    postDTO.setImage(fileDTO)
+    postDTO.setTags(tagsList)
 
     const reactionData = await ReactionService.getReactionsCount(
       postDTO.id,
-      userId
-    );
-    postDTO.setLikes(reactionData);
+      userId,
+    )
+    postDTO.setLikes(reactionData)
 
-    const commentsData = await CommentService.getList(postDTO.id);
-    postDTO.setComments(commentsData);
+    const commentsData = await CommentService.getList(postDTO.id)
+    postDTO.setComments(commentsData)
 
-    return postDTO;
+    return postDTO
   }
 
   async postReaction(postId, userId, isLiked) {
     const reactionStatus = await ReactionService.setReaction(
       postId,
       userId,
-      isLiked
-    );
+      isLiked,
+    )
 
-    if (!reactionStatus && isLiked !== 'null') {
-      await this.postExist(postId);
-      await ReactionService.add(postId, userId, isLiked);
+    if (!reactionStatus && isLiked !== "null") {
+      await this.postExist(postId)
+      await ReactionService.add(postId, userId, isLiked)
     }
 
-    return true;
+    return true
   }
 
   async addPostComment(userId, postId, message) {
-    await this.postExist(postId);
+    await this.postExist(postId)
 
     const inseredCommentDTO = await CommentService.create(
       userId,
       postId,
-      message
-    );
-    return inseredCommentDTO;
+      message,
+    )
+    return inseredCommentDTO
   }
 }
 
-module.exports = new PostService();
+module.exports = new PostService()

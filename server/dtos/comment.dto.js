@@ -25,8 +25,7 @@ const UserDTO = require("../dtos/user.dto")
  *         message: 'test message'
  */
 
- module.exports = class CommentDTO {
-
+module.exports = class CommentDTO {
   constructor(model) {
     this.id = model._id
     this.message = model.message
@@ -35,8 +34,6 @@ const UserDTO = require("../dtos/user.dto")
     if (model.user) {
       this.setUser(model.user)
     }
-
-
   }
 
   setUser(user) {

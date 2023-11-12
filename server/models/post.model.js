@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require("mongoose")
 
 /**
  * @swagger
@@ -57,9 +57,9 @@ const PostSchema = new Schema({
   timeRead: { type: Number, required: true },
   readCount: { type: Number, default: 0 },
   createdDate: { type: Date, required: true, default: Date.now },
-});
+})
 
-module.exports = model("Posts", PostSchema);
+module.exports = model("Posts", PostSchema)
 
 // db.posts.aggregate([
 //   {

@@ -4,14 +4,16 @@ const ApiError = require("../exceprions/api.error")
 const tokenModel = require("../models/token.model")
 
 class TokenService {
-
   generateTokens(payload) {
-
-    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_EXPIRES })
-    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES })
+    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_EXPIRES,
+    })
+    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: process.env.JWT_REFRESH_EXPIRES,
+    })
     return {
       accessToken,
-      refreshToken
+      refreshToken,
     }
   }
 
@@ -48,7 +50,7 @@ class TokenService {
 
     const token = await tokenModel.create({
       user: userId,
-      refreshToken
+      refreshToken,
     })
 
     return token
@@ -61,7 +63,6 @@ class TokenService {
       throw ApiError.UnauthorizedError()
     }
   }
-
 }
 
 module.exports = new TokenService()

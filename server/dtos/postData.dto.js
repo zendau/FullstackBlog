@@ -51,26 +51,19 @@
  *            postId: 62d717847a2c15105c1a20d6
  */
 
-
 module.exports = class PostDataDTO {
-
   constructor(model) {
     this.id = model.id
     this.email = model.email
     this.rating = model.rating
-    this.reactions = model.reactions.map(reaction => new PostReactions(reaction))
-    this.comments = model.comments.map(cooment => new PostComments(cooment))
+    this.reactions = model.reactions.map(
+      (reaction) => new PostReactions(reaction),
+    )
+    this.comments = model.comments.map((cooment) => new PostComments(cooment))
   }
 }
 
-
 class PostReactions {
-
-  id
-  isLiked
-  postId
-  postTitle
-
   constructor(model) {
     this.id = model.id
     this.isLiked = model.isLiked
@@ -80,17 +73,10 @@ class PostReactions {
 }
 
 class PostComments {
-
-  id
-  message
-  postId
-  postTitle
-
   constructor(model) {
     this.id = model.id
     this.message = model.message
     this.postId = model.postId[0]
     this.postTitle = model.postTitle[0]
   }
-
 }

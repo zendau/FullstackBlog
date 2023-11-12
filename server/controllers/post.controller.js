@@ -1,47 +1,45 @@
-const PostService = require("../services/post.service");
-const CommentService = require("../services/comment.serice");
+const PostService = require("../services/post.service")
+const CommentService = require("../services/comment.serice")
 
-const ApiError = require("../exceprions/api.error");
+const ApiError = require("../exceprions/api.error")
 
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
+const Joi = require("joi")
+Joi.objectId = require("joi-objectid")(Joi)
 
 class PostController {
   async create(req, res, next) {
     try {
-
-      debugger
-
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
         body: Joi.string().required(),
         timeRead: Joi.number().required(),
         tags: Joi.array().required(),
-      });
-      const { error } = schema.validate(req.body);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const postData = req.body;
+      const postData = req.body
 
-      const file = req.file;
+      const file = req.file
       if (file === undefined) {
         throw ApiError.HttpException(
-          "file is required field and must be one of the types: png, jpg, jpeg"
-        );
+          "file is required field and must be one of the types: png, jpg, jpeg",
+        )
       }
 
-      const { id, isActivated } = req.user.payload;
+      const { id, isActivated } = req.user.payload
 
       if (!isActivated) {
-        res.json({ message: 'For this action you need to activate your account' })
+        res.json({
+          message: "For this action you need to activate your account",
+        })
         return
       }
 
-
-      const data = await PostService.create(id, postData, file);
-      res.json(data);
+      const data = await PostService.create(id, postData, file)
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -51,18 +49,18 @@ class PostController {
         postId: Joi.objectId().required(),
         title: Joi.string().min(6).max(20),
         body: Joi.string(),
-      });
-      const { error } = schema.validate(req.body);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, title, body } = req.body;
-      const userId = req.user.payload.id;
-      const file = req.file;
+      const { postId, title, body } = req.body
+      const userId = req.user.payload.id
+      const file = req.file
 
-      const data = await PostService.edit(postId, userId, title, body, file);
-      res.json(data);
+      const data = await PostService.edit(postId, userId, title, body, file)
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -70,15 +68,15 @@ class PostController {
     try {
       const schema = Joi.object({
         id: Joi.objectId().required(),
-      });
-      const { error } = schema.validate(req.params);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const userId = req.user.payload.id;
-      const data = await PostService.delete(req.params.id, userId);
-      res.json(data);
+      const userId = req.user.payload.id
+      const data = await PostService.delete(req.params.id, userId)
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -86,19 +84,19 @@ class PostController {
     try {
       const schema = Joi.object({
         id: Joi.objectId().required(),
-      });
-      const { error } = schema.validate(req.params);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { id } = req.params;
-      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+      const { id } = req.params
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
 
-      const userId = req.user?.payload?.id || null;
+      const userId = req.user?.payload?.id || null
 
-      const data = await PostService.getOne(id, userId, ip);
-      res.json(data);
+      const data = await PostService.getOne(id, userId, ip)
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -106,16 +104,16 @@ class PostController {
     try {
       const schema = Joi.object({
         substring: Joi.string().min(3).max(20).required(),
-      });
-      const { error } = schema.validate(req.params);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { substring } = req.params;
+      const { substring } = req.params
 
-      const data = await PostService.searchBySubstring(substring);
-      res.json(data);
+      const data = await PostService.searchBySubstring(substring)
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -124,17 +122,17 @@ class PostController {
       const schema = Joi.object({
         postId: Joi.objectId().required(),
         isLiked: [Joi.bool().required(), Joi.allow(null)],
-      });
-      const { error } = schema.validate(req.query);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, isLiked } = req.query;
-      const userId = req.user.payload.id;
+      const { postId, isLiked } = req.query
+      const userId = req.user.payload.id
 
-      const resData = await PostService.postReaction(postId, userId, isLiked);
-      res.json(resData);
+      const resData = await PostService.postReaction(postId, userId, isLiked)
+      res.json(resData)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -144,29 +142,29 @@ class PostController {
         currentPage: Joi.number().required(),
         limit: Joi.number().required(),
         userId: Joi.objectId().required(),
-      });
-      const { error } = schema.validate(req.query);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { currentPage, limit, userId } = req.query;
+      const { currentPage, limit, userId } = req.query
       const data = await PostService.getLimitUserPosts(
         currentPage,
         limit,
-        userId
-      );
+        userId,
+      )
 
-      res.json(data);
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
   async getAllPosts(req, res, next) {
     try {
-      const data = await PostService.getAllPosts();
-      res.json(data);
+      const data = await PostService.getAllPosts()
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -175,16 +173,16 @@ class PostController {
       const schema = Joi.object({
         currentPage: Joi.number().required(),
         limit: Joi.number().required(),
-      });
-      const { error } = schema.validate(req.query);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { currentPage, limit } = req.query;
-      const data = await PostService.getLimitPosts(currentPage, limit);
+      const { currentPage, limit } = req.query
+      const data = await PostService.getLimitPosts(currentPage, limit)
 
-      res.json(data);
+      res.json(data)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -193,22 +191,22 @@ class PostController {
       const schema = Joi.object({
         postId: Joi.objectId().required(),
         message: Joi.string().required(),
-      });
-      const { error } = schema.validate(req.body);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, message } = req.body;
+      const { postId, message } = req.body
 
-      const userId = req.user.payload.id;
+      const userId = req.user.payload.id
 
       const inseredData = await PostService.addPostComment(
         userId,
         postId,
-        message
-      );
-      res.json(inseredData);
+        message,
+      )
+      res.json(inseredData)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -217,21 +215,21 @@ class PostController {
       const schema = Joi.object({
         commentId: Joi.objectId().required(),
         message: Joi.string().required(),
-      });
-      const { error } = schema.validate(req.body);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { commentId, message } = req.body;
-      const userId = req.user.payload.id;
+      const { commentId, message } = req.body
+      const userId = req.user.payload.id
 
       const updatedStatus = await CommentService.edit(
         commentId,
         userId,
-        message
-      );
-      res.json(updatedStatus);
+        message,
+      )
+      res.json(updatedStatus)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 
@@ -239,19 +237,19 @@ class PostController {
     try {
       const schema = Joi.object({
         commentId: Joi.objectId().required(),
-      });
-      const { error } = schema.validate(req.body);
-      if (error) throw ApiError.HttpException(error.details[0].message);
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { commentId } = req.body;
-      const userId = req.user.payload.id;
+      const { commentId } = req.body
+      const userId = req.user.payload.id
 
-      const deleteStatus = await CommentService.delete(commentId, userId);
-      res.json(deleteStatus);
+      const deleteStatus = await CommentService.delete(commentId, userId)
+      res.json(deleteStatus)
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
 }
 
-module.exports = new PostController();
+module.exports = new PostController()

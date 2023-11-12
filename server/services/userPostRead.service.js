@@ -1,33 +1,31 @@
-const UserPostReadModel = require("../models/userPostRead.model");
-const PostModel = require("../models/post.model");
-
-const { ObjectId } = require("mongodb");
+const UserPostReadModel = require("../models/userPostRead.model")
+const PostModel = require("../models/post.model")
 
 class UserPostReadService {
   async chechIsReadStatus(postId, ip) {
     const res = await UserPostReadModel.findOne({
       $and: [{ post: postId }, { ip }],
-    });
+    })
 
-    return !res;
+    return !res
   }
 
   async setIsReadStatus(postId, ip) {
-    const res = await UserPostReadModel.create({ post: postId, ip });
+    const res = await UserPostReadModel.create({ post: postId, ip })
 
-    const incStatus = await this.postIncReadCount(postId);
+    await this.postIncReadCount(postId)
 
-    return res;
+    return res
   }
 
   async postIncReadCount(postId) {
     const res = await PostModel.updateOne(
       { _id: postId },
-      { $inc: { readCount: 1 } }
-    );
+      { $inc: { readCount: 1 } },
+    )
 
-    return !!res;
+    return !!res
   }
 }
 
-module.exports = new UserPostReadService();
+module.exports = new UserPostReadService()

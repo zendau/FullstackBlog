@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require("mongoose")
 
 /**
  * @swagger
@@ -24,6 +24,6 @@ const { Schema, model } = require("mongoose");
 const UserPostReadSchema = new Schema({
   post: { type: Schema.Types.ObjectId, ref: "Posts", required: true },
   ip: { type: String, required: true },
-});
+})
 
-module.exports = model("UserPostRead", UserPostReadSchema);
+module.exports = model("UserPostRead", UserPostReadSchema)

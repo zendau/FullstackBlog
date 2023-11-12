@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require("mongoose")
 
 /**
  * @swagger
@@ -18,6 +18,6 @@ const { Schema, model } = require("mongoose");
 
 const TagSchema = new Schema({
   title: { type: Schema.Types.String, require: true, unique: true },
-});
+})
 
-module.exports = model("Tags", TagSchema);
+module.exports = model("Tags", TagSchema)

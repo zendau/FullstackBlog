@@ -3,16 +3,14 @@ const fileModel = require("../models/file.model")
 const ApiError = require("../exceprions/api.error")
 const FileDTO = require("../dtos/file.dto")
 
-const fs = require('fs')
+const fs = require("fs")
 
 class FileService {
-
   async create(file) {
-
     const fileInsered = await fileModel.create({
       fileName: file.filename,
       size: file.size,
-      mimetype: file.mimetype
+      mimetype: file.mimetype,
     })
 
     const fileDTO = new FileDTO(fileInsered)
@@ -20,7 +18,6 @@ class FileService {
   }
 
   async getById(fileId) {
-
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
@@ -29,18 +26,16 @@ class FileService {
 
     const fileDTO = new FileDTO(file)
     return fileDTO
-
   }
 
   async getList() {
     const files = await fileModel.find()
 
-    const filesDTO = files.map(file => new FileDTO(file))
+    const filesDTO = files.map((file) => new FileDTO(file))
     return filesDTO
   }
 
   async update(fileId, newFile) {
-
     const file = await fileModel.findById(fileId)
 
     if (file === null) {
@@ -63,16 +58,15 @@ class FileService {
 
   removeFromStorage(filename) {
     fs.unlink(`${process.env.FILE_FOULDER}/${filename}`, (err) => {
-      if (err && err.code == 'ENOENT') {
+      if (err && err.code == "ENOENT") {
         console.error("File doesn't exist, won't remove it")
       } else if (err) {
-        console.error('Error occurred while trying to remove file')
+        console.error("Error occurred while trying to remove file")
       }
     })
   }
 
   async delete(fileId) {
-
     const DeleteStatus = await fileModel.findByIdAndDelete(fileId)
     if (DeleteStatus === null) {
       throw ApiError.HttpException(`File id ${fileId} is not found`)
@@ -82,7 +76,6 @@ class FileService {
 
     return true
   }
-
 }
 
 module.exports = new FileService()

@@ -1,10 +1,9 @@
 const UserService = require("../services/user.service")
 const Joi = require("joi")
-Joi.objectId = require('joi-objectid')(Joi)
+Joi.objectId = require("joi-objectid")(Joi)
 const ApiError = require("../exceprions/api.error")
 
 class UserController {
-
   async registration(req, res, next) {
     try {
       const schema = Joi.object({
@@ -16,16 +15,18 @@ class UserController {
 
       const { email, password } = req.body
       const data = await UserService.registration(email, password)
-      res.cookie("JWTRefreshToken", data.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
+      res.cookie("JWTRefreshToken", data.refreshToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
       res.json(data)
     } catch (e) {
-      console.log('EEER', e)
+      console.log("EEER", e)
       next(e)
     }
   }
 
   async login(req, res, next) {
-
     try {
       const schema = Joi.object({
         email: Joi.string().email(),
@@ -36,7 +37,10 @@ class UserController {
 
       const { email, password } = req.body
       const userData = await UserService.login(email, password)
-      res.cookie('JWTRefreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+      res.cookie("JWTRefreshToken", userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
       res.json(userData)
     } catch (e) {
       next(e)
@@ -47,7 +51,10 @@ class UserController {
     try {
       const { JWTRefreshToken } = req.cookies
       const userData = await UserService.refresh(JWTRefreshToken)
-      res.cookie('JWTRefreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+      res.cookie("JWTRefreshToken", userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
       return res.json(userData)
     } catch (e) {
       next(e)
@@ -78,7 +85,7 @@ class UserController {
   async setConfirmCode(req, res, next) {
     try {
       const schema = Joi.object({
-        email: Joi.string().email().required()
+        email: Joi.string().email().required(),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
@@ -103,8 +110,16 @@ class UserController {
 
       const { code, newEmail, newPassword } = req.body
       const userId = req.user.payload.id
-      const newUserData = await UserService.saveNewUserData(userId, code, newEmail, newPassword)
-      res.cookie('JWTRefreshToken', newUserData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+      const newUserData = await UserService.saveNewUserData(
+        userId,
+        code,
+        newEmail,
+        newPassword,
+      )
+      res.cookie("JWTRefreshToken", newUserData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
       return res.json(newUserData)
     } catch (e) {
       next(e)
@@ -114,14 +129,17 @@ class UserController {
   async activateAccount(req, res, next) {
     try {
       const schema = Joi.object({
-        confirmCode: Joi.number().required()
+        confirmCode: Joi.number().required(),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { confirmCode } = req.body
       const userId = req.user.payload.id
-      const activateStatus = await UserService.activateAccount(userId, confirmCode)
+      const activateStatus = await UserService.activateAccount(
+        userId,
+        confirmCode,
+      )
 
       return res.json(activateStatus)
     } catch (e) {
@@ -134,7 +152,6 @@ class UserController {
       const userId = req.user.payload.id
       const status = await UserService.repeatConfirmCode(userId)
       return res.json(status)
-
     } catch (e) {
       next(e)
     }
@@ -146,7 +163,6 @@ class UserController {
       const status = await UserService.resetPassword(email, confirmCode)
 
       return res.json(status)
-
     } catch (e) {
       next(e)
     }
@@ -154,7 +170,6 @@ class UserController {
 
   async getUserById(req, res, next) {
     try {
-
       const schema = Joi.object({
         id: Joi.objectId().required(),
       })
@@ -165,12 +180,10 @@ class UserController {
       const status = await UserService.getUserData(userId)
 
       return res.json(status)
-
     } catch (e) {
       next(e)
     }
   }
-
 }
 
 module.exports = new UserController()

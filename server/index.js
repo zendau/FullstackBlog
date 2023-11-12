@@ -1,25 +1,25 @@
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
 
-const express = require("express");
-const app = express();
-const path = require("path");
+const express = require("express")
+const app = express()
+const path = require("path")
 
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express")
+const swaggerJsDoc = require("swagger-jsdoc")
 
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+const cookieParser = require("cookie-parser")
+const cors = require("cors")
 
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-const userRoute = require("./routes/user.route");
-const postRoute = require("./routes/post.route");
-const fileRoute = require("./routes/file.route");
-const commentRoute = require("./routes/comment.route");
+const userRoute = require("./routes/user.route")
+const postRoute = require("./routes/post.route")
+const fileRoute = require("./routes/file.route")
+const commentRoute = require("./routes/comment.route")
 
-const errorMiddleware = require("./middlewares/error.middleware");
+const errorMiddleware = require("./middlewares/error.middleware")
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 const options = {
   definition: {
@@ -31,34 +31,34 @@ const options = {
     },
   },
   apis: ["./routes/*.js", "./models/*.js", "./dtos/*.js"],
-};
+}
 
-const specs = swaggerJsDoc(options);
+const specs = swaggerJsDoc(options)
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-app.use(cookieParser());
+app.use(cookieParser())
 
 app.use(
   cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
-  })
-);
+  }),
+)
 
-app.use("/user", userRoute);
-app.use("/post", postRoute);
-app.use("/file", fileRoute);
-app.use("/comment", commentRoute);
+app.use("/user", userRoute)
+app.use("/post", postRoute)
+app.use("/file", fileRoute)
+app.use("/comment", commentRoute)
 
-app.use(errorMiddleware);
+app.use(errorMiddleware)
 app.use(
   "/image",
-  express.static(path.join(__dirname, process.env.FILE_FOULDER))
-);
+  express.static(path.join(__dirname, process.env.FILE_FOULDER)),
+)
 
 async function start() {
   try {
@@ -66,16 +66,15 @@ async function start() {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
-    });
+    })
 
     app.listen(PORT, () => {
-      console.log(`server started on http://localhost:${PORT}`);
-    });
-  }
-  catch (e) {
-    console.log('ee', e)
-    console.error(e.message);
+      console.log(`server started on http://localhost:${PORT}`)
+    })
+  } catch (e) {
+    console.log("ee", e)
+    console.error(e.message)
   }
 }
 
-start();
+start()

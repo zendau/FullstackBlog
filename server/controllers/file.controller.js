@@ -1,18 +1,21 @@
 const FileService = require("../services/file.service")
+const Joi = require("joi")
+const ApiError = require("../exceprions/api.error")
 
 class FileController {
-
   async add(req, res, next) {
     try {
       const schema = Joi.object({
-        id: Joi.objectId().required()
+        id: Joi.objectId().required(),
       })
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const file = req.file
       if (file === undefined) {
-        throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
+        throw ApiError.HttpException(
+          "file is required field and must be one of the types: png, jpg, jpeg",
+        )
       }
 
       const fileInsered = await FileService.create(file)
@@ -25,14 +28,16 @@ class FileController {
   async update(req, res, next) {
     try {
       const schema = Joi.object({
-        id: Joi.objectId().required()
+        id: Joi.objectId().required(),
       })
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const file = req.file
       if (file === undefined) {
-        throw ApiError.HttpException('file is required field and must be one of the types: png, jpg, jpeg')
+        throw ApiError.HttpException(
+          "file is required field and must be one of the types: png, jpg, jpeg",
+        )
       }
 
       const id = req.params.id
@@ -47,7 +52,7 @@ class FileController {
   async delete(req, res, next) {
     try {
       const schema = Joi.object({
-        id: Joi.objectId().required()
+        id: Joi.objectId().required(),
       })
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
@@ -64,7 +69,7 @@ class FileController {
   async getOne(req, res, next) {
     try {
       const schema = Joi.object({
-        id: Joi.objectId().required()
+        id: Joi.objectId().required(),
       })
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
@@ -78,7 +83,6 @@ class FileController {
     }
   }
 
-
   async getList(req, res, next) {
     try {
       const filesData = await FileService.getList()
@@ -88,12 +92,10 @@ class FileController {
     }
   }
 
-
-
   async download(req, res, next) {
     try {
       const schema = Joi.object({
-        id: Joi.string().required()
+        id: Joi.string().required(),
       })
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
@@ -104,7 +106,6 @@ class FileController {
       next(e)
     }
   }
-
 }
 
 module.exports = new FileController()

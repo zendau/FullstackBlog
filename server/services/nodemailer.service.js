@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer")
 
 class NodeMailerService {
   constructor() {
@@ -10,7 +10,7 @@ class NodeMailerService {
         user: process.env.MAILER_USER,
         pass: process.env.MAILER_PASS,
       },
-    });
+    })
   }
 
   async sendConfirmСode(code, email) {
@@ -20,9 +20,9 @@ class NodeMailerService {
         from: process.env.MAILER_FROM,
         subject: "Confirm code",
         html: `<p>Your confirm code - ${code}</p>`,
-      });
+      })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
@@ -33,11 +33,11 @@ class NodeMailerService {
         from: process.env.MAILER_FROM,
         subject: "Reseted password",
         html: `<p>Your new password - ${password}</p>`,
-      });
+      })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 }
 
-module.exports = new NodeMailerService();
+module.exports = new NodeMailerService()

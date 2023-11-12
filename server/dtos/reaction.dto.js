@@ -20,8 +20,7 @@
  *         isLiked: false
  */
 
- module.exports = class ReactionDto {
-
+module.exports = class ReactionDto {
   constructor(model) {
     this.counterLikes = model.counterLikes
     this.counterDislikes = model.counterDislikes

@@ -1,6 +1,6 @@
-const { ObjectId } = require("mongodb");
-const reactionModel = require("../models/reaction.model");
-const ReactionDTO = require("../dtos/reaction.dto");
+const { ObjectId } = require("mongodb")
+const reactionModel = require("../models/reaction.model")
+const ReactionDTO = require("../dtos/reaction.dto")
 
 class ReactionService {
   async add(postId, userId, isLiked) {
@@ -8,34 +8,34 @@ class ReactionService {
       post: postId,
       user: userId,
       isLiked,
-    });
+    })
   }
 
   async setReaction(postId, userId, isLiked) {
-    if (isLiked === "null") return await this.deleteReaction(postId, userId);
+    if (isLiked === "null") return await this.deleteReaction(postId, userId)
 
     const res = await reactionModel.findOneAndUpdate(
       {
         $and: [{ post: postId }, { user: userId }],
       },
-      { $set: { isLiked } }
-    );
+      { $set: { isLiked } },
+    )
 
     if (res === null) {
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   async deleteReaction(postId, userId) {
     const res = await reactionModel.findOneAndDelete({
       $and: [{ post: postId }, { user: userId }],
-    });
+    })
 
     if (res === null) {
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   async getReactionsCount(postId, userId) {
@@ -78,16 +78,16 @@ class ReactionService {
           _id: 0,
         },
       },
-    ]);
+    ])
     if (reactions.length === 0) {
       return new ReactionDTO({
         counterLikes: 0,
         counterDislikes: 0,
         user: [{ isLiked: null }],
-      });
+      })
     }
 
-    return new ReactionDTO(reactions[0]);
+    return new ReactionDTO(reactions[0])
   }
 
   async getUserRating(postsId) {
@@ -100,7 +100,7 @@ class ReactionService {
       {
         $group: {
           _id: null,
-          counterDislikes: {
+          counterLikes: {
             $sum: {
               $cond: ["$isLiked", 1, 0],
             },
@@ -117,20 +117,20 @@ class ReactionService {
           _id: 0,
         },
       },
-    ]);
+    ])
 
-    const likes = reactions[0]?.like ? reactions[0].like : 0;
-    const dislikes = reactions[0]?.dislike ? reactions[0].dislike : 0;
-    const sum = likes + dislikes;
+    const likes = reactions[0]?.like ? reactions[0].like : 0
+    const dislikes = reactions[0]?.dislike ? reactions[0].dislike : 0
+    const sum = likes + dislikes
 
     if (sum === 0) {
-      return [0, 0];
+      return [0, 0]
     }
 
-    const x1 = parseFloat((likes / sum) * 10).toFixed(2);
-    const x2 = parseFloat(10 - x1).toFixed(2);
+    const x1 = parseFloat((likes / sum) * 10).toFixed(2)
+    const x2 = parseFloat(10 - x1).toFixed(2)
 
-    return [x1, x2];
+    return [x1, x2]
   }
 
   async getPersonalLikes(user) {
@@ -157,13 +157,13 @@ class ReactionService {
           isLiked: 1,
         },
       },
-    ]);
-    return reactions;
+    ])
+    return reactions
   }
 
   async deletePostReactions(postId) {
-    await reactionModel.deleteMany({ post: postId });
+    await reactionModel.deleteMany({ post: postId })
   }
 }
 
-module.exports = new ReactionService();
+module.exports = new ReactionService()

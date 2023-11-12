@@ -6,21 +6,19 @@ const uuid = require("uuid")
 const TokenService = require("../services/token.service")
 const ConfirmCodeService = require("../services/confirmCode.service")
 const nodemailerService = require("./nodemailer.service")
-const PostService = require('../services/post.service')
+const PostService = require("../services/post.service")
 
 const UserDTO = require("../dtos/user.dto")
-const PostDataDTO = require('../dtos/postData.dto')
+const PostDataDTO = require("../dtos/postData.dto")
 
 class UserService {
-
   async registration(email, password) {
-
     await this.checkEmail(email)
     const hashPass = await this.getHashPassword(password)
 
     const user = await userModel.create({
       email,
-      password: hashPass
+      password: hashPass,
     })
 
     const userDTO = new UserDTO(user)
@@ -73,7 +71,7 @@ class UserService {
   async getUsersList() {
     const users = await userModel.find()
 
-    const userDTO = users.map(user => new UserDTO(user))
+    const userDTO = users.map((user) => new UserDTO(user))
     return userDTO
   }
 
@@ -81,7 +79,7 @@ class UserService {
     const user = await userModel.findById(id)
 
     if (user === null) {
-      throw ApiError.HttpException(`User id ${fileId} is not found`)
+      throw ApiError.HttpException(`User id ${id} is not found`)
     }
 
     const userDTO = new UserDTO(user)
@@ -99,9 +97,7 @@ class UserService {
     return new PostDataDTO(user)
   }
 
-
   async logout(token) {
-
     if (!token) {
       throw ApiError.UnauthorizedError()
     }
@@ -119,7 +115,6 @@ class UserService {
 
     const res = await ConfirmCodeService.createCode(user)
     return res
-
   }
 
   async saveNewUserData(userId, code, newEmail, newPassword) {
@@ -137,7 +132,10 @@ class UserService {
     }
 
     if (newPassword) {
-      const hashNewPass = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT))
+      const hashNewPass = await bcrypt.hash(
+        newPassword,
+        parseInt(process.env.BCRYPT_SALT),
+      )
       user.password = hashNewPass
     }
 
@@ -157,16 +155,12 @@ class UserService {
 
     await ConfirmCodeService.checkCode(confirmCode)
 
-
-    await userModel.findByIdAndUpdate(userData.id,
-      {
-        isActivated: true
-      }
-    )
+    await userModel.findByIdAndUpdate(userData.id, {
+      isActivated: true,
+    })
     await ConfirmCodeService.deleteCode(confirmCode)
 
     return true
-
   }
 
   async repeatConfirmCode(id) {
@@ -185,7 +179,9 @@ class UserService {
     const candidate = await this.getByEmail(email)
 
     if (candidate) {
-      throw ApiError.HttpException(`user with email - ${email} is already registered`)
+      throw ApiError.HttpException(
+        `user with email - ${email} is already registered`,
+      )
     }
 
     return candidate
@@ -196,7 +192,6 @@ class UserService {
   }
 
   async resetPassword(email, confirmCode) {
-
     const userData = await this.getByEmail(email)
     await ConfirmCodeService.checkCode(confirmCode)
 
@@ -210,7 +205,6 @@ class UserService {
 
     return { message: `New password was send to ${email}` }
   }
-
 }
 
 module.exports = new UserService()
