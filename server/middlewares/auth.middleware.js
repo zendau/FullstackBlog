@@ -1,7 +1,7 @@
 const ApiError = require('../exceprions/api.error')
 const TokenService = require('../services/token.service')
 
-module.exports = function (role) {
+function authGuard(role) {
 	return function (req, res, next) {
 		try {
 
@@ -32,4 +32,10 @@ module.exports = function (role) {
 			return next(ApiError.UnauthorizedError())
 		}
 	}
+}
+
+module.exports = {
+	authGuard: authGuard(),
+	userGuard: authGuard('user'),
+	adminGuard: authGuard('admin')
 }

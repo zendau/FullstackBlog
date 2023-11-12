@@ -2,7 +2,7 @@ const Router = require('express').Router
 const UserController = require('../controllers/user.controller')
 const router = new Router()
 
-const authMiddleware = require("../middlewares/auth.middleware")
+const { authGuard } = require("../middlewares/auth.middleware")
 
 /**
  * @swagger
@@ -125,7 +125,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/all", authMiddleware(), UserController.userList)
+router.get("/all", authGuard, UserController.userList)
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get("/all", authMiddleware(), UserController.userList)
  *         description: Unexpected error
  */
 
-router.get("/logout", authMiddleware(), UserController.logoutUser)
+router.get("/logout", authGuard, UserController.logoutUser)
 
 /**
  * @swagger
@@ -212,7 +212,7 @@ router.post("/setConfirmCode", UserController.setConfirmCode)
  *         description: Unexpected error
  */
 
-router.put("/saveNewData", authMiddleware(), UserController.saveNewUserData)
+router.put("/saveNewData", authGuard, UserController.saveNewUserData)
 
 /**
  * @swagger
@@ -242,7 +242,7 @@ router.put("/saveNewData", authMiddleware(), UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post('/activate', authMiddleware(), UserController.activateAccount)
+router.post('/activate', authGuard, UserController.activateAccount)
 
 /**
  * @swagger
@@ -268,7 +268,7 @@ router.post('/activate', authMiddleware(), UserController.activateAccount)
  *         description: Unexpected error
  */
 
-router.get('/getActivateCode', authMiddleware(), UserController.repeatConfirmCode)
+router.get('/getActivateCode', authGuard, UserController.repeatConfirmCode)
 
 /**
  * @swagger
