@@ -6,15 +6,17 @@ module.exports = class ApiError extends Error {
   }
 
   static UnauthorizedError() {
-    return new ApiError(401, 'User is not auth')
+    return new ApiError(401, 'Unauthorized user. Access denied.')
   }
 
   static HttpException(response) {
     return new ApiError(400, response)
   }
 
+
+
   static ForbiddenError() {
-    return new ApiError(403, 'You do not have access to this page')
+    return new ApiError(403, 'Forbidden. You do not have permission to access this resource')
   }
 
   static PageNotFoundError(respone) {

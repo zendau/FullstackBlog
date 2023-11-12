@@ -125,7 +125,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/all", authMiddleware, UserController.userList)
+router.get("/all", authMiddleware(), UserController.userList)
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get("/all", authMiddleware, UserController.userList)
  *         description: Unexpected error
  */
 
-router.get("/logout", authMiddleware, UserController.logoutUser)
+router.get("/logout", authMiddleware(), UserController.logoutUser)
 
 /**
  * @swagger
@@ -212,7 +212,7 @@ router.post("/setConfirmCode", UserController.setConfirmCode)
  *         description: Unexpected error
  */
 
-router.put("/saveNewData", authMiddleware, UserController.saveNewUserData)
+router.put("/saveNewData", authMiddleware(), UserController.saveNewUserData)
 
 /**
  * @swagger
@@ -242,7 +242,7 @@ router.put("/saveNewData", authMiddleware, UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post('/activate', authMiddleware, UserController.activateAccount)
+router.post('/activate', authMiddleware(), UserController.activateAccount)
 
 /**
  * @swagger
@@ -259,7 +259,7 @@ router.post('/activate', authMiddleware, UserController.activateAccount)
  *         description: ObjectId of User
  *     responses:
  *       200:
- *         description: Confirm code was re-send 
+ *         description: Confirm code was re-send
  *       400:
  *          description: Error message
  *       401:
@@ -268,7 +268,7 @@ router.post('/activate', authMiddleware, UserController.activateAccount)
  *         description: Unexpected error
  */
 
-router.get('/getActivateCode', authMiddleware, UserController.repeatConfirmCode)
+router.get('/getActivateCode', authMiddleware(), UserController.repeatConfirmCode)
 
 /**
  * @swagger
