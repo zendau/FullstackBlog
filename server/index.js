@@ -15,6 +15,7 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/user.route");
 const postRoute = require("./routes/post.route");
 const fileRoute = require("./routes/file.route");
+const commentRoute = require("./routes/comment.route");
 
 const errorMiddleware = require("./middlewares/error.middleware");
 
@@ -51,6 +52,7 @@ app.use(
 app.use("/user", userRoute);
 app.use("/post", postRoute);
 app.use("/file", fileRoute);
+app.use("/comment", commentRoute);
 
 app.use(errorMiddleware);
 app.use(
