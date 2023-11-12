@@ -32,6 +32,8 @@ const { authGuard } = require("../middlewares/auth.middleware")
 
 router.get("/all", authGuard, UserController.userList)
 
-router.get("/roles", AdminController.getRoles)
+router.patch("/roles", AdminController.getRoles)
+router.patch("/setRole", AdminController.setUserRole)
+router.patch("/unSetRole", AdminController.unSetUserRole)
 
 module.exports = router

@@ -1,13 +1,50 @@
 const UserModel = require("../models/user.model")
+const ApiError = require("../exceprions/api.error")
 
 class AdminService {
   getRoles() {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     const roles = UserModel.schema.obj.roles.enum
-
     return roles
+  }
+
+  async setUserRole(userId, role) {
+    const roles = this.getRoles()
+
+    if (!roles.includes(role)) {
+      throw ApiError.HttpException(`Role "${role}" not found`)
+    }
+
+    const res = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $push: { roles: role } },
+      { new: true },
+    )
+
+    if (!res) {
+      throw ApiError.HttpException(`UserId "${userId}" not found`)
+    }
+
+    return !!res
+  }
+
+  async unSetUserRole(userId, role) {
+    const roles = this.getRoles()
+
+    if (!roles.includes(role)) {
+      throw ApiError.HttpException(`Role "${role}" not found`)
+    }
+
+    const res = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { roles: role } },
+      { new: true },
+    )
+
+    if (!res) {
+      throw ApiError.HttpException(`UserId "${userId}" not found`)
+    }
+
+    return !!res
   }
 }
 
