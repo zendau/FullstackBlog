@@ -38,7 +38,7 @@ const usersSchema = new Schema({
   isActivated: { type: Boolean, default: false },
   roles: {
     type: [String],
-    enum: ["user", "admin", "guest"],
+    enum: ["user", "admin"],
     default: ["user"],
   },
 })

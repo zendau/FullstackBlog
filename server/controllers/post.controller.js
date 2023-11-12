@@ -1,5 +1,5 @@
 const PostService = require("../services/post.service")
-const CommentService = require("../services/comment.serice")
+const CommentService = require("../services/comment.service")
 
 const ApiError = require("../exceprions/api.error")
 

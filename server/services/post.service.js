@@ -7,7 +7,7 @@ const ApiError = require("../exceprions/api.error")
 const FileService = require("./file.service")
 const TagService = require("./tag.service")
 const ReactionService = require("./reaction.service")
-const CommentService = require("./comment.serice")
+const CommentService = require("./comment.service")
 const UserPostReadService = require("./userPostRead.service")
 
 const { ObjectId } = require("mongodb")
