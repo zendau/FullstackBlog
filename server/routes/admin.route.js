@@ -1,5 +1,6 @@
 const Router = require("express").Router
 const UserController = require("../controllers/user.controller")
+const AdminController = require("../controllers/admin.controller")
 const router = new Router()
 
 const { authGuard } = require("../middlewares/auth.middleware")
@@ -30,5 +31,7 @@ const { authGuard } = require("../middlewares/auth.middleware")
  */
 
 router.get("/all", authGuard, UserController.userList)
+
+router.get("/roles", AdminController.getRoles)
 
 module.exports = router
