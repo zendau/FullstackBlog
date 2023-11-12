@@ -49,10 +49,6 @@
  */
 
 module.exports = class PostDto {
-  id;
-  title;
-  date;
-  body;
 
   constructor(model) {
     this.id = model._id;

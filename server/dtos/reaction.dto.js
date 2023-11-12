@@ -21,9 +21,6 @@
  */
 
  module.exports = class ReactionDto {
-  like
-  dislike
-  isLiked
 
   constructor(model) {
     this.counterLikes = model.counterLikes

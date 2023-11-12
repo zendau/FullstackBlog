@@ -21,10 +21,6 @@
  */
 
 module.exports = class FileDTO {
-  id
-  fileName
-  mimetype
-
 
   constructor(model) {
     this.id = model._id

@@ -18,7 +18,7 @@ const UserDTO = require("../dtos/user.dto")
  *           description: message of comment
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
- *         user: 
+ *         user:
  *          id: 62c7234d9f3f1739381f93c4
  *          email: root@admin.com
  *          isActivated: false
@@ -26,11 +26,6 @@ const UserDTO = require("../dtos/user.dto")
  */
 
  module.exports = class CommentDTO {
-  id
-  user
-  message
-  edited
-  user 
 
   constructor(model) {
     this.id = model._id
@@ -41,7 +36,7 @@ const UserDTO = require("../dtos/user.dto")
       this.setUser(model.user)
     }
 
-    
+
   }
 
   setUser(user) {

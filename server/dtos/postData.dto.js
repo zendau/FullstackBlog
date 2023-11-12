@@ -27,7 +27,7 @@
  *          items:
  *           id: ObjectId
  *           isLiked: boolean
- *           postId: ObjectId       
+ *           postId: ObjectId
  *           postTitle: string
  *       example:
  *         email: root@gmail.com
@@ -53,18 +53,13 @@
 
 
 module.exports = class PostDataDTO {
-  id
-  email
-  rating
-  reactions
-  comments
 
   constructor(model) {
     this.id = model.id
     this.email = model.email
     this.rating = model.rating
-    this.reactions = model.reactions.map(reaction => new PostReactions(reaction)) 
-    this.comments = model.comments.map(cooment => new PostComments(cooment)) 
+    this.reactions = model.reactions.map(reaction => new PostReactions(reaction))
+    this.comments = model.comments.map(cooment => new PostComments(cooment))
   }
 }
 
