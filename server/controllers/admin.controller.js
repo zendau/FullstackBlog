@@ -46,6 +46,40 @@ class AdminController {
       next(e)
     }
   }
+
+  async blockUser(req, res, next) {
+    try {
+      const schema = Joi.object({
+        userId: Joi.objectId().required(),
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { userId } = req.body
+
+      const data = await AdminService.blockUser(userId)
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async unBlockUser(req, res, next) {
+    try {
+      const schema = Joi.object({
+        userId: Joi.objectId().required(),
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { userId } = req.body
+
+      const data = await AdminService.unBlockUser(userId)
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 module.exports = new AdminController()

@@ -2,8 +2,11 @@ const Router = require("express").Router
 const PostController = require("../controllers/post.controller")
 const router = new Router()
 
-const { authGuard, adminGuard } = require("../middlewares/auth.middleware")
-const jwtDataMiddleware = require("../middlewares/jwtData.middleware")
+const {
+  authGuard,
+  adminGuard,
+  noAuth,
+} = require("../middlewares/auth.middleware")
 const multer = require("../middlewares/multer.middleware")
 
 /**
@@ -151,7 +154,7 @@ router.delete("/delete/:id", authGuard, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", jwtDataMiddleware, PostController.getOne)
+router.get("/get/:id", noAuth, PostController.getOne)
 
 router.get("/search/:substring", PostController.getPostsBySubString)
 

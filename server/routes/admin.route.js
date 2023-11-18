@@ -35,5 +35,7 @@ router.get("/all", authGuard, UserController.userList)
 router.patch("/roles", AdminController.getRoles)
 router.patch("/setRole", AdminController.setUserRole)
 router.patch("/unSetRole", AdminController.unSetUserRole)
+router.patch("/block", AdminController.blockUser)
+router.patch("/unBlock", AdminController.unBlockUser)
 
 module.exports = router

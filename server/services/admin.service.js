@@ -46,6 +46,32 @@ class AdminService {
 
     return !!res
   }
+
+  async blockUser(userId) {
+    const res = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { isBlocked: true },
+    )
+
+    if (!res) {
+      throw ApiError.HttpException(`UserId "${userId}" not found`)
+    }
+
+    return !!res
+  }
+
+  async unBlockUser(userId) {
+    const res = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { isBlocked: false },
+    )
+
+    if (!res) {
+      throw ApiError.HttpException(`UserId "${userId}" not found`)
+    }
+
+    return !!res
+  }
 }
 
 module.exports = new AdminService()

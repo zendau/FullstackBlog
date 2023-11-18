@@ -3,9 +3,16 @@ const TokenService = require("../services/token.service")
 
 function authGuard(role) {
   return function (req, res, next) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
     try {
       const authorizationHeader = req.headers.authorization
       if (!authorizationHeader) {
+        if (role === "noAuth") {
+          return next()
+        }
+
         return next(ApiError.UnauthorizedError())
       }
 
@@ -19,7 +26,11 @@ function authGuard(role) {
         return next(ApiError.UnauthorizedError())
       }
 
-      if (role && !userData.payload.roles.includes(role)) {
+      if (userData.payload.isBlocked) {
+        return next(ApiError.ForbiddenError())
+      }
+
+      if (role && role !== "noAuth" && !userData.payload.roles.includes(role)) {
         return next(ApiError.ForbiddenError())
       }
 
@@ -35,4 +46,5 @@ module.exports = {
   authGuard: authGuard(),
   userGuard: authGuard("user"),
   adminGuard: authGuard("admin"),
+  noAuth: authGuard("noAuth"),
 }
