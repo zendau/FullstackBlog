@@ -338,83 +338,83 @@ module.exports = model("Posts", PostSchema)
 //     },
 //   },
 //   //
-//   {
-//     $lookup: {
-//       from: "posts",
-//       localField: "_id",
-//       foreignField: "_id",
-//       as: "post",
-//     },
+// {
+//   $lookup: {
+//     from: "posts",
+//     localField: "_id",
+//     foreignField: "_id",
+//     as: "post",
 //   },
-//   { $unwind: "$post" },
-//   {
-//     $lookup: {
-//       from: "files",
-//       localField: "post.file",
-//       foreignField: "_id",
-//       as: "file",
-//     },
+// },
+// { $unwind: "$post" },
+// {
+//   $lookup: {
+//     from: "files",
+//     localField: "post.file",
+//     foreignField: "_id",
+//     as: "file",
 //   },
-//   { $unwind: "$file" },
-//   {
-//     $lookup: {
-//       from: "users",
-//       localField: "post.author",
-//       foreignField: "_id",
-//       as: "author",
-//     },
+// },
+// { $unwind: "$file" },
+// {
+//   $lookup: {
+//     from: "users",
+//     localField: "post.author",
+//     foreignField: "_id",
+//     as: "author",
 //   },
-//   { $unwind: "$author" },
-//   {
-//     $lookup: {
-//       from: "tags",
-//       localField: "post.tags",
-//       foreignField: "_id",
-//       as: "tags",
-//     },
+// },
+// { $unwind: "$author" },
+// {
+//   $lookup: {
+//     from: "tags",
+//     localField: "post.tags",
+//     foreignField: "_id",
+//     as: "tags",
 //   },
-//   {
-//     $project: {
-//       _id: 0,
-//       id: "$_id",
-//       body: { $substr: ["$post.body", 0, 10] },
-//       tags: {
-//         $map: {
-//           input: "$tags",
-//           as: "tag",
-//           in: "$$tag.title",
-//         },
+// },
+// {
+//   $project: {
+//     _id: 0,
+//     id: "$_id",
+//     body: { $substr: ["$post.body", 0, 10] },
+//     tags: {
+//       $map: {
+//         input: "$tags",
+//         as: "tag",
+//         in: "$$tag.title",
 //       },
-//       author: {
-//         id: "$author._id",
-//         email: 1,
-//       },
-//       title: "$post.title",
-//       timeRead: "$post.timeRead",
-//       file: {
-//         id: "$file._id",
-//         fileName: 1,
-//         size: 1,
-//         mimetype: 1,
-//       },
-//       createdDate: "$post.createdDate",
-//       rating: {
-//         $sum: [
-//           { $multiply: ["$counterLikes", 2] },
-//           { $multiply: ["$counterDislikes", -1] },
-//           { $multiply: ["$counterComments", 3] },
-//           { $multiply: ["$counterReads", 0.1] },
-//         ],
-//       },
-//       counterReads: 1,
-//       counterComments: 1,
-//       counterLikes: 1,
-//       counterDislikes: 1,
 //     },
+//     author: {
+//       id: "$author._id",
+//       email: 1,
+//     },
+//     title: "$post.title",
+//     timeRead: "$post.timeRead",
+//     file: {
+//       id: "$file._id",
+//       fileName: 1,
+//       size: 1,
+//       mimetype: 1,
+//     },
+//     createdDate: "$post.createdDate",
+//     rating: {
+//       $sum: [
+//         { $multiply: ["$counterLikes", 2] },
+//         { $multiply: ["$counterDislikes", -1] },
+//         { $multiply: ["$counterComments", 3] },
+//         { $multiply: ["$counterReads", 0.1] },
+//       ],
+//     },
+//     counterReads: 1,
+//     counterComments: 1,
+//     counterLikes: 1,
+//     counterDislikes: 1,
 //   },
-//   //
-//   // { $sort: { rating: -1 } /* Сортировка по убыванию рейтинга*/ },
-//   { $sort: { createdDate: -1 } /* Сортировка по дате*/ },
+// },
+// //
+// // { $sort: { rating: -1 } /* Сортировка по убыванию рейтинга*/ },
+// { $sort: { createdDate: -1 } /* Сортировка по дате*/ },
 // ]);
 
 // db.tags.aggregate([

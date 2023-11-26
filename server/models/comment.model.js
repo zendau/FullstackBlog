@@ -31,6 +31,7 @@ const CommentSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "Users", required: true },
   message: { type: Schema.Types.String, require: true },
   edited: { type: Schema.Types.Boolean, default: "false" },
+  createdDate: { type: Date, required: true, default: Date.now },
 })
 
 module.exports = model("Comments", CommentSchema)

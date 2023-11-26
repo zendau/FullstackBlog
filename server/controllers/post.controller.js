@@ -100,23 +100,6 @@ class PostController {
     }
   }
 
-  async getPostsBySubString(req, res, next) {
-    try {
-      const schema = Joi.object({
-        substring: Joi.string().min(3).max(20).required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
-      const { substring } = req.params
-
-      const data = await PostService.searchBySubstring(substring)
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
-
   async reactionPost(req, res, next) {
     try {
       const schema = Joi.object({
@@ -131,6 +114,23 @@ class PostController {
 
       const resData = await PostService.postReaction(postId, userId, isLiked)
       res.json(resData)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getPostsBySubString(req, res, next) {
+    try {
+      const schema = Joi.object({
+        substring: Joi.string().min(3).max(20).required(),
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { substring } = req.params
+
+      const data = await PostService.searchBySubstring(substring)
+      res.json(data)
     } catch (e) {
       next(e)
     }
