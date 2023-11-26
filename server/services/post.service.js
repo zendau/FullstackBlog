@@ -221,6 +221,240 @@ class PostService {
     )
     return inseredCommentDTO
   }
+
+  postsRating(withCounters) {
+    return [
+      {
+        $lookup: {
+          from: "comments",
+          localField: "_id",
+          foreignField: "post",
+          as: "comments",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          comments: {
+            $size: "$comments",
+          },
+          readCount: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "reactions",
+          localField: "_id",
+          foreignField: "post",
+          as: "react",
+        },
+      },
+      {
+        $unwind: {
+          path: "$react",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          counterLikes: {
+            $sum: {
+              $cond: {
+                if: {
+                  $eq: ["$react.isLiked", true],
+                },
+                then: 1,
+                else: 0,
+              },
+            },
+          },
+          counterDislikes: {
+            $sum: {
+              $cond: {
+                if: {
+                  $eq: ["$react.isLiked", false],
+                },
+                then: 1,
+                else: 0,
+              },
+            },
+          },
+          counterComments: {
+            $first: "$comments",
+          },
+          counterReads: {
+            $first: "$readCount",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          rating: {
+            $sum: [
+              {
+                $multiply: ["$counterLikes", 2],
+              },
+              {
+                $multiply: ["$counterDislikes", -1],
+              },
+              {
+                $multiply: ["$counterComments", 3],
+              },
+              {
+                $multiply: ["$counterReads", 0.1],
+              },
+            ],
+          },
+          ...(withCounters && {
+            counterReads: 1,
+            counterComments: 1,
+            counterLikes: 1,
+            counterDislikes: 1,
+          }),
+        },
+      },
+    ]
+  }
+
+  postsMatchFilter(idList, { authorId, tag }) {
+    const matchData = {}
+
+    const objectIdList = idList.map((id) => ObjectId(id))
+
+    // Выборка постов конкретного пользователя
+    if (authorId) {
+      matchData.author = {
+        $eq: ObjectId(authorId),
+      }
+    }
+
+    // Выборка постов по конкретному тегу
+    if (tag) {
+      matchData.tags = {
+        $elemMatch: { $eq: ObjectId(tag) },
+      }
+    }
+
+    // Исключения постов которые уже были получины
+    matchData._id = {
+      $nin: objectIdList,
+    }
+
+    return {
+      $match: {
+        ...matchData,
+      },
+    }
+  }
+
+  postsExtendedData() {
+    return [
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "_id",
+          as: "post",
+        },
+      },
+      {
+        $unwind: "$post",
+      },
+      {
+        $lookup: {
+          from: "files",
+          localField: "post.file",
+          foreignField: "_id",
+          as: "file",
+        },
+      },
+      {
+        $unwind: "$file",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "post.author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: "$author",
+      },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "post.tags",
+          foreignField: "_id",
+          as: "tags",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          body: {
+            $substr: ["$post.body", 0, 10],
+          },
+          tags: {
+            $map: {
+              input: "$tags",
+              as: "tag",
+              in: "$$tag.title",
+            },
+          },
+          author: {
+            id: "$author._id",
+            email: 1,
+          },
+          title: "$post.title",
+          timeRead: "$post.timeRead",
+          file: {
+            id: "$file._id",
+            fileName: 1,
+            size: 1,
+            mimetype: 1,
+          },
+          createdDate: "$post.createdDate",
+          rating: {
+            $sum: [
+              {
+                $multiply: ["$counterLikes", 2],
+              },
+              {
+                $multiply: ["$counterDislikes", -1],
+              },
+              {
+                $multiply: ["$counterComments", 3],
+              },
+              {
+                $multiply: ["$counterReads", 0.1],
+              },
+            ],
+          },
+          counterReads: 1,
+          counterComments: 1,
+          counterLikes: 1,
+          counterDislikes: 1,
+        },
+      },
+    ]
+  }
+
+  postsSort({ isRating, isCreatedDate }) {
+    const sort = {}
+
+    if (isRating) {
+      sort.rating = -1
+    }
+
+    if (isCreatedDate) {
+      sort.createdDate = -1
+    }
+  }
 }
 
 module.exports = new PostService()
