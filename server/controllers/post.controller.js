@@ -164,14 +164,22 @@ class PostController {
       const schema = Joi.object({
         limit: Joi.number().required(),
         exclude: Joi.array(),
+        sort: Joi.string().required(),
+        tag: Joi.string(),
+        authorId: Joi.string(),
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { limit, exclude } = req.query
+      const { limit, exclude, sort, tag, authorId } = req.query
       const data = await PostService.getPostsPagination(
         exclude,
         parseInt(limit),
+        sort,
+        {
+          tag,
+          authorId,
+        },
       )
 
       res.json(data)

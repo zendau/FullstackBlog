@@ -450,13 +450,17 @@ class PostService {
   postsSort(filter) {
     const sort = {}
 
-    if (filter?.isRating) {
-      sort.rating = -1
+    switch (filter) {
+      case "byCreatedDate":
+        sort.createdDate = -1
+        break
+
+      case "byRating":
+      default:
+        sort.rating = -1
+        break
     }
 
-    if (filter?.isCreatedDate) {
-      sort.createdDate = -1
-    }
     return [
       {
         $sort: sort,
@@ -464,11 +468,14 @@ class PostService {
     ]
   }
 
-  async getPostsPagination(idList, limit) {
-    const filter = this.postsMatchFilter(idList)
+  async getPostsPagination(idList, limit, sortType, filterType) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
+    const filter = this.postsMatchFilter(idList, filterType)
     const rating = this.postsRating(true)
     const extended = this.postsExtendedData()
-    const sort = this.postsSort({ isRating: true })
+    const sort = this.postsSort(sortType)
 
     const postsLimit = { $limit: limit }
 
