@@ -302,4 +302,6 @@ router.get("/getLimitPosts", PostController.getLimitPosts)
 
 router.patch("/reacting", authGuard, PostController.reactionPost)
 
+router.get("/pagination", PostController.getPostsPagination)
+
 module.exports = router

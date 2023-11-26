@@ -159,6 +159,27 @@ class PostController {
     }
   }
 
+  async getPostsPagination(req, res, next) {
+    try {
+      const schema = Joi.object({
+        limit: Joi.number().required(),
+        exclude: Joi.array(),
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { limit, exclude } = req.query
+      const data = await PostService.getPostsPagination(
+        exclude,
+        parseInt(limit),
+      )
+
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async getAllPosts(req, res, next) {
     try {
       const data = await PostService.getAllPosts()

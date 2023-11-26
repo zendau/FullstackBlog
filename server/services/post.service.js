@@ -290,7 +290,6 @@ class PostService {
       },
       {
         $project: {
-          _id: 0,
           rating: {
             $sum: [
               {
@@ -318,22 +317,24 @@ class PostService {
     ]
   }
 
-  postsMatchFilter(idList, { authorId, tag }) {
+  postsMatchFilter(idList, filter) {
     const matchData = {}
 
-    const objectIdList = idList.map((id) => ObjectId(id))
+    const objectIdList = Array.isArray(idList)
+      ? idList.map((id) => ObjectId(id))
+      : []
 
     // Выборка постов конкретного пользователя
-    if (authorId) {
+    if (filter?.authorId) {
       matchData.author = {
-        $eq: ObjectId(authorId),
+        $eq: ObjectId(filter.authorId),
       }
     }
 
     // Выборка постов по конкретному тегу
-    if (tag) {
+    if (filter?.tag) {
       matchData.tags = {
-        $elemMatch: { $eq: ObjectId(tag) },
+        $elemMatch: { $eq: ObjectId(filter.tag) },
       }
     }
 
@@ -342,11 +343,13 @@ class PostService {
       $nin: objectIdList,
     }
 
-    return {
-      $match: {
-        ...matchData,
+    return [
+      {
+        $match: {
+          ...matchData,
+        },
       },
-    }
+    ]
   }
 
   postsExtendedData() {
@@ -444,16 +447,42 @@ class PostService {
     ]
   }
 
-  postsSort({ isRating, isCreatedDate }) {
+  postsSort(filter) {
     const sort = {}
 
-    if (isRating) {
+    if (filter?.isRating) {
       sort.rating = -1
     }
 
-    if (isCreatedDate) {
+    if (filter?.isCreatedDate) {
       sort.createdDate = -1
     }
+    return [
+      {
+        $sort: sort,
+      },
+    ]
+  }
+
+  async getPostsPagination(idList, limit) {
+    const filter = this.postsMatchFilter(idList)
+    const rating = this.postsRating(true)
+    const extended = this.postsExtendedData()
+    const sort = this.postsSort({ isRating: true })
+
+    const postsLimit = { $limit: limit }
+
+    const combineAggregate = [
+      ...filter,
+      ...rating,
+      ...extended,
+      ...sort,
+      postsLimit,
+    ]
+
+    const posts = await postModel.aggregate(combineAggregate)
+
+    return posts
   }
 }
 
