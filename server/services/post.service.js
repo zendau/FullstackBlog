@@ -469,9 +469,6 @@ class PostService {
   }
 
   async getPostsPagination(idList, limit, sortType, filterType) {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     const filter = this.postsMatchFilter(idList, filterType)
     const rating = this.postsRating(true)
     const extended = this.postsExtendedData()

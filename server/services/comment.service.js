@@ -89,6 +89,117 @@ class CommentService {
     const commentListDTO = commentList.map((comment) => new CommentDTO(comment))
     return commentListDTO
   }
+
+  commentsMatchFilter(idList, filter) {
+    const matchData = {}
+
+    const objectIdList = Array.isArray(idList)
+      ? idList.map((id) => ObjectId(id))
+      : []
+
+    // Выборка комментариев пользователя
+    if (filter?.user) {
+      matchData.author = {
+        $eq: ObjectId(filter.user),
+      }
+    }
+
+    // Выборка комментариев поста
+    if (filter?.post) {
+      matchData.post = {
+        $eq: ObjectId(filter.post),
+      }
+    }
+
+    // Исключения постов которые уже были получины
+    matchData._id = {
+      $nin: objectIdList,
+    }
+
+    return [
+      {
+        $match: {
+          ...matchData,
+        },
+      },
+    ]
+  }
+  commentssExtendedData() {
+    return [
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "post",
+          foreignField: "_id",
+          as: "post",
+        },
+      },
+      {
+        $unwind: "$post",
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          edited: 1,
+          user: {
+            id: "$user._id",
+            email: "$user.email",
+            isActivated: "$user.isActivated",
+            isBlocked: "$user.isBlocked",
+          },
+          post: {
+            id: "$post._id",
+            title: "$post.title",
+          },
+          message: 1,
+          createdDate: 1,
+        },
+      },
+    ]
+  }
+
+  commentsSort(filter) {
+    const sort = {}
+
+    switch (filter) {
+      case "createdDate":
+      default:
+        sort.createdDate = -1
+        break
+    }
+
+    return [
+      {
+        $sort: sort,
+      },
+    ]
+  }
+
+  async getCommentsPagination(idList, limit, sortType, filterType) {
+    const filter = this.commentsMatchFilter(idList, filterType)
+    const extended = this.commentssExtendedData()
+    const sort = this.postsSort(sortType)
+
+    const limitCount = { $limit: limit }
+
+    const combineAggregate = [...filter, ...extended, ...sort, limitCount]
+
+    const posts = await commentModel.aggregate(combineAggregate)
+
+    return posts
+  }
 }
 
 module.exports = new CommentService()
