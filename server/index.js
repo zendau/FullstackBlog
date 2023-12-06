@@ -56,6 +56,34 @@ app.use("/file", fileRoute)
 app.use("/comment", commentRoute)
 app.use("/admin", adminRoute)
 
+// Error middleware
+// app.use((err, req, res, next) => {
+//   // Обработка ошибки
+
+//   console.log("2error", err)
+
+//   // eslint-disable-next-line no-debugger
+//   // debugger
+
+//   res.status(err.status || 500)
+//   res.json({
+//     error: {
+//       message: err.message,
+//     },
+//   })
+// })
+
+// app.use((err, req, res, next) => {
+//   console.error(err.stack)
+//   res.status(err.status || 500)
+//   res.json({
+//     error: {
+//       message: err.message,
+//     },
+//   })
+//   // res.status(500).send("Something broke!")
+// })
+
 app.use(errorMiddleware)
 app.use(
   "/image",

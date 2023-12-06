@@ -2,12 +2,15 @@ const commentModel = require("../models/comment.model")
 const ApiError = require("../exceprions/api.error")
 const { ObjectId } = require("mongodb")
 const CommentDTO = require("../dtos/comment.dto")
+const PostService = require("../services/post.service")
 
 class CommentService {
-  async create(user, post, message) {
+  async create(userId, postId, message) {
+    await PostService.postExist(postId)
+
     const inseredComment = await commentModel.create({
-      user,
-      post,
+      userId,
+      postId,
       message,
     })
 

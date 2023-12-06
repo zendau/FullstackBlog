@@ -1,7 +1,8 @@
 module.exports = class ApiError extends Error {
-  constructor(status, response) {
-    super(response)
+  constructor(status, message) {
+    super(message)
     this.status = status
+    this.message = message
   }
 
   static UnauthorizedError() {

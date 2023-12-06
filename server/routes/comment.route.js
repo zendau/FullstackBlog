@@ -1,5 +1,5 @@
 const Router = require("express").Router
-const PostController = require("../controllers/post.controller")
+const CommentController = require("../controllers/comment.controller")
 const router = new Router()
 
 const { authGuard } = require("../middlewares/auth.middleware")
@@ -40,7 +40,7 @@ const { authGuard } = require("../middlewares/auth.middleware")
  *         description: Unexpected error
  */
 
-router.post("/add", authGuard, PostController.addPostComment)
+router.post("/add", authGuard, CommentController.create)
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ router.post("/add", authGuard, PostController.addPostComment)
  *         description: Unexpected error
  */
 
-router.put("/edit", authGuard, PostController.editPostComment)
+// router.put("/edit", authGuard, PostController.editPostComment)
 
 /**
  * @swagger
@@ -109,6 +109,6 @@ router.put("/edit", authGuard, PostController.editPostComment)
  *         description: Unexpected error
  */
 
-router.delete("/delete", authGuard, PostController.deletePostComment)
+// router.delete("/delete", authGuard, PostController.deletePostComment)
 
 module.exports = router
