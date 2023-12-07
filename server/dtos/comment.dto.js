@@ -30,10 +30,24 @@ module.exports = class CommentDTO {
     this.id = model._id
     this.message = model.message
     this.edited = model.edited
+    this.createdDate = model.createdDate
 
     if (model.user) {
       this.setUser(model.user)
     }
+
+    if (model.post) {
+      this.setPostData(model.post)
+    }
+  }
+
+  setPostData(post) {
+    const postData = {}
+
+    postData.id = post._id
+    postData.title = post.title
+
+    this.post = postData
   }
 
   setUser(user) {

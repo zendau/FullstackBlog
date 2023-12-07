@@ -15,7 +15,8 @@ class CommentController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { postId, message } = req.body
-
+      // eslint-disable-next-line no-debugger
+      debugger
       const userId = req.user.payload.id
 
       const inseredData = await CommentService.create(userId, postId, message)

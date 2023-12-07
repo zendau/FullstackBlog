@@ -3,18 +3,23 @@ const ApiError = require("../exceprions/api.error")
 const { ObjectId } = require("mongodb")
 const CommentDTO = require("../dtos/comment.dto")
 const PostService = require("../services/post.service")
-
 class CommentService {
-  async create(userId, postId, message) {
-    await PostService.postExist(postId)
+  async create(user, post, message) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
+    await PostService.postExist(post)
 
     const inseredComment = await commentModel.create({
-      userId,
-      postId,
+      user,
+      post,
       message,
     })
 
-    const commentPopulate = await inseredComment.populate("user").execPopulate()
+    const commentPopulate = await inseredComment
+      .populate("user")
+      .populate("post")
+      .execPopulate()
 
     const commentDTO = new CommentDTO(commentPopulate)
     return commentDTO

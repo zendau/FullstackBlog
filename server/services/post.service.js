@@ -7,7 +7,6 @@ const ApiError = require("../exceprions/api.error")
 const FileService = require("./file.service")
 const TagService = require("./tag.service")
 const ReactionService = require("./reaction.service")
-const CommentService = require("./comment.service")
 const UserPostReadService = require("./userPostRead.service")
 
 const { ObjectId } = require("mongodb")
@@ -86,11 +85,12 @@ class PostService {
     const posts = await postModel.find().where("author").equals(userId)
     const postsId = posts.map((post) => ObjectId(post._id))
 
-    const comments = await CommentService.usersComments(userId)
+    // const comments = await CommentService.usersComments(userId)
     const userRating = await ReactionService.getUserRating(postsId)
     const reactions = await ReactionService.getPersonalLikes(userId)
 
-    return { userRating, comments, reactions }
+    // return { userRating, comments, reactions }
+    return { userRating, reactions }
   }
 
   async getOne(postId, userId, ip) {
@@ -190,8 +190,8 @@ class PostService {
     )
     postDTO.setLikes(reactionData)
 
-    const commentsData = await CommentService.getList(postDTO.id)
-    postDTO.setComments(commentsData)
+    // const commentsData = await CommentService.getList(postDTO.id)
+    // postDTO.setComments(commentsData)
 
     return postDTO
   }
@@ -211,15 +211,15 @@ class PostService {
     return true
   }
 
-  async addPostComment(userId, postId, message) {
+  async addPostComment(userId, postId) {
     await this.postExist(postId)
 
-    const inseredCommentDTO = await CommentService.create(
-      userId,
-      postId,
-      message,
-    )
-    return inseredCommentDTO
+    // const inseredCommentDTO = await CommentService.create(
+    //   userId,
+    //   postId,
+    //   message,
+    // )
+    // return inseredCommentDTO
   }
 
   postsRating(withCounters) {
