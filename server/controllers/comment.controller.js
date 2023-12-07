@@ -15,8 +15,7 @@ class CommentController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { postId, message } = req.body
-      // eslint-disable-next-line no-debugger
-      debugger
+
       const userId = req.user.payload.id
 
       const inseredData = await CommentService.create(userId, postId, message)
@@ -26,7 +25,7 @@ class CommentController {
     }
   }
 
-  async editPostComment(req, res, next) {
+  async edit(req, res, next) {
     try {
       const schema = Joi.object({
         commentId: Joi.objectId().required(),
@@ -49,7 +48,7 @@ class CommentController {
     }
   }
 
-  async deletePostComment(req, res, next) {
+  async delete(req, res, next) {
     try {
       const schema = Joi.object({
         commentId: Joi.objectId().required(),
@@ -60,8 +59,8 @@ class CommentController {
       const { commentId } = req.body
       const userId = req.user.payload.id
 
-      const deleteStatus = await CommentService.delete(commentId, userId)
-      res.json(deleteStatus)
+      await CommentService.delete(commentId, userId)
+      res.json(true)
     } catch (e) {
       next(e)
     }

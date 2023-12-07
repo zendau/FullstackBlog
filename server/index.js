@@ -28,6 +28,7 @@ class App {
 
     this.validateEnv()
 
+    this.initializeSwagger()
     this.initializeMiddlewares()
     this.initializeRoutes()
     this.initializeErrorHandling()
@@ -52,7 +53,7 @@ class App {
     })
   }
 
-  initializeSwaggerSpecs() {
+  initializeSwagger() {
     const options = {
       definition: {
         openapi: "3.0.0",
@@ -66,16 +67,10 @@ class App {
     }
 
     const specs = swaggerJsDoc(options)
-    return specs
+    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
   }
 
   initializeMiddlewares() {
-    this.app.use(
-      "/api-docs",
-      swaggerUI.serve,
-      swaggerUI.setup(this.initializeSwaggerSpecs()),
-    )
-
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(express.json())
 

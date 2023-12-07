@@ -6,10 +6,17 @@ const { authGuard } = require("../middlewares/auth.middleware")
 
 /**
  * @swagger
+ * tags:
+ *   name: Comment
+ *   description: The Comment API
+ */
+
+/**
+ * @swagger
  * /comment/add:
  *   post:
  *     summary: add comment to post
- *     tags: [Post]
+ *     tags: [Comment]
  *     security:
  *      - bearerAuth: []
  *     parameters:
@@ -47,7 +54,7 @@ router.post("/add", authGuard, CommentController.create)
  * /comment/edit:
  *   put:
  *     summary: add comment to post
- *     tags: [Post]
+ *     tags: [Comment]
  *     security:
  *      - bearerAuth: []
  *     parameters:
@@ -56,8 +63,8 @@ router.post("/add", authGuard, CommentController.create)
  *         schema:
  *          type: objectId
  *         description: objectId of post
- *       - in: newMessage
- *         name: newMessage
+ *       - in: message
+ *         name: message
  *         schema:
  *          type: string
  *         description: post's new message
@@ -78,14 +85,14 @@ router.post("/add", authGuard, CommentController.create)
  *         description: Unexpected error
  */
 
-// router.put("/edit", authGuard, PostController.editPostComment)
+router.put("/edit", authGuard, CommentController.edit)
 
 /**
  * @swagger
  * /comment/delete:
  *   delete:
  *     summary: delete post's comment
- *     tags: [Post]
+ *     tags: [Comment]
  *     security:
  *      - bearerAuth: []
  *     parameters:
@@ -100,7 +107,7 @@ router.post("/add", authGuard, CommentController.create)
  *         content:
  *           application/json:
  *             schema:
- *              type: string
+ *              type: boolean
  *       400:
  *          description: Error message
  *       401:
@@ -109,6 +116,6 @@ router.post("/add", authGuard, CommentController.create)
  *         description: Unexpected error
  */
 
-// router.delete("/delete", authGuard, PostController.deletePostComment)
+router.delete("/delete", authGuard, CommentController.delete)
 
 module.exports = router

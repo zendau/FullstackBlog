@@ -14,6 +14,17 @@
  *         isActivated:
  *           type: boolean
  *           description: isActivated user status
+ *         isBlocked:
+ *           type: boolean
+ *           description: isBlocked user status
+ *         roles:
+ *           type: array
+ *           items:
+ *             properties:
+ *              admin:
+ *               type: string
+ *              user:
+ *               type: string
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
  *         email: root@admin.com

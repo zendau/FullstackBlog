@@ -10,19 +10,40 @@ const UserDTO = require("../dtos/user.dto")
  *         id:
  *           type: ObjectId
  *           description: ObjectId of comment
- *         user:
- *           $ref: '#/components/DTOs/User'
- *           description: author of post
  *         message:
  *           type: string
  *           description: message of comment
+ *         edited:
+ *           type: boolean
+ *           description: edited status
+ *         createdDate:
+ *           type: date
+ *           description: date of create post's comment
+ *         user:
+ *           $ref: '#/components/DTOs/User'
+ *           description: author of post
+ *         post:
+ *           type: object
+ *           required:
+ *            - id
+ *            - title
+ *           properties:
+ *            id:
+ *              type: ObjectId
+ *            title:
+ *              type: string
  *       example:
  *         id: 62c7234d9f3f1739381f93c4
+ *         message: 'test message'
+ *         edited: false
+ *         createdDate: 2023-12-07T08:28:58.165Z
+ *         post:
+ *          id: 654bfde3551c1975e9697aab,
+ *          title: test22
  *         user:
  *          id: 62c7234d9f3f1739381f93c4
  *          email: root@admin.com
  *          isActivated: false
- *         message: 'test message'
  */
 
 module.exports = class CommentDTO {

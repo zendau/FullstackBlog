@@ -5,9 +5,6 @@ const CommentDTO = require("../dtos/comment.dto")
 const PostService = require("../services/post.service")
 class CommentService {
   async create(user, post, message) {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     await PostService.postExist(post)
 
     const inseredComment = await commentModel.create({
