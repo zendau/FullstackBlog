@@ -1,5 +1,5 @@
-import UserPostReadModel from "../models/userPostRead.model.js"
 import PostModel from "../models/post.model.js"
+import UserPostReadModel from "../models/userPostRead.model.js"
 
 class UserPostReadService {
   async chechIsReadStatus(postId, ip) {

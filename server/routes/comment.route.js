@@ -1,8 +1,10 @@
 import { Router } from "express"
+
 import CommentController from "../controllers/comment.controller.js"
+import { authGuard } from "../middlewares/auth.middleware.js"
+
 const router = new Router()
 
-import { authGuard } from "../middlewares/auth.middleware.js"
 /**
  * @swagger
  * tags:

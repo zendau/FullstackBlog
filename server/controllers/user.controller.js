@@ -1,10 +1,10 @@
-import UserService from "../services/user.service.js"
 import Joi from "joi"
-
 import objectId from "joi-objectid"
 
-Joi.objectId = objectId(Joi)
 import ApiError from "../exceprions/api.error.js"
+import UserService from "../services/user.service.js"
+
+Joi.objectId = objectId(Joi)
 
 class UserController {
   async registration(req, res, next) {

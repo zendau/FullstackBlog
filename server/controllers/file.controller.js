@@ -1,6 +1,7 @@
-import FileService from "../services/file.service.js"
 import Joi from "joi"
+
 import ApiError from "../exceprions/api.error.js"
+import FileService from "../services/file.service.js"
 
 class FileController {
   async add(req, res, next) {

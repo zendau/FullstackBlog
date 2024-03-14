@@ -1,8 +1,8 @@
-import confirmCodeModel from "../models/confirmCode.model.js"
 import crypto from "crypto"
-import NodeMailerService from "./nodemailer.service.js"
 
 import ApiError from "../exceprions/api.error.js"
+import confirmCodeModel from "../models/confirmCode.model.js"
+import NodeMailerService from "./nodemailer.service.js"
 
 class ConfirmCodeService {
   async createCode(userData) {

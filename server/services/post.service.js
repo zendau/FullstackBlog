@@ -1,16 +1,16 @@
-import postModel from "../models/post.model.js"
+import mongoose from "mongoose"
+
+import FileDTO from "../dtos/file.dto.js"
 import PostDTO from "../dtos/post.dto.js"
 import UserDTO from "../dtos/user.dto.js"
-import FileDTO from "../dtos/file.dto.js"
 import ApiError from "../exceprions/api.error.js"
-
+import postModel from "../models/post.model.js"
 import FileService from "./file.service.js"
-import TagService from "./tag.service.js"
 import ReactionService from "./reaction.service.js"
+import TagService from "./tag.service.js"
 import UserPostReadService from "./userPostRead.service.js"
 
-import pkg from "mongoose"
-const { ObjectId } = pkg
+const { ObjectId } = mongoose
 
 class PostService {
   async create(author, postData, file) {

@@ -1,5 +1,5 @@
-import UserModel from "../models/user.model.js"
 import ApiError from "../exceprions/api.error.js"
+import UserModel from "../models/user.model.js"
 
 class AdminService {
   getRoles() {

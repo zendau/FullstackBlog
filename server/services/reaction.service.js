@@ -1,7 +1,9 @@
-import pkg from "mongoose"
-const { ObjectId } = pkg
-import reactionModel from "../models/reaction.model.js"
+import mongoose from "mongoose"
+
 import ReactionDTO from "../dtos/reaction.dto.js"
+import reactionModel from "../models/reaction.model.js"
+
+const { ObjectId } = mongoose
 
 class ReactionService {
   async add(postId, userId, isLiked) {

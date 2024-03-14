@@ -1,15 +1,14 @@
-import userModel from "../models/user.model.js"
-import ApiError from "../exceprions/api.error.js"
 import bcrypt from "bcrypt"
 import { v4 as uuid } from "uuid"
 
-import TokenService from "../services/token.service.js"
-import ConfirmCodeService from "../services/confirmCode.service.js"
-import nodemailerService from "./nodemailer.service.js"
-import PostService from "../services/post.service.js"
-
-import UserDTO from "../dtos/user.dto.js"
 import PostDataDTO from "../dtos/postData.dto.js"
+import UserDTO from "../dtos/user.dto.js"
+import ApiError from "../exceprions/api.error.js"
+import userModel from "../models/user.model.js"
+import ConfirmCodeService from "../services/confirmCode.service.js"
+import PostService from "../services/post.service.js"
+import TokenService from "../services/token.service.js"
+import nodemailerService from "./nodemailer.service.js"
 
 class UserService {
   async registration(email, password) {

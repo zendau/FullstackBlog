@@ -1,27 +1,21 @@
-import dotenv from "dotenv"
-
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
-
-import express from "express"
-import path from "path"
-
-import swaggerUI from "swagger-ui-express"
-import swaggerJsDoc from "swagger-jsdoc"
-
 import cookieParser from "cookie-parser"
 import cors from "cors"
-
+import dotenv from "dotenv"
+import { cleanEnv, num, port, str } from "envalid"
+import express from "express"
 import mongoose from "mongoose"
-
-import { cleanEnv, str, port, num } from "envalid"
-
-import userRoute from "./routes/user.route.js"
-import postRoute from "./routes/post.route.js"
-import fileRoute from "./routes/file.route.js"
-import commentRoute from "./routes/comment.route.js"
-import adminRoute from "./routes/admin.route.js"
+import path from "path"
+import swaggerJsDoc from "swagger-jsdoc"
+import swaggerUI from "swagger-ui-express"
 
 import errorMiddleware from "./middlewares/error.middleware.js"
+import adminRoute from "./routes/admin.route.js"
+import commentRoute from "./routes/comment.route.js"
+import fileRoute from "./routes/file.route.js"
+import postRoute from "./routes/post.route.js"
+import userRoute from "./routes/user.route.js"
+
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 class App {
   constructor(port) {

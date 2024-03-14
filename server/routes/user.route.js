@@ -1,8 +1,9 @@
 import { Router } from "express"
-import UserController from "../controllers/user.controller.js"
-const router = new Router()
 
+import UserController from "../controllers/user.controller.js"
 import { authGuard } from "../middlewares/auth.middleware.js"
+
+const router = new Router()
 
 /**
  * @swagger

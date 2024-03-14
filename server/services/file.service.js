@@ -1,9 +1,8 @@
-import fileModel from "../models/file.model.js"
-
-import ApiError from "../exceprions/api.error.js"
-import FileDTO from "../dtos/file.dto.js"
-
 import fs from "fs"
+
+import FileDTO from "../dtos/file.dto.js"
+import ApiError from "../exceprions/api.error.js"
+import fileModel from "../models/file.model.js"
 
 class FileService {
   async create(file) {

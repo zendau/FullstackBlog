@@ -1,9 +1,10 @@
 import { Router } from "express"
-import FileController from "../controllers/file.controller.js"
-const router = new Router()
 
+import FileController from "../controllers/file.controller.js"
 import { authGuard } from "../middlewares/auth.middleware.js"
 import multer from "../middlewares/multer.middleware.js"
+
+const router = new Router()
 
 /**
  * @swagger
