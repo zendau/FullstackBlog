@@ -1,25 +1,27 @@
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
+import dotenv from "dotenv"
 
-const express = require("express")
-const path = require("path")
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
-const swaggerUI = require("swagger-ui-express")
-const swaggerJsDoc = require("swagger-jsdoc")
+import express from "express"
+import path from "path"
 
-const cookieParser = require("cookie-parser")
-const cors = require("cors")
+import swaggerUI from "swagger-ui-express"
+import swaggerJsDoc from "swagger-jsdoc"
 
-const mongoose = require("mongoose")
+import cookieParser from "cookie-parser"
+import cors from "cors"
 
-const { cleanEnv, str, port, num } = require("envalid")
+import mongoose from "mongoose"
 
-const userRoute = require("./routes/user.route")
-const postRoute = require("./routes/post.route")
-const fileRoute = require("./routes/file.route")
-const commentRoute = require("./routes/comment.route")
-const adminRoute = require("./routes/admin.route")
+import { cleanEnv, str, port, num } from "envalid"
 
-const errorMiddleware = require("./middlewares/error.middleware")
+import userRoute from "./routes/user.route.js"
+import postRoute from "./routes/post.route.js"
+import fileRoute from "./routes/file.route.js"
+import commentRoute from "./routes/comment.route.js"
+import adminRoute from "./routes/admin.route.js"
+
+import errorMiddleware from "./middlewares/error.middleware.js"
 
 class App {
   constructor(port) {
@@ -85,7 +87,7 @@ class App {
 
     this.app.use(
       "/image",
-      express.static(path.join(__dirname, process.env.FILE_FOULDER)),
+      express.static(path.join(import.meta.url, process.env.FILE_FOULDER)),
     )
   }
 

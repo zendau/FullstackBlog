@@ -1,6 +1,6 @@
-const FileService = require("../services/file.service")
-const Joi = require("joi")
-const ApiError = require("../exceprions/api.error")
+import FileService from "../services/file.service.js"
+import Joi from "joi"
+import ApiError from "../exceprions/api.error.js"
 
 class FileController {
   async add(req, res, next) {
@@ -108,4 +108,4 @@ class FileController {
   }
 }
 
-module.exports = new FileController()
+export default new FileController()

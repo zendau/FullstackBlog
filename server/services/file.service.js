@@ -1,9 +1,9 @@
-const fileModel = require("../models/file.model")
+import fileModel from "../models/file.model.js"
 
-const ApiError = require("../exceprions/api.error")
-const FileDTO = require("../dtos/file.dto")
+import ApiError from "../exceprions/api.error.js"
+import FileDTO from "../dtos/file.dto.js"
 
-const fs = require("fs")
+import fs from "fs"
 
 class FileService {
   async create(file) {
@@ -78,4 +78,4 @@ class FileService {
   }
 }
 
-module.exports = new FileService()
+export default new FileService()

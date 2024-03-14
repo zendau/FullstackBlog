@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -26,4 +27,4 @@ const ConfirmCodeSchema = new Schema({
   code: { type: String, required: true },
 })
 
-module.exports = model("ConfirmCode", ConfirmCodeSchema)
+export default model("ConfirmCode", ConfirmCodeSchema)

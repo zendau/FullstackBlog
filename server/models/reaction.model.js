@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -32,4 +33,4 @@ const ReactionSchema = new Schema({
   isLiked: { type: Schema.Types.Boolean, require: true },
 })
 
-module.exports = model("Reactions", ReactionSchema)
+export default model("Reactions", ReactionSchema)

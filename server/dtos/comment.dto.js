@@ -1,4 +1,4 @@
-const UserDTO = require("../dtos/user.dto")
+import UserDTO from "../dtos/user.dto.js"
 
 /**
  * @swagger
@@ -46,7 +46,7 @@ const UserDTO = require("../dtos/user.dto")
  *          isActivated: false
  */
 
-module.exports = class CommentDTO {
+export default class CommentDTO {
   constructor(model) {
     this.id = model._id
     this.message = model.message

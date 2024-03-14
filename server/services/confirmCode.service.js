@@ -1,8 +1,8 @@
-const confirmCodeModel = require("../models/confirmCode.model")
-const crypto = require("crypto")
-const NodeMailerService = require("./nodemailer.service")
+import confirmCodeModel from "../models/confirmCode.model.js"
+import crypto from "crypto"
+import NodeMailerService from "./nodemailer.service.js"
 
-const ApiError = require("../exceprions/api.error")
+import ApiError from "../exceprions/api.error.js"
 
 class ConfirmCodeService {
   async createCode(userData) {
@@ -57,4 +57,4 @@ class ConfirmCodeService {
   }
 }
 
-module.exports = new ConfirmCodeService()
+export default new ConfirmCodeService()

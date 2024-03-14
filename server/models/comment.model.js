@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -34,4 +35,4 @@ const CommentSchema = new Schema({
   createdDate: { type: Date, default: Date.now },
 })
 
-module.exports = model("Comments", CommentSchema)
+export default model("Comments", CommentSchema)

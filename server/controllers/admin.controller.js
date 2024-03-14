@@ -1,8 +1,10 @@
-const ApiError = require("../exceprions/api.error")
-const AdminService = require("../services/admin.service")
+import ApiError from "../exceprions/api.error.js"
+import AdminService from "../services/admin.service.js"
 
-const Joi = require("joi")
-Joi.objectId = require("joi-objectid")(Joi)
+import Joi from "joi"
+import objectId from "joi-objectid"
+
+Joi.objectId = objectId(Joi)
 
 class AdminController {
   getRoles(req, res) {
@@ -82,4 +84,4 @@ class AdminController {
   }
 }
 
-module.exports = new AdminController()
+export default new AdminController()

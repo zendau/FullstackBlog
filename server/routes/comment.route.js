@@ -1,9 +1,8 @@
-const Router = require("express").Router
-const CommentController = require("../controllers/comment.controller")
+import { Router } from "express"
+import CommentController from "../controllers/comment.controller.js"
 const router = new Router()
 
-const { authGuard } = require("../middlewares/auth.middleware")
-
+import { authGuard } from "../middlewares/auth.middleware.js"
 /**
  * @swagger
  * tags:
@@ -118,4 +117,4 @@ router.put("/edit", authGuard, CommentController.edit)
 
 router.delete("/delete", authGuard, CommentController.delete)
 
-module.exports = router
+export default router

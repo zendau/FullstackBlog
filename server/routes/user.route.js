@@ -1,8 +1,8 @@
-const Router = require("express").Router
-const UserController = require("../controllers/user.controller")
+import { Router } from "express"
+import UserController from "../controllers/user.controller.js"
 const router = new Router()
 
-const { authGuard } = require("../middlewares/auth.middleware")
+import { authGuard } from "../middlewares/auth.middleware.js"
 
 /**
  * @swagger
@@ -301,4 +301,4 @@ router.post("/resetPassword", UserController.resetPassword)
 
 router.get("/data/:id", UserController.getUserById)
 
-module.exports = router
+export default router

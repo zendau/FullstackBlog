@@ -1,5 +1,5 @@
-const UserModel = require("../models/user.model")
-const ApiError = require("../exceprions/api.error")
+import UserModel from "../models/user.model.js"
+import ApiError from "../exceprions/api.error.js"
 
 class AdminService {
   getRoles() {
@@ -74,4 +74,4 @@ class AdminService {
   }
 }
 
-module.exports = new AdminService()
+export default new AdminService()

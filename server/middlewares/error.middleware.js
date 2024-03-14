@@ -1,7 +1,7 @@
-const ApiError = require("../exceprions/api.error")
+import ApiError from "../exceprions/api.error.js"
 
 // eslint-disable-next-line no-unused-vars
-module.exports = function (err, req, res, next) {
+export default function (err, req, res, next) {
   const status = err.status || 500
   const message = err.message || "Unexpected error"
 

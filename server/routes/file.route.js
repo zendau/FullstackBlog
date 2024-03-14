@@ -1,10 +1,9 @@
-const Router = require("express").Router
-const FileController = require("../controllers/file.controller")
+import { Router } from "express"
+import FileController from "../controllers/file.controller.js"
 const router = new Router()
 
-const { authGuard } = require("../middlewares/auth.middleware")
-
-const multer = require("../middlewares/multer.middleware")
+import { authGuard } from "../middlewares/auth.middleware.js"
+import multer from "../middlewares/multer.middleware.js"
 
 /**
  * @swagger
@@ -177,4 +176,4 @@ router.delete("/delete/:id", authGuard, FileController.delete)
 
 router.get("/download/:id", FileController.download)
 
-module.exports = router
+export default router

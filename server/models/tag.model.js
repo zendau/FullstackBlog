@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -20,4 +21,4 @@ const TagSchema = new Schema({
   title: { type: Schema.Types.String, require: true, unique: true },
 })
 
-module.exports = model("Tags", TagSchema)
+export default model("Tags", TagSchema)

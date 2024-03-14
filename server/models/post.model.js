@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -59,7 +60,7 @@ const PostSchema = new Schema({
   createdDate: { type: Date, required: true, default: Date.now },
 })
 
-module.exports = model("Posts", PostSchema)
+export default model("Posts", PostSchema)
 
 // db.posts.aggregate([
 //   {
@@ -293,7 +294,7 @@ module.exports = model("Posts", PostSchema)
 //   //
 // ]);
 
-///
+// /
 
 // db.posts.aggregate([
 //   {

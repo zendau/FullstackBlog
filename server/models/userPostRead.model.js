@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -26,4 +27,4 @@ const UserPostReadSchema = new Schema({
   ip: { type: String, required: true },
 })
 
-module.exports = model("UserPostRead", UserPostReadSchema)
+export default model("UserPostRead", UserPostReadSchema)

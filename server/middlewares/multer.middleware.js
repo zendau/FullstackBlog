@@ -1,7 +1,6 @@
-const multer = require("multer")
-const { v4: uuidv4 } = require("uuid")
-const { extname } = require("path")
-
+import multer from "multer"
+import { v4 as uuidv4 } from "uuid"
+import extname from "path"
 const storageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, process.env.FILE_FOULDER)
@@ -23,7 +22,7 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-module.exports = multer({
+export default multer({
   storage: storageConfig,
   fileFilter: fileFilter,
 }).single("file")

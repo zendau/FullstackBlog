@@ -1,8 +1,10 @@
-const CommentService = require("../services/comment.service")
-const ApiError = require("../exceprions/api.error")
+import CommentService from "../services/comment.service.js"
+import ApiError from "../exceprions/api.error.js"
 
-const Joi = require("joi")
-Joi.objectId = require("joi-objectid")(Joi)
+import Joi from "joi"
+import objectId from "joi-objectid"
+
+Joi.objectId = objectId(Joi)
 
 class CommentController {
   async create(req, res, next) {
@@ -67,4 +69,4 @@ class CommentController {
   }
 }
 
-module.exports = new CommentController()
+export default new CommentController()

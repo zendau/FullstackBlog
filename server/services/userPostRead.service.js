@@ -1,5 +1,5 @@
-const UserPostReadModel = require("../models/userPostRead.model")
-const PostModel = require("../models/post.model")
+import UserPostReadModel from "../models/userPostRead.model.js"
+import PostModel from "../models/post.model.js"
 
 class UserPostReadService {
   async chechIsReadStatus(postId, ip) {
@@ -28,4 +28,4 @@ class UserPostReadService {
   }
 }
 
-module.exports = new UserPostReadService()
+export default new UserPostReadService()

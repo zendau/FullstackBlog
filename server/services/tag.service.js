@@ -1,6 +1,6 @@
-const TagModel = require("../models/tag.model")
-const PostModel = require("../models/post.model")
-const ApiError = require("../exceprions/api.error")
+import TagModel from "../models/tag.model.js"
+import PostModel from "../models/post.model.js"
+import ApiError from "../exceprions/api.error.js"
 
 class TagService {
   async insertTags(tagsList) {
@@ -41,4 +41,4 @@ class TagService {
   }
 }
 
-module.exports = new TagService()
+export default new TagService()

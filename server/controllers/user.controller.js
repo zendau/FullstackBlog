@@ -1,7 +1,10 @@
-const UserService = require("../services/user.service")
-const Joi = require("joi")
-Joi.objectId = require("joi-objectid")(Joi)
-const ApiError = require("../exceprions/api.error")
+import UserService from "../services/user.service.js"
+import Joi from "joi"
+
+import objectId from "joi-objectid"
+
+Joi.objectId = objectId(Joi)
+import ApiError from "../exceprions/api.error.js"
 
 class UserController {
   async registration(req, res, next) {
@@ -186,4 +189,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController()
+export default new UserController()

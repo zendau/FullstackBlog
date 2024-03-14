@@ -20,7 +20,7 @@
  *         mimetype: image/png
  */
 
-module.exports = class FileDTO {
+export default class FileDTO {
   constructor(model) {
     this.id = model._id
     this.fileName = model.fileName

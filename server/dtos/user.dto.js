@@ -31,7 +31,7 @@
  *         isActivated: false
  */
 
-module.exports = class UserDto {
+export default class UserDto {
   constructor(model) {
     this.email = model.email
     this.id = model._id

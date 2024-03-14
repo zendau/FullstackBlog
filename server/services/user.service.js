@@ -1,15 +1,15 @@
-const userModel = require("../models/user.model")
-const ApiError = require("../exceprions/api.error")
-const bcrypt = require("bcrypt")
-const uuid = require("uuid")
+import userModel from "../models/user.model.js"
+import ApiError from "../exceprions/api.error.js"
+import bcrypt from "bcrypt"
+import { v4 as uuid } from "uuid"
 
-const TokenService = require("../services/token.service")
-const ConfirmCodeService = require("../services/confirmCode.service")
-const nodemailerService = require("./nodemailer.service")
-const PostService = require("../services/post.service")
+import TokenService from "../services/token.service.js"
+import ConfirmCodeService from "../services/confirmCode.service.js"
+import nodemailerService from "./nodemailer.service.js"
+import PostService from "../services/post.service.js"
 
-const UserDTO = require("../dtos/user.dto")
-const PostDataDTO = require("../dtos/postData.dto")
+import UserDTO from "../dtos/user.dto.js"
+import PostDataDTO from "../dtos/postData.dto.js"
 
 class UserService {
   async registration(email, password) {
@@ -207,4 +207,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService()
+export default new UserService()

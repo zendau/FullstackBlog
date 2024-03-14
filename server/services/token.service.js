@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken")
-const ApiError = require("../exceprions/api.error")
+import jwt from "jsonwebtoken"
+import ApiError from "../exceprions/api.error.js"
 
-const tokenModel = require("../models/token.model")
+import tokenModel from "../models/token.model.js"
 
 class TokenService {
   generateTokens(payload) {
@@ -65,4 +65,4 @@ class TokenService {
   }
 }
 
-module.exports = new TokenService()
+export default new TokenService()

@@ -1,6 +1,7 @@
-const { ObjectId } = require("mongodb")
-const reactionModel = require("../models/reaction.model")
-const ReactionDTO = require("../dtos/reaction.dto")
+import pkg from "mongoose"
+const { ObjectId } = pkg
+import reactionModel from "../models/reaction.model.js"
+import ReactionDTO from "../dtos/reaction.dto.js"
 
 class ReactionService {
   async add(postId, userId, isLiked) {
@@ -166,4 +167,4 @@ class ReactionService {
   }
 }
 
-module.exports = new ReactionService()
+export default new ReactionService()

@@ -51,7 +51,7 @@
  *            postId: 62d717847a2c15105c1a20d6
  */
 
-module.exports = class PostDataDTO {
+export default class PostDataDTO {
   constructor(model) {
     this.id = model.id
     this.email = model.email

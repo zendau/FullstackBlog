@@ -48,7 +48,7 @@
  *           message: 'test message'
  */
 
-module.exports = class PostDto {
+export default class PostDto {
   constructor(model) {
     this.id = model._id
     this.title = model.title

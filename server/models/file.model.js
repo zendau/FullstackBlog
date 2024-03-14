@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose")
+import mongoose from "mongoose"
+const { Schema, model } = mongoose
 
 /**
  * @swagger
@@ -32,4 +33,4 @@ const FileSchema = new Schema({
   mimetype: { type: String, required: true },
 })
 
-module.exports = model("Files", FileSchema)
+export default model("Files", FileSchema)

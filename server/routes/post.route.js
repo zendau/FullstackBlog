@@ -1,13 +1,9 @@
-const Router = require("express").Router
-const PostController = require("../controllers/post.controller")
+import { Router } from "express"
+import PostController from "../controllers/post.controller.js"
 const router = new Router()
 
-const {
-  authGuard,
-  adminGuard,
-  noAuth,
-} = require("../middlewares/auth.middleware")
-const multer = require("../middlewares/multer.middleware")
+import { authGuard, adminGuard } from "../middlewares/auth.middleware.js"
+import multer from "../middlewares/multer.middleware.js"
 
 /**
  * @swagger
@@ -154,9 +150,9 @@ router.delete("/delete/:id", authGuard, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", noAuth, PostController.getOne)
+// router.get("/get/:id", noAuth, PostController.getOne)
 
-router.get("/search/:substring", PostController.getPostsBySubString)
+// router.get("/search/:substring", PostController.getPostsBySubString)
 
 /**
  * @swagger
@@ -199,7 +195,7 @@ router.get("/search/:substring", PostController.getPostsBySubString)
  *         description: Unexpected error
  */
 
-router.get("/getUserPosts/", PostController.getUserPosts)
+// router.get("/getUserPosts/", PostController.getUserPosts)
 
 /**
  * @swagger
@@ -226,7 +222,7 @@ router.get("/getUserPosts/", PostController.getUserPosts)
  *         description: Unexpected error
  */
 
-router.get("/getAllPosts", PostController.getAllPosts)
+// router.get("/getAllPosts", PostController.getAllPosts)
 
 /**
  * @swagger
@@ -264,7 +260,7 @@ router.get("/getAllPosts", PostController.getAllPosts)
  *         description: Unexpected error
  */
 
-router.get("/getLimitPosts", PostController.getLimitPosts)
+// router.get("/getLimitPosts", PostController.getLimitPosts)
 
 /**
  * @swagger
@@ -304,4 +300,4 @@ router.patch("/reacting", authGuard, PostController.reactionPost)
 
 router.get("/pagination", PostController.getPostsPagination)
 
-module.exports = router
+export default router

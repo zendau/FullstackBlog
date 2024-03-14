@@ -1,8 +1,9 @@
-const commentModel = require("../models/comment.model")
-const ApiError = require("../exceprions/api.error")
-const { ObjectId } = require("mongodb")
-const CommentDTO = require("../dtos/comment.dto")
-const PostService = require("../services/post.service")
+import commentModel from "../models/comment.model.js"
+import ApiError from "../exceprions/api.error.js"
+import pkg from "mongoose"
+const { ObjectId } = pkg
+import CommentDTO from "../dtos/comment.dto.js"
+import PostService from "../services/post.service.js"
 class CommentService {
   async create(user, post, message) {
     await PostService.postExist(post)
@@ -207,4 +208,4 @@ class CommentService {
   }
 }
 
-module.exports = new CommentService()
+export default new CommentService()

@@ -1,15 +1,16 @@
-const postModel = require("../models/post.model")
-const PostDTO = require("../dtos/post.dto")
-const UserDTO = require("../dtos/user.dto")
-const FileDTO = require("../dtos/file.dto")
-const ApiError = require("../exceprions/api.error")
+import postModel from "../models/post.model.js"
+import PostDTO from "../dtos/post.dto.js"
+import UserDTO from "../dtos/user.dto.js"
+import FileDTO from "../dtos/file.dto.js"
+import ApiError from "../exceprions/api.error.js"
 
-const FileService = require("./file.service")
-const TagService = require("./tag.service")
-const ReactionService = require("./reaction.service")
-const UserPostReadService = require("./userPostRead.service")
+import FileService from "./file.service.js"
+import TagService from "./tag.service.js"
+import ReactionService from "./reaction.service.js"
+import UserPostReadService from "./userPostRead.service.js"
 
-const { ObjectId } = require("mongodb")
+import pkg from "mongoose"
+const { ObjectId } = pkg
 
 class PostService {
   async create(author, postData, file) {
@@ -81,17 +82,17 @@ class PostService {
     return post
   }
 
-  async getUserPostData(userId) {
-    const posts = await postModel.find().where("author").equals(userId)
-    const postsId = posts.map((post) => ObjectId(post._id))
+  // async getUserPostData(userId) {
+  //   const posts = await postModel.find().where("author").equals(userId)
+  //   const postsId = posts.map((post) => ObjectId(post._id))
 
-    // const comments = await CommentService.usersComments(userId)
-    const userRating = await ReactionService.getUserRating(postsId)
-    const reactions = await ReactionService.getPersonalLikes(userId)
+  //   // const comments = await CommentService.usersComments(userId)
+  //   const userRating = await ReactionService.getUserRating(postsId)
+  //   const reactions = await ReactionService.getPersonalLikes(userId)
 
-    // return { userRating, comments, reactions }
-    return { userRating, reactions }
-  }
+  //   // return { userRating, comments, reactions }
+  //   return { userRating, reactions }
+  // }
 
   async getOne(postId, userId, ip) {
     const post = await this.postExist(postId)
@@ -117,16 +118,16 @@ class PostService {
     return postsDTO
   }
 
-  async getAllPosts() {
-    const posts = await postModel.find().populate("author")
-    const postsDTO = posts.map((post) => this.createPostListDTO(post))
-    return postsDTO
-  }
+  // async getAllPosts() {
+  //   const posts = await postModel.find().populate("author")
+  //   const postsDTO = posts.map((post) => this.createPostListDTO(post))
+  //   return postsDTO
+  // }
 
-  async getLimitPosts(currentPage, limit) {
-    const postsData = await this.getPosts({}, currentPage, limit)
-    return postsData
-  }
+  // async getLimitPosts(currentPage, limit) {
+  //   const postsData = await this.getPosts({}, currentPage, limit)
+  //   return postsData
+  // }
 
   async getLimitUserPosts(currentPage, limit, userId) {
     const postsData = await this.getPosts(
@@ -211,16 +212,16 @@ class PostService {
     return true
   }
 
-  async addPostComment(userId, postId) {
-    await this.postExist(postId)
+  // async addPostComment(userId, postId) {
+  //   await this.postExist(postId)
 
-    // const inseredCommentDTO = await CommentService.create(
-    //   userId,
-    //   postId,
-    //   message,
-    // )
-    // return inseredCommentDTO
-  }
+  //   // const inseredCommentDTO = await CommentService.create(
+  //   //   userId,
+  //   //   postId,
+  //   //   message,
+  //   // )
+  //   // return inseredCommentDTO
+  // }
 
   postsRating(withCounters) {
     return [
@@ -318,6 +319,9 @@ class PostService {
   }
 
   postsMatchFilter(idList, filter) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
     const matchData = {}
 
     const objectIdList = Array.isArray(idList)
@@ -338,9 +342,27 @@ class PostService {
       }
     }
 
-    // Исключения постов которые уже были получины
-    matchData._id = {
-      $nin: objectIdList,
+    // Выборка постов по подстроке
+    if (filter.substring) {
+      const regex = new RegExp(filter.substring, "i")
+
+      matchData.title = {
+        $regex: regex,
+      }
+    }
+
+    // Получение поста по айди
+    if (filter.postId) {
+      matchData._id = {
+        $eq: ObjectId(filter.postId),
+      }
+    }
+
+    if (objectIdList.length > 0) {
+      // Исключения постов которые уже были получины
+      matchData._id = {
+        $nin: objectIdList,
+      }
     }
 
     return [
@@ -490,4 +512,4 @@ class PostService {
   }
 }
 
-module.exports = new PostService()
+export default new PostService()

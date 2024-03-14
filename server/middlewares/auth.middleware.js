@@ -1,7 +1,7 @@
-const ApiError = require("../exceprions/api.error")
-const TokenService = require("../services/token.service")
+import ApiError from "../exceprions/api.error.js"
+import TokenService from "../services/token.service.js"
 
-function authGuard(role) {
+export function authGuard(role) {
   return function (req, res, next) {
     // eslint-disable-next-line no-debugger
     debugger
@@ -42,9 +42,6 @@ function authGuard(role) {
   }
 }
 
-module.exports = {
-  authGuard: authGuard(),
-  userGuard: authGuard("user"),
-  adminGuard: authGuard("admin"),
-  noAuth: authGuard("noAuth"),
-}
+export const userGuard = authGuard("user")
+export const adminGuard = authGuard("admin")
+export const noAuth = authGuard("noAuth")

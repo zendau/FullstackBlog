@@ -1,9 +1,11 @@
-const PostService = require("../services/post.service")
+import PostService from "../services/post.service.js"
 
-const ApiError = require("../exceprions/api.error")
+import ApiError from "../exceprions/api.error.js"
 
-const Joi = require("joi")
-Joi.objectId = require("joi-objectid")(Joi)
+import Joi from "joi"
+import objectId from "joi-objectid"
+
+Joi.objectId = objectId(Joi)
 
 class PostController {
   async create(req, res, next) {
@@ -79,25 +81,25 @@ class PostController {
     }
   }
 
-  async getOne(req, res, next) {
-    try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
+  // async getOne(req, res, next) {
+  //   try {
+  //     const schema = Joi.object({
+  //       id: Joi.objectId().required(),
+  //     })
+  //     const { error } = schema.validate(req.params)
+  //     if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { id } = req.params
-      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
+  //     const { id } = req.params
+  //     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
 
-      const userId = req.user?.payload?.id || null
+  //     const userId = req.user?.payload?.id || null
 
-      const data = await PostService.getOne(id, userId, ip)
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
+  //     const data = await PostService.getOne(id, userId, ip)
+  //     res.json(data)
+  //   } catch (e) {
+  //     next(e)
+  //   }
+  // }
 
   async reactionPost(req, res, next) {
     try {
@@ -118,64 +120,72 @@ class PostController {
     }
   }
 
-  async getPostsBySubString(req, res, next) {
-    try {
-      const schema = Joi.object({
-        substring: Joi.string().min(3).max(20).required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
+  // async getPostsBySubString(req, res, next) {
+  //   try {
+  //     const schema = Joi.object({
+  //       substring: Joi.string().min(3).max(20).required(),
+  //     })
+  //     const { error } = schema.validate(req.params)
+  //     if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { substring } = req.params
+  //     const { substring } = req.params
 
-      const data = await PostService.searchBySubstring(substring)
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
+  //     const data = await PostService.searchBySubstring(substring)
+  //     res.json(data)
+  //   } catch (e) {
+  //     next(e)
+  //   }
+  // }
 
-  async getUserPosts(req, res, next) {
-    try {
-      const schema = Joi.object({
-        currentPage: Joi.number().required(),
-        limit: Joi.number().required(),
-        userId: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.query)
-      if (error) throw ApiError.HttpException(error.details[0].message)
+  // async getUserPosts(req, res, next) {
+  //   try {
+  //     const schema = Joi.object({
+  //       currentPage: Joi.number().required(),
+  //       limit: Joi.number().required(),
+  //       userId: Joi.objectId().required(),
+  //     })
+  //     const { error } = schema.validate(req.query)
+  //     if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { currentPage, limit, userId } = req.query
-      const data = await PostService.getLimitUserPosts(
-        currentPage,
-        limit,
-        userId,
-      )
+  //     const { currentPage, limit, userId } = req.query
+  //     const data = await PostService.getLimitUserPosts(
+  //       currentPage,
+  //       limit,
+  //       userId,
+  //     )
 
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
+  //     res.json(data)
+  //   } catch (e) {
+  //     next(e)
+  //   }
+  // }
 
   async getPostsPagination(req, res, next) {
     try {
       const schema = Joi.object({
-        limit: Joi.number().required(),
+        limit: Joi.number(),
         exclude: Joi.array(),
-        sort: Joi.string().required(),
+        sort: Joi.string(),
         tag: Joi.string(),
         authorId: Joi.string(),
+        postId: Joi.string(),
+        substring: Joi.string(),
       })
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { limit, exclude, sort, tag, authorId } = req.query
+      const { limit, exclude, sort, tag, authorId, substring, postId } =
+        req.query
+
+      const limitValue = limit ? parseInt(limit) : 1
+
       const data = await PostService.getPostsPagination(
         exclude,
-        parseInt(limit),
+        limitValue,
         sort,
         {
+          postId,
+          substring,
           tag,
           authorId,
         },
@@ -187,32 +197,32 @@ class PostController {
     }
   }
 
-  async getAllPosts(req, res, next) {
-    try {
-      const data = await PostService.getAllPosts()
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
+  // async getAllPosts(req, res, next) {
+  //   try {
+  //     const data = await PostService.getAllPosts()
+  //     res.json(data)
+  //   } catch (e) {
+  //     next(e)
+  //   }
+  // }
 
-  async getLimitPosts(req, res, next) {
-    try {
-      const schema = Joi.object({
-        currentPage: Joi.number().required(),
-        limit: Joi.number().required(),
-      })
-      const { error } = schema.validate(req.query)
-      if (error) throw ApiError.HttpException(error.details[0].message)
+  // async getLimitPosts(req, res, next) {
+  //   try {
+  //     const schema = Joi.object({
+  //       currentPage: Joi.number().required(),
+  //       limit: Joi.number().required(),
+  //     })
+  //     const { error } = schema.validate(req.query)
+  //     if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { currentPage, limit } = req.query
-      const data = await PostService.getLimitPosts(currentPage, limit)
+  //     const { currentPage, limit } = req.query
+  //     const data = await PostService.getLimitPosts(currentPage, limit)
 
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
+  //     res.json(data)
+  //   } catch (e) {
+  //     next(e)
+  //   }
+  // }
 }
 
-module.exports = new PostController()
+export default new PostController()
