@@ -1,30 +1,28 @@
 module.exports = {
   env: {
-    node: true,
-    es6: true,
+    browser: true,
+    es2021: true,
   },
-  parserOptions: {
-    ecmaVersion: 2020, // или более новая версия
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "plugin:import/recommended",
-    " plugin:import/errors",
-    "plugin:import/warnings",
-  ],
+  extends: ["airbnb-base", "plugin:prettier/recommended"],
   plugins: ["prettier"],
+  overrides: [
+    {
+      env: {
+        node: true,
+      },
+      files: [".eslintrc.{js,cjs}"],
+      parserOptions: {
+        sourceType: "script",
+      },
+    },
+  ],
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
   rules: {
     "prettier/prettier": "error",
-    "node/no-extraneous-require": "off",
-    "sort-imports": [
-      "error",
-      {
-        ignoreCase: false,
-        ignoreDeclarationSort: true,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ["none", "all", "single", "multiple"],
-      },
-    ],
+    "import/extensions": "off",
+    "class-methods-use-this": "off",
   },
 }

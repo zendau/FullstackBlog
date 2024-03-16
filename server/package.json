@@ -10,7 +10,9 @@
     "debug": "cross-env NODE_ENV=development nodemon --inspect index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "jest",
+    "prepare": "husky && husky install"
   },
   "author": "",
   "license": "ISC",
@@ -37,13 +39,26 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.24.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
     "nodemon": "^2.0.12",
     "prettier": "^3.0.3"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{json,js,html}": [
+      "prettier --write --ignore-unknown"
+    ]
   }
 }
