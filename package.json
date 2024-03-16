@@ -1,0 +1,28 @@
+{
+  "name": "reactblog",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:server & npm run test:frontend",
+    "test:frontend": "cd frontend && npm run dev",
+    "test:server": "cd server && npm run test",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zendau/jwtAuth.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zendau/jwtAuth/issues"
+  },
+  "homepage": "https://github.com/zendau/jwtAuth#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^19.2.0",
+    "@commitlint/config-conventional": "^19.1.0",
+    "husky": "^9.0.11"
+  }
+}
