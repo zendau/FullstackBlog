@@ -7,6 +7,7 @@ import path from "path"
 import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUI from "swagger-ui-express"
 
+import Logger from "./libs/logger.js"
 import errorMiddleware from "./middlewares/error.middleware.js"
 import adminRoute from "./routes/admin.route.js"
 import commentRoute from "./routes/comment.route.js"
@@ -82,7 +83,7 @@ class App {
     try {
       await this.connectToTheDatabase()
       this.app.listen(this.port, () => {
-        console.log(`App listening on the port http://localhost:${this.port}`)
+        Logger.info(`App listening on the port http://localhost:${this.port}`)
       })
     } catch (e) {
       console.error(`Server Error: -> ${e}`)
