@@ -12,7 +12,7 @@ class FileController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const file = req.file
+      const { file } = req
       if (file === undefined) {
         throw ApiError.HttpException(
           "file is required field and must be one of the types: png, jpg, jpeg",
@@ -34,14 +34,14 @@ class FileController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const file = req.file
+      const { file } = req
       if (file === undefined) {
         throw ApiError.HttpException(
           "file is required field and must be one of the types: png, jpg, jpeg",
         )
       }
 
-      const id = req.params.id
+      const { id } = req.params
       const fileUpdated = await FileService.update(id, file)
 
       res.json(fileUpdated)
@@ -58,7 +58,7 @@ class FileController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const id = req.params.id
+      const { id } = req.params
       const fileDeleted = await FileService.delete(id)
 
       res.json(fileDeleted)
@@ -75,7 +75,7 @@ class FileController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const id = req.params.id
+      const { id } = req.params
       const fileData = await FileService.getById(id)
 
       res.json(fileData)
@@ -101,7 +101,7 @@ class FileController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const id = req.params.id
+      const { id } = req.params
       res.download(`${process.env.FILE_FOULDER}/${id}`)
     } catch (e) {
       next(e)

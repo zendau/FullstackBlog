@@ -1,3 +1,6 @@
+import PostComments from "./postComments.dto.js"
+import PostReactions from "./postReactions.dto.js"
+
 /**
  * @swagger
  * components:
@@ -60,23 +63,5 @@ export default class PostDataDTO {
       (reaction) => new PostReactions(reaction),
     )
     this.comments = model.comments.map((cooment) => new PostComments(cooment))
-  }
-}
-
-class PostReactions {
-  constructor(model) {
-    this.id = model.id
-    this.isLiked = model.isLiked
-    this.postId = model.postId[0]
-    this.postTitle = model.postTitle[0]
-  }
-}
-
-class PostComments {
-  constructor(model) {
-    this.id = model.id
-    this.message = model.message
-    this.postId = model.postId[0]
-    this.postTitle = model.postTitle[0]
   }
 }

@@ -20,7 +20,7 @@ class PostController {
 
       const postData = req.body
 
-      const file = req.file
+      const { file } = req
       if (file === undefined) {
         throw ApiError.HttpException(
           "file is required field and must be one of the types: png, jpg, jpeg",
@@ -55,7 +55,7 @@ class PostController {
 
       const { postId, title, body } = req.body
       const userId = req.user.payload.id
-      const file = req.file
+      const { file } = req
 
       const data = await PostService.edit(postId, userId, title, body, file)
       res.json(data)

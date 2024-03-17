@@ -5,10 +5,10 @@ import PostDataDTO from "../dtos/postData.dto.js"
 import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceprions/api.error.js"
 import userModel from "../models/user.model.js"
-import ConfirmCodeService from "../services/confirmCode.service.js"
-import PostService from "../services/post.service.js"
-import TokenService from "../services/token.service.js"
+import ConfirmCodeService from "./confirmCode.service.js"
 import nodemailerService from "./nodemailer.service.js"
+import PostService from "./post.service.js"
+import TokenService from "./token.service.js"
 
 class UserService {
   async registration(email, password) {
@@ -187,7 +187,11 @@ class UserService {
   }
 
   async getHashPassword(password) {
-    return await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
+    const hashPasswort = await bcrypt.hash(
+      password,
+      parseInt(process.env.BCRYPT_SALT),
+    )
+    return hashPasswort
   }
 
   async resetPassword(email, confirmCode) {

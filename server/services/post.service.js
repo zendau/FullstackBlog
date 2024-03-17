@@ -151,7 +151,7 @@ class PostService {
 
     let nextPage = null
 
-    if (postsDTO.length == limit) {
+    if (postsDTO.length === parseInt(limit)) {
       nextPage = true
     } else {
       nextPage = false
@@ -168,16 +168,16 @@ class PostService {
     }
   }
 
-  createPostListDTO(postModel) {
-    const postDTO = new PostDTO(postModel)
+  createPostListDTO(postModelData) {
+    const postDTO = new PostDTO(postModelData)
     postDTO.setUserName(postModel.author.email)
     return postDTO
   }
 
-  async getExtendedPostDTO(postModel, userId) {
-    const postDTO = new PostDTO(postModel)
-    const userDTO = new UserDTO(postModel.author)
-    const fileDTO = new FileDTO(postModel.file)
+  async getExtendedPostDTO(postModelData, userId) {
+    const postDTO = new PostDTO(postModelData)
+    const userDTO = new UserDTO(postModelData.author)
+    const fileDTO = new FileDTO(postModelData.file)
 
     const tagsList = postModel.tags.map((tag) => tag.title)
 

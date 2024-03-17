@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import CommentDTO from "../dtos/comment.dto.js"
 import ApiError from "../exceprions/api.error.js"
 import commentModel from "../models/comment.model.js"
-import PostService from "../services/post.service.js"
+import PostService from "./post.service.js"
 
 const { ObjectId } = mongoose
 
@@ -133,6 +133,7 @@ class CommentService {
       },
     ]
   }
+
   commentssExtendedData() {
     return [
       {

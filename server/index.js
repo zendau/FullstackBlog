@@ -1,7 +1,6 @@
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import dotenv from "dotenv"
-import { cleanEnv, num, port, str } from "envalid"
 import express from "express"
 import mongoose from "mongoose"
 import path from "path"
@@ -14,6 +13,7 @@ import commentRoute from "./routes/comment.route.js"
 import fileRoute from "./routes/file.route.js"
 import postRoute from "./routes/post.route.js"
 import userRoute from "./routes/user.route.js"
+import validateEnv from "./utils/validateEnv.js"
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
@@ -22,31 +22,12 @@ class App {
     this.app = express()
     this.port = port
 
-    this.validateEnv()
+    validateEnv()
 
     this.initializeSwagger()
     this.initializeMiddlewares()
     this.initializeRoutes()
     this.initializeErrorHandling()
-  }
-
-  validateEnv() {
-    cleanEnv(process.env, {
-      PORT: port(),
-      DB_URL: str(),
-      BCRYPT_SALT: num(),
-      JWT_ACCESS_SECRET: str(),
-      JWT_ACCESS_EXPIRES: str(),
-      JWT_REFRESH_SECRET: str(),
-      JWT_REFRESH_EXPIRES: str(),
-      CLIENT_URL: str(),
-      MAILER_HOST: str(),
-      MAILER_PORT: port(),
-      MAILER_USER: str(),
-      MAILER_PASS: str(),
-      MAILER_FROM: str(),
-      FILE_FOULDER: str(),
-    })
   }
 
   initializeSwagger() {

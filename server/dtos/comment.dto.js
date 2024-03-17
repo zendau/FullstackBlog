@@ -1,4 +1,4 @@
-import UserDTO from "../dtos/user.dto.js"
+import UserDTO from "./user.dto.js"
 
 /**
  * @swagger

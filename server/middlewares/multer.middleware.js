@@ -25,5 +25,5 @@ const fileFilter = (req, file, cb) => {
 
 export default multer({
   storage: storageConfig,
-  fileFilter: fileFilter,
+  fileFilter,
 }).single("file")

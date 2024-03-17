@@ -15,7 +15,10 @@ class ReactionService {
   }
 
   async setReaction(postId, userId, isLiked) {
-    if (isLiked === "null") return await this.deleteReaction(postId, userId)
+    if (isLiked === "null") {
+      const deletedReactionStatus = await this.deleteReaction(postId, userId)
+      return deletedReactionStatus
+    }
 
     const res = await reactionModel.findOneAndUpdate(
       {

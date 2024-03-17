@@ -24,5 +24,8 @@ module.exports = {
     "prettier/prettier": "error",
     "import/extensions": "off",
     "class-methods-use-this": "off",
+    radix: "off",
+    "consistent-return": "off",
+    "no-underscore-dangle": "off",
   },
 }
