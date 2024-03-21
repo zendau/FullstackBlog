@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  mongotest:
+    image: mongo:latest
+    ports:
+      - 27018:27017
+    volumes:
+      - ./test:/teqwerty
