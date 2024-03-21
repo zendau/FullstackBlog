@@ -125,8 +125,6 @@ class UserController {
   }
 
   async activateAccount(req, res, next) {
-    // eslint-disable-next-line no-debugger
-    debugger
     try {
       const schema = Joi.object({
         confirmCode: Joi.number().required(),

@@ -7,7 +7,7 @@ import NodeMailerService from "./nodemailer.service.js"
 class ConfirmCodeService {
   async createCode(userData) {
     try {
-      const confirmCode = crypto.randomInt(1000000).toString().padStart(7)
+      const confirmCode = crypto.randomInt(1000000).toString()
       const codeData = await confirmCodeModel.findOne({ user: userData.id })
 
       if (codeData) {
