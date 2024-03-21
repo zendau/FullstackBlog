@@ -64,6 +64,7 @@ class UserController {
     }
   }
 
+  // TODO: check
   async userList(req, res, next) {
     try {
       const users = await UserService.getUsersList()
@@ -85,15 +86,9 @@ class UserController {
     }
   }
 
-  async setConfirmCode(req, res, next) {
+  async resendConfirmCode(req, res, next) {
     try {
-      const schema = Joi.object({
-        email: Joi.string().email().required(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
-      const { email } = req.body
+      const { email } = req.user.payload
       await UserService.setConfirmCode(email)
       return res.send(true)
     } catch (e) {
@@ -145,16 +140,6 @@ class UserController {
       )
 
       return res.json(activateStatus)
-    } catch (e) {
-      next(e)
-    }
-  }
-
-  async repeatConfirmCode(req, res, next) {
-    try {
-      const userId = req.user.payload.id
-      const status = await UserService.repeatConfirmCode(userId)
-      return res.json(status)
     } catch (e) {
       next(e)
     }

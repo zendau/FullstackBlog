@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import UserController from "../controllers/user.controller.js"
-import { authGuard } from "../middlewares/auth.middleware.js"
+import { authGuard, userGuard } from "../middlewares/auth.middleware.js"
 
 const router = new Router()
 
@@ -124,15 +124,10 @@ router.get("/logout", authGuard, UserController.logoutUser)
 
 /**
  * @swagger
- * /user/setConfirmCode:
- *   post:
- *     summary: Set confirm code
+ * /user/resendConfirmCode:
+ *   get:
+ *     summary: Resend confirm code
  *     tags: [User]
- *     parameters:
- *       - in: email
- *         name: email
- *         type: string
- *         description: email of User
  *     responses:
  *       200:
  *         description: confirm code successfully created
@@ -144,7 +139,7 @@ router.get("/logout", authGuard, UserController.logoutUser)
  *         description: Unexpected error
  */
 
-router.post("/setConfirmCode", UserController.setConfirmCode)
+router.get("/resendConfirmCode", userGuard, UserController.resendConfirmCode)
 
 /**
  * @swagger
@@ -220,32 +215,6 @@ router.post("/activate", authGuard, UserController.activateAccount)
 
 /**
  * @swagger
- * /user/getActivateCode:
- *   get:
- *     summary: User re-send confirm code
- *     tags: [User]
- *     security:
- *      - bearerAuth: []
- *     parameters:
- *       - in: userId
- *         name: userId
- *         type: ObjectId
- *         description: ObjectId of User
- *     responses:
- *       200:
- *         description: Confirm code was re-send
- *       400:
- *          description: Error message
- *       401:
- *         description: User is not auth
- *       500:
- *         description: Unexpected error
- */
-
-router.get("/getActivateCode", authGuard, UserController.repeatConfirmCode)
-
-/**
- * @swagger
  * /user/resetPassword:
  *   post:
  *     summary: Reset user password
@@ -300,6 +269,6 @@ router.post("/resetPassword", UserController.resetPassword)
  *         description: Unexpected error
  */
 
-router.get("/data/:id", UserController.getUserById)
+router.get("/data/:id", authGuard, UserController.getUserById)
 
 export default router
