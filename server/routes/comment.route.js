@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import CommentController from "../controllers/comment.controller.js"
-import { authGuard } from "../middlewares/auth.middleware.js"
+import { userGuard } from "../middlewares/auth.middleware.js"
 
 const router = new Router()
 
@@ -48,7 +48,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/add", authGuard, CommentController.create)
+router.post("/add", userGuard, CommentController.create)
 
 /**
  * @swagger
@@ -86,7 +86,7 @@ router.post("/add", authGuard, CommentController.create)
  *         description: Unexpected error
  */
 
-router.put("/edit", authGuard, CommentController.edit)
+router.put("/edit", userGuard, CommentController.edit)
 
 /**
  * @swagger
@@ -117,6 +117,6 @@ router.put("/edit", authGuard, CommentController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete", authGuard, CommentController.delete)
+router.delete("/delete", userGuard, CommentController.delete)
 
 export default router

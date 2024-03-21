@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import FileController from "../controllers/file.controller.js"
-import { authGuard } from "../middlewares/auth.middleware.js"
+import { userGuard } from "../middlewares/auth.middleware.js"
 import multer from "../middlewares/multer.middleware.js"
 
 const router = new Router()
@@ -43,7 +43,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/add", authGuard, multer, FileController.add)
+router.post("/add", userGuard, multer, FileController.add)
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.post("/add", authGuard, multer, FileController.add)
  *       500:
  *         description: Unexpected error
  */
-router.get("/get/:id", authGuard, FileController.getOne)
+router.get("/get/:id", userGuard, FileController.getOne)
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.get("/get/:id", authGuard, FileController.getOne)
  *         description: Unexpected error
  */
 
-router.get("/list", authGuard, FileController.getList)
+router.get("/list", userGuard, FileController.getList)
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get("/list", authGuard, FileController.getList)
  *         description: Unexpected error
  */
 
-router.put("/update/:id", authGuard, multer, FileController.update)
+router.put("/update/:id", userGuard, multer, FileController.update)
 
 /**
  * @swagger
@@ -156,7 +156,7 @@ router.put("/update/:id", authGuard, multer, FileController.update)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", authGuard, FileController.delete)
+router.delete("/delete/:id", userGuard, FileController.delete)
 
 /**
  * @swagger

@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import UserController from "../controllers/user.controller.js"
-import { authGuard, userGuard } from "../middlewares/auth.middleware.js"
+import { userGuard } from "../middlewares/auth.middleware.js"
 
 const router = new Router()
 
@@ -120,7 +120,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/logout", authGuard, UserController.logoutUser)
+router.get("/logout", userGuard, UserController.logoutUser)
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.get("/resendConfirmCode", userGuard, UserController.resendConfirmCode)
  *         description: Unexpected error
  */
 
-router.put("/saveNewData", authGuard, UserController.saveNewUserData)
+router.put("/saveNewData", userGuard, UserController.saveNewUserData)
 
 /**
  * @swagger
@@ -192,10 +192,6 @@ router.put("/saveNewData", authGuard, UserController.saveNewUserData)
  *     security:
  *      - bearerAuth: []
  *     parameters:
- *       - in: userId
- *         name: userId
- *         type: ObjectId
- *         description: ObjectId of User
  *       - in: code
  *         name: code
  *         type: string
@@ -211,7 +207,7 @@ router.put("/saveNewData", authGuard, UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post("/activate", authGuard, UserController.activateAccount)
+router.post("/activate", userGuard, UserController.activateAccount)
 
 /**
  * @swagger
@@ -269,6 +265,6 @@ router.post("/resetPassword", UserController.resetPassword)
  *         description: Unexpected error
  */
 
-router.get("/data/:id", authGuard, UserController.getUserById)
+router.get("/data/:id", userGuard, UserController.getUserById)
 
 export default router

@@ -125,6 +125,8 @@ class UserController {
   }
 
   async activateAccount(req, res, next) {
+    // eslint-disable-next-line no-debugger
+    debugger
     try {
       const schema = Joi.object({
         confirmCode: Joi.number().required(),
@@ -133,11 +135,8 @@ class UserController {
       if (error) throw ApiError.HttpException(error.details[0].message)
 
       const { confirmCode } = req.body
-      const userId = req.user.payload.id
-      const activateStatus = await UserService.activateAccount(
-        userId,
-        confirmCode,
-      )
+      const { id } = req.user.payload
+      const activateStatus = await UserService.activateAccount(id, confirmCode)
 
       return res.json(activateStatus)
     } catch (e) {

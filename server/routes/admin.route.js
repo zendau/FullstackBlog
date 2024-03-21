@@ -2,7 +2,7 @@ import { Router } from "express"
 
 import AdminController from "../controllers/admin.controller.js"
 import UserController from "../controllers/user.controller.js"
-import { authGuard } from "../middlewares/auth.middleware.js"
+import { adminGuard } from "../middlewares/auth.middleware.js"
 
 const router = new Router()
 
@@ -31,12 +31,12 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.get("/all", authGuard, UserController.userList)
+router.get("/all", adminGuard, UserController.userList)
 
-router.patch("/roles", AdminController.getRoles)
-router.patch("/setRole", AdminController.setUserRole)
-router.patch("/unSetRole", AdminController.unSetUserRole)
-router.patch("/block", AdminController.blockUser)
-router.patch("/unBlock", AdminController.unBlockUser)
+router.patch("/roles", adminGuard, AdminController.getRoles)
+router.patch("/setRole", adminGuard, AdminController.setUserRole)
+router.patch("/unSetRole", adminGuard, AdminController.unSetUserRole)
+router.patch("/block", adminGuard, AdminController.blockUser)
+router.patch("/unBlock", adminGuard, AdminController.unBlockUser)
 
 export default router

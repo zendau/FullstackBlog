@@ -1,7 +1,7 @@
 import ApiError from "../exceprions/api.error.js"
 import TokenService from "../services/token.service.js"
 
-export function authGuard(role) {
+function authGuard(role) {
   return function (req, res, next) {
     // eslint-disable-next-line no-debugger
     debugger

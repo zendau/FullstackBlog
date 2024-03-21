@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import PostController from "../controllers/post.controller.js"
-import { adminGuard, authGuard } from "../middlewares/auth.middleware.js"
+import { adminGuard, userGuard } from "../middlewares/auth.middleware.js"
 import multer from "../middlewares/multer.middleware.js"
 
 const router = new Router()
@@ -87,7 +87,7 @@ router.post("/create", adminGuard, multer, PostController.create)
  *         description: Unexpected error
  */
 
-router.patch("/edit", authGuard, multer, PostController.edit)
+router.patch("/edit", userGuard, multer, PostController.edit)
 
 /**
  * @swagger
@@ -115,7 +115,7 @@ router.patch("/edit", authGuard, multer, PostController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", authGuard, PostController.delete)
+router.delete("/delete/:id", userGuard, PostController.delete)
 
 /**
  * @swagger
@@ -297,7 +297,7 @@ router.delete("/delete/:id", authGuard, PostController.delete)
  *         description: Unexpected error
  */
 
-router.patch("/reacting", authGuard, PostController.reactionPost)
+router.patch("/reacting", userGuard, PostController.reactionPost)
 
 router.get("/pagination", PostController.getPostsPagination)
 
