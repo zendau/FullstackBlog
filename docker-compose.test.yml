@@ -5,4 +5,4 @@ services:
     ports:
       - 27018:27017
     volumes:
-      - ./test:/teqwerty
+      - ./dump:/docker-entrypoint-initdb.d
