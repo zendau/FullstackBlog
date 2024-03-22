@@ -80,25 +80,25 @@ class PostController {
     }
   }
 
-  // async getOne(req, res, next) {
-  //   try {
-  //     const schema = Joi.object({
-  //       id: Joi.objectId().required(),
-  //     })
-  //     const { error } = schema.validate(req.params)
-  //     if (error) throw ApiError.HttpException(error.details[0].message)
+  async getOne(req, res, next) {
+    try {
+      const schema = Joi.object({
+        id: Joi.objectId().required(),
+      })
+      const { error } = schema.validate(req.params)
+      if (error) throw ApiError.HttpException(error.details[0].message)
 
-  //     const { id } = req.params
-  //     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
+      const { id } = req.params
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
 
-  //     const userId = req.user?.payload?.id || null
+      const userId = req.user?.payload?.id || null
 
-  //     const data = await PostService.getOne(id, userId, ip)
-  //     res.json(data)
-  //   } catch (e) {
-  //     next(e)
-  //   }
-  // }
+      const data = await PostService.getOne(id, userId, ip)
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
 
   async reactionPost(req, res, next) {
     try {

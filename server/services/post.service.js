@@ -10,10 +10,11 @@ import ReactionService from "./reaction.service.js"
 import TagService from "./tag.service.js"
 import UserPostReadService from "./userPostRead.service.js"
 
-const { ObjectId } = mongoose
-
 class PostService {
   async create(author, postData, file) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
     const fileData = await FileService.create(file)
     const tagsList = await TagService.insertTags(postData.tags)
 
@@ -179,7 +180,7 @@ class PostService {
     const userDTO = new UserDTO(postModelData.author)
     const fileDTO = new FileDTO(postModelData.file)
 
-    const tagsList = postModel.tags.map((tag) => tag.title)
+    const tagsList = postModelData.tags.map((tag) => tag.title)
 
     postDTO.setAuthor(userDTO)
     postDTO.setImage(fileDTO)
@@ -325,20 +326,20 @@ class PostService {
     const matchData = {}
 
     const objectIdList = Array.isArray(idList)
-      ? idList.map((id) => ObjectId(id))
+      ? idList.map((id) => mongoose.Types.ObjectId(id))
       : []
 
     // Выборка постов конкретного пользователя
     if (filter?.authorId) {
       matchData.author = {
-        $eq: ObjectId(filter.authorId),
+        $eq: mongoose.Types.ObjectId(filter.authorId),
       }
     }
 
     // Выборка постов по конкретному тегу
     if (filter?.tag) {
       matchData.tags = {
-        $elemMatch: { $eq: ObjectId(filter.tag) },
+        $elemMatch: { $eq: mongoose.Types.ObjectId(filter.tag) },
       }
     }
 
@@ -354,7 +355,7 @@ class PostService {
     // Получение поста по айди
     if (filter.postId) {
       matchData._id = {
-        $eq: ObjectId(filter.postId),
+        $eq: mongoose.Types.ObjectId(filter.postId),
       }
     }
 

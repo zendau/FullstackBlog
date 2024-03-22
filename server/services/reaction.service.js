@@ -3,8 +3,6 @@ import mongoose from "mongoose"
 import ReactionDTO from "../dtos/reaction.dto.js"
 import reactionModel from "../models/reaction.model.js"
 
-const { ObjectId } = mongoose
-
 class ReactionService {
   async add(postId, userId, isLiked) {
     await reactionModel.create({
@@ -45,10 +43,12 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
+    // eslint-disable-next-line no-debugger
+    debugger
     const reactions = await reactionModel.aggregate([
       {
         $match: {
-          post: ObjectId(postId),
+          post: mongoose.Types.ObjectId(postId),
         },
       },
       {
@@ -68,7 +68,7 @@ class ReactionService {
             $push: {
               $cond: [
                 {
-                  $eq: ["$user", ObjectId(userId)],
+                  $eq: ["$user", mongoose.Types.ObjectId(userId)],
                 },
                 {
                   isLiked: "$isLiked",
@@ -143,7 +143,7 @@ class ReactionService {
     const reactions = await reactionModel.aggregate([
       {
         $match: {
-          user: ObjectId(user),
+          user: mongoose.Types.ObjectId(user),
         },
       },
       {

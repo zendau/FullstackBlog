@@ -5,8 +5,6 @@ import ApiError from "../exceprions/api.error.js"
 import commentModel from "../models/comment.model.js"
 import PostService from "./post.service.js"
 
-const { ObjectId } = mongoose
-
 class CommentService {
   async create(user, post, message) {
     await PostService.postExist(post)
@@ -66,7 +64,7 @@ class CommentService {
     const commentList = await commentModel.aggregate([
       {
         $match: {
-          user: ObjectId(userId),
+          user: mongoose.Types.ObjectId(userId),
         },
       },
       {
@@ -103,20 +101,20 @@ class CommentService {
     const matchData = {}
 
     const objectIdList = Array.isArray(idList)
-      ? idList.map((id) => ObjectId(id))
+      ? idList.map((id) => mongoose.Types.ObjectId(id))
       : []
 
     // Выборка комментариев пользователя
     if (filter?.user) {
       matchData.author = {
-        $eq: ObjectId(filter.user),
+        $eq: mongoose.Types.ObjectId(filter.user),
       }
     }
 
     // Выборка комментариев поста
     if (filter?.post) {
       matchData.post = {
-        $eq: ObjectId(filter.post),
+        $eq: mongoose.Types.ObjectId(filter.post),
       }
     }
 

@@ -1,5 +1,5 @@
 import multer from "multer"
-import extname from "path"
+import { extname } from "path"
 import { v4 as uuidv4 } from "uuid"
 
 const storageConfig = multer.diskStorage({

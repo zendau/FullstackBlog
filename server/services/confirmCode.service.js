@@ -34,6 +34,9 @@ class ConfirmCodeService {
   }
 
   async checkCode(code) {
+    // eslint-disable-next-line no-debugger
+    debugger
+
     const codeData = await confirmCodeModel.findOne({ code })
 
     const confirmCodeStatus = !!codeData

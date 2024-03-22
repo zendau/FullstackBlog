@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import PostController from "../controllers/post.controller.js"
-import { adminGuard, userGuard } from "../middlewares/auth.middleware.js"
+import { noAuth, userGuard } from "../middlewares/auth.middleware.js"
 import multer from "../middlewares/multer.middleware.js"
 
 const router = new Router()
@@ -49,7 +49,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/create", adminGuard, multer, PostController.create)
+router.post("/create", userGuard, multer, PostController.create)
 
 /**
  * @swagger
@@ -151,7 +151,7 @@ router.delete("/delete/:id", userGuard, PostController.delete)
  *         description: Unexpected error
  */
 
-// router.get("/get/:id", noAuth, PostController.getOne)
+router.get("/get/:id", noAuth, PostController.getOne)
 
 // router.get("/search/:substring", PostController.getPostsBySubString)
 
