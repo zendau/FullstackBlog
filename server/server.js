@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
 import mongoose from "mongoose"
-import path from "path"
 import swaggerJsDoc from "swagger-jsdoc"
 import swaggerUI from "swagger-ui-express"
 
@@ -58,10 +57,7 @@ class App {
       }),
     )
 
-    this.app.use(
-      "/image",
-      express.static(path.join(import.meta.url, process.env.FILE_FOULDER)),
-    )
+    this.app.use("/image", express.static(process.env.FILE_FOULDER))
   }
 
   initializeRoutes() {
@@ -78,16 +74,18 @@ class App {
 
   async listen() {
     try {
-      await this.connectToTheDatabase()
+      await this.connectDB()
       this.app.listen(this.port, () => {
         Logger.info(`App listening on the port http://localhost:${this.port}`)
       })
     } catch (e) {
       console.error(`Server Error: -> ${e}`)
+      throw new Error(e)
     }
+    return this.app
   }
 
-  async connectToTheDatabase() {
+  async connectDB() {
     try {
       await mongoose.connect(process.env.DB_URL, {
         useNewUrlParser: true,
@@ -97,6 +95,11 @@ class App {
     } catch (e) {
       console.error(`DB Error: -> ${e}`)
     }
+  }
+
+  async disconnectDB() {
+    await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   }
 }
 
