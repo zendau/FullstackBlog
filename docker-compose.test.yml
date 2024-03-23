@@ -6,3 +6,8 @@ services:
       - 27018:27017
     volumes:
       - ./dump:/docker-entrypoint-initdb.d
+  mailpit-test:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - 1026:1025
+      - 8026:8025

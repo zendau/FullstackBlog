@@ -12,6 +12,9 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "test": "jest",
+    "pretest:e2e": "sh scripts/docker-test-up.sh",
+    "test:e2e": "cross-env DOTENV_CONFIG_PATH=.env.test jest --testPathPattern=__test__/e2e --detectOpenHandles --setupFiles=dotenv/config",
+    "posttest:e2e": "sh scripts/docker-test-down.sh",
     "prepare": "husky && husky install"
   },
   "author": "",

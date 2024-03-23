@@ -1,5 +1,6 @@
 export default {
   transform: {
-    "^.+\\.[t|j]sx?$": "babel-jest",
+    "^.+\\.m?js$": "babel-jest",
   },
+  clearMocks: true,
 }
