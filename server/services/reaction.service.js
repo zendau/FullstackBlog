@@ -43,8 +43,6 @@ class ReactionService {
   }
 
   async getReactionsCount(postId, userId) {
-    // eslint-disable-next-line no-debugger
-    debugger
     const reactions = await reactionModel.aggregate([
       {
         $match: {

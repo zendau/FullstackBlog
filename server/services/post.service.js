@@ -12,9 +12,6 @@ import UserPostReadService from "./userPostRead.service.js"
 
 class PostService {
   async create(author, postData, file) {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     const fileData = await FileService.create(file)
     const tagsList = await TagService.insertTags(postData.tags)
 
@@ -83,18 +80,6 @@ class PostService {
     return post
   }
 
-  // async getUserPostData(userId) {
-  //   const posts = await postModel.find().where("author").equals(userId)
-  //   const postsId = posts.map((post) => ObjectId(post._id))
-
-  //   // const comments = await CommentService.usersComments(userId)
-  //   const userRating = await ReactionService.getUserRating(postsId)
-  //   const reactions = await ReactionService.getPersonalLikes(userId)
-
-  //   // return { userRating, comments, reactions }
-  //   return { userRating, reactions }
-  // }
-
   async getOne(postId, userId, ip) {
     const post = await this.postExist(postId)
     const postDTO = await this.getExtendedPostDTO(post, userId)
@@ -118,17 +103,6 @@ class PostService {
     const postsDTO = posts.map((post) => this.createPostListDTO(post))
     return postsDTO
   }
-
-  // async getAllPosts() {
-  //   const posts = await postModel.find().populate("author")
-  //   const postsDTO = posts.map((post) => this.createPostListDTO(post))
-  //   return postsDTO
-  // }
-
-  // async getLimitPosts(currentPage, limit) {
-  //   const postsData = await this.getPosts({}, currentPage, limit)
-  //   return postsData
-  // }
 
   async getLimitUserPosts(currentPage, limit, userId) {
     const postsData = await this.getPosts(
@@ -192,9 +166,6 @@ class PostService {
     )
     postDTO.setLikes(reactionData)
 
-    // const commentsData = await CommentService.getList(postDTO.id)
-    // postDTO.setComments(commentsData)
-
     return postDTO
   }
 
@@ -212,17 +183,6 @@ class PostService {
 
     return true
   }
-
-  // async addPostComment(userId, postId) {
-  //   await this.postExist(postId)
-
-  //   // const inseredCommentDTO = await CommentService.create(
-  //   //   userId,
-  //   //   postId,
-  //   //   message,
-  //   // )
-  //   // return inseredCommentDTO
-  // }
 
   postsRating(withCounters) {
     return [
@@ -320,9 +280,6 @@ class PostService {
   }
 
   postsMatchFilter(idList, filter) {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     const matchData = {}
 
     const objectIdList = Array.isArray(idList)

@@ -119,46 +119,6 @@ class PostController {
     }
   }
 
-  // async getPostsBySubString(req, res, next) {
-  //   try {
-  //     const schema = Joi.object({
-  //       substring: Joi.string().min(3).max(20).required(),
-  //     })
-  //     const { error } = schema.validate(req.params)
-  //     if (error) throw ApiError.HttpException(error.details[0].message)
-
-  //     const { substring } = req.params
-
-  //     const data = await PostService.searchBySubstring(substring)
-  //     res.json(data)
-  //   } catch (e) {
-  //     next(e)
-  //   }
-  // }
-
-  // async getUserPosts(req, res, next) {
-  //   try {
-  //     const schema = Joi.object({
-  //       currentPage: Joi.number().required(),
-  //       limit: Joi.number().required(),
-  //       userId: Joi.objectId().required(),
-  //     })
-  //     const { error } = schema.validate(req.query)
-  //     if (error) throw ApiError.HttpException(error.details[0].message)
-
-  //     const { currentPage, limit, userId } = req.query
-  //     const data = await PostService.getLimitUserPosts(
-  //       currentPage,
-  //       limit,
-  //       userId,
-  //     )
-
-  //     res.json(data)
-  //   } catch (e) {
-  //     next(e)
-  //   }
-  // }
-
   async getPostsPagination(req, res, next) {
     try {
       const schema = Joi.object({
@@ -195,33 +155,6 @@ class PostController {
       next(e)
     }
   }
-
-  // async getAllPosts(req, res, next) {
-  //   try {
-  //     const data = await PostService.getAllPosts()
-  //     res.json(data)
-  //   } catch (e) {
-  //     next(e)
-  //   }
-  // }
-
-  // async getLimitPosts(req, res, next) {
-  //   try {
-  //     const schema = Joi.object({
-  //       currentPage: Joi.number().required(),
-  //       limit: Joi.number().required(),
-  //     })
-  //     const { error } = schema.validate(req.query)
-  //     if (error) throw ApiError.HttpException(error.details[0].message)
-
-  //     const { currentPage, limit } = req.query
-  //     const data = await PostService.getLimitPosts(currentPage, limit)
-
-  //     res.json(data)
-  //   } catch (e) {
-  //     next(e)
-  //   }
-  // }
 }
 
 export default new PostController()
