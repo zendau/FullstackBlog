@@ -79,7 +79,7 @@ class App {
         Logger.info(`App listening on the port http://localhost:${this.port}`)
       })
     } catch (e) {
-      console.error(`Server Error: -> ${e}`)
+      Logger.error(e)
       throw new Error(e)
     }
     return this.app
@@ -93,7 +93,8 @@ class App {
         useUnifiedTopology: true,
       })
     } catch (e) {
-      console.error(`DB Error: -> ${e}`)
+      Logger.error(e)
+      throw new Error(e)
     }
   }
 

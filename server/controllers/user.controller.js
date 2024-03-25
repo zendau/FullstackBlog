@@ -1,5 +1,6 @@
 import Joi from "joi"
 import objectId from "joi-objectid"
+import { Logger } from "winston"
 
 import ApiError from "../exceprions/api.error.js"
 import UserService from "../services/user.service.js"
@@ -22,9 +23,9 @@ class UserController {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
       })
+      Logger.info(`User '${email}' was registered`)
       res.json(data)
     } catch (e) {
-      console.log("EEER", e)
       next(e)
     }
   }

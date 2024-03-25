@@ -58,9 +58,9 @@ class FileService {
   removeFromStorage(filename) {
     fs.unlink(`${process.env.FILE_FOULDER}/${filename}`, (err) => {
       if (err && err.code === "ENOENT") {
-        console.error("File doesn't exist, won't remove it")
+        throw ApiError.PageNotFoundError("File not found")
       } else if (err) {
-        console.error("Error occurred while trying to remove file")
+        throw ApiError.ForbiddenError()
       }
     })
   }

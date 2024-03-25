@@ -9,8 +9,8 @@ export default class ApiError extends Error {
     return new ApiError(401, "Unauthorized user. Access denied.")
   }
 
-  static HttpException(response) {
-    return new ApiError(400, response)
+  static HttpException(msg) {
+    return new ApiError(400, msg)
   }
 
   static ForbiddenError() {
@@ -20,7 +20,11 @@ export default class ApiError extends Error {
     )
   }
 
-  static PageNotFoundError(respone) {
-    return new ApiError(404, respone)
+  static InternalError(msg) {
+    return new ApiError(500, msg)
+  }
+
+  static PageNotFoundError(msg) {
+    return new ApiError(404, msg)
   }
 }

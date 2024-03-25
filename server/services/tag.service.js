@@ -36,7 +36,7 @@ class TagService {
       })
       return res
     } catch (e) {
-      console.error("tag remove post tag error", e)
+      throw ApiError.InternalError("tag remove post tag error")
     }
   }
 }

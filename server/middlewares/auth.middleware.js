@@ -3,9 +3,6 @@ import TokenService from "../services/token.service.js"
 
 function authGuard(role) {
   return function (req, res, next) {
-    // eslint-disable-next-line no-debugger
-    debugger
-
     try {
       const authorizationHeader = req.headers.authorization
       if (!authorizationHeader) {

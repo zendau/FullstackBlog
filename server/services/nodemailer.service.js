@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer"
 
+import ApiError from "../exceprions/api.error"
+
 class NodeMailerService {
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -22,7 +24,7 @@ class NodeMailerService {
         html: `<p>Your confirm code - ${code}</p>`,
       })
     } catch (e) {
-      console.log(e)
+      throw ApiError.InternalError("An error occurred while sending the email")
     }
   }
 
@@ -35,7 +37,7 @@ class NodeMailerService {
         html: `<p>Your new password - ${password}</p>`,
       })
     } catch (e) {
-      console.log(e)
+      throw ApiError.InternalError("An error occurred while sending the email")
     }
   }
 }

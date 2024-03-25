@@ -1,5 +1,11 @@
+import Logger from "./libs/logger.js"
 import App from "./server.js"
 
 const PORT = process.env.PORT || 3000
-const app = new App(PORT)
-app.listen()
+
+try {
+  const app = new App(PORT)
+  app.listen()
+} catch (e) {
+  Logger.error(e)
+}
