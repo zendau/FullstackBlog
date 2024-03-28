@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt"
+import mongoose from "mongoose"
 import { v4 as uuid } from "uuid"
 
-import PostDataDTO from "../dtos/postData.dto.js"
+// import PostDataDTO from "../dtos/postData.dto.js"
 import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceprions/api.error.js"
 import userModel from "../models/user.model.js"
@@ -86,14 +87,85 @@ class UserService {
     return userDTO
   }
 
-  async getUserData(id) {
-    const user = await this.getById(id)
+  userLookup() {
+    return [
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "author",
+          as: "posts",
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "posts._id",
+          foreignField: "post",
+          as: "comments",
+        },
+      },
+      {
+        $lookup: {
+          from: "userpostreads",
+          localField: "posts._id",
+          foreignField: "post",
+          as: "postreads",
+        },
+      },
+      {
+        $lookup: {
+          from: "reactions",
+          localField: "posts._id",
+          foreignField: "post",
+          as: "react",
+        },
+      },
+    ]
+  }
 
-    const postData = await PostService.getUserPostData(id)
-    user.rating = postData.userRating
-    user.comments = postData.comments
-    user.reactions = postData.reactions
-    return new PostDataDTO(user)
+  async getUserData(id) {
+    const postsRating = await PostService.postsRating(true)
+    const combineAggregate = [
+      {
+        $match: {
+          _id: {
+            $eq: mongoose.Types.ObjectId(id),
+          },
+        },
+      },
+      ...this.userLookup(),
+      ...postsRating,
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+        },
+      },
+      {
+        $project: {
+          counterLikes: 1,
+          counterDislikes: 1,
+          counterReads: 1,
+          counterComments: 1,
+          rating: 1,
+          id: "$user._id",
+          _id: 0,
+          isBlocked: "$user.isBlocked",
+          email: "$user.email",
+        },
+      },
+    ]
+
+    const userData = await userModel.aggregate(combineAggregate)
+    return userData
   }
 
   async logout(token) {

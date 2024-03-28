@@ -184,7 +184,7 @@ class PostService {
     return true
   }
 
-  postsRating(withCounters) {
+  postLookup() {
     return [
       {
         $lookup: {
@@ -203,6 +203,19 @@ class PostService {
         },
       },
       {
+        $lookup: {
+          from: "reactions",
+          localField: "_id",
+          foreignField: "post",
+          as: "react",
+        },
+      },
+    ]
+  }
+
+  postsRating(withCounters) {
+    return [
+      {
         $project: {
           _id: 1,
           comments: {
@@ -211,14 +224,7 @@ class PostService {
           counterReads: {
             $size: "$postreads",
           },
-        },
-      },
-      {
-        $lookup: {
-          from: "reactions",
-          localField: "_id",
-          foreignField: "post",
-          as: "react",
+          react: "$react",
         },
       },
       {
@@ -460,6 +466,7 @@ class PostService {
 
   async getPostsPagination(idList, limit, sortType, filterType) {
     const filter = this.postsMatchFilter(idList, filterType)
+    const postLookup = this.postLookup()
     const rating = this.postsRating(true)
     const extended = this.postsExtendedData()
     const sort = this.postsSort(sortType)
@@ -468,6 +475,7 @@ class PostService {
 
     const combineAggregate = [
       ...filter,
+      ...postLookup,
       ...rating,
       ...extended,
       ...sort,
