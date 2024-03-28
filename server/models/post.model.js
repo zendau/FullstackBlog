@@ -57,7 +57,7 @@ const PostSchema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
   timeRead: { type: Number, required: true },
-  readCount: { type: Number, default: 0 },
+  // readCount: { type: Number, default: 0 },
   createdDate: { type: Date, required: true, default: Date.now },
 })
 

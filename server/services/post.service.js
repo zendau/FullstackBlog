@@ -195,12 +195,22 @@ class PostService {
         },
       },
       {
+        $lookup: {
+          from: "userpostreads",
+          localField: "_id",
+          foreignField: "post",
+          as: "postreads",
+        },
+      },
+      {
         $project: {
           _id: 1,
           comments: {
             $size: "$comments",
           },
-          readCount: 1,
+          counterReads: {
+            $size: "$postreads",
+          },
         },
       },
       {
@@ -246,7 +256,7 @@ class PostService {
             $first: "$comments",
           },
           counterReads: {
-            $first: "$readCount",
+            $first: "$counterReads",
           },
         },
       },
