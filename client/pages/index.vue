@@ -51,7 +51,7 @@ watch(page, () => {
   </div>
   <div v-else class="cart__container">
     <div v-for="post of posts" :key="post.id" class="cart__item">
-      <img src="/item.jpg" class="cart__item--img" alt="" />
+      <NuxtImg src="/item.jpg" class="cart__item--img" alt="" />
       <div class="mt-3 space-y-2 text-center">
         <h1 class="">
           <NuxtLink :to="`/${post.id}`">
