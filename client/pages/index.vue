@@ -26,6 +26,7 @@ const { data: posts, pending } = await useFetch(
       }))
     },
     lazy: true,
+    key: `post-page/${page.value}`,
   },
 )
 

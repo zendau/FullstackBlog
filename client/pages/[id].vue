@@ -2,12 +2,16 @@
 interface IPost {
   name: string
   content: string
+  fetchTime?: Date
 }
 
 const { params } = useRoute()
 
 const { data: post } = await useFetch<IPost>(
   `https://api.fakestorejson.com/api/v1/public/products/${params.id}`,
+  {
+    key: `post/${params.id}`,
+  },
 )
 </script>
 
