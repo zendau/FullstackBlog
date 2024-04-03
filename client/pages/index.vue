@@ -1,122 +1,99 @@
 <script setup lang="ts">
-interface IQ {
-  id: number
-  title: string
-  body: string
-  img: string
-}
-
-const test: IQ[] = [
-  {
-    id: 1,
-    title: "test 1",
-    body: "body 1",
-    img: "/place.png",
-  },
-  {
-    id: 2,
-    title: "test 2",
-    body: "body 2",
-    img: "/place.png",
-  },
-  {
-    id: 3,
-    title: "test 3",
-    body: "body 3",
-    img: "/place.png",
-  },
-  {
-    id: 4,
-    title: "test 4",
-    body: "body 4",
-    img: "/place.png",
-  },
-  {
-    id: 5,
-    title: "test 5",
-    body: "body 5",
-    img: "/place.png",
-  },
-  {
-    id: 6,
-    title: "test 6",
-    body: "body 6",
-    img: "/place.png",
-  },
-  {
-    id: 7,
-    title: "test 7",
-    body: "body 7",
-    img: "/place.png",
-  },
-  {
-    id: 8,
-    title: "test 8",
-    body: "body 8",
-    img: "/place.png",
-  },
-]
 const router = useRouter()
 const route = useRoute()
 
-const isLoad = ref(true)
 const page = ref(1)
-const currentPage = parseInt(route.query.page as any)
+const { x, y } = useWindowScroll({ behavior: "smooth" })
 
-console.log(currentPage)
+const currentPage = parseInt(route.query.page as any)
 
 if (currentPage && currentPage > 1) page.value = currentPage
 
-const items = ref(Array(55))
+const POST_ON_PAGE = 10
+
+const { data: posts, pending } = await useFetch(
+  "https://api.fakestorejson.com/api/v1/public/products",
+  {
+    query: {
+      per_page: POST_ON_PAGE,
+      page,
+    },
+    transform: (posts: any) => {
+      return posts.data.map((post: any) => ({
+        id: post.id,
+        name: post.name,
+        desc: post.description,
+      }))
+    },
+    lazy: true,
+  },
+)
+
+const postMaxitemsCount = 55
 
 watch(page, () => {
   router.push({ query: { page: page.value } })
+  x.value = 0
+  y.value = 0
 })
-
-setTimeout(() => {
-  isLoad.value = false
-}, 5000)
 </script>
 
 <template>
-  <div class="container my-6 flex justify-center items-center flex-col">
-    <div
-      v-for="(item, index) of test"
-      v-if="isLoad"
-      :key="index"
-      class="flex mb-6 items-center space-x-4"
-    >
-      <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
-      <div class="space-y-2">
-        <USkeleton class="h-4 w-[250px]" />
-        <USkeleton class="h-4 w-[200px]" />
+  <h1 class="text-center text-4xl m-4">Catalog</h1>
+  <div v-if="pending" class="cart__container">
+    <div v-for="item of POST_ON_PAGE" :key="item" class="cart__item">
+      <USkeleton class="h-60 w-full" />
+      <div class="mt-3 space-y-2 text-center">
+        <USkeleton class="h-6 w-full" />
+        <USkeleton class="h-40 w-full" />
       </div>
     </div>
-    <div
-      v-for="item of test"
-      v-else
-      :key="item.id"
-      class="flex mb-6 items-center space-x-4 text-primary-500"
-    >
-      <img :src="item.img" alt="" class="h-12 w-12">
-      <div class="space-y-2 text-center">
-        <h1 class="h-4 w-[250px]">
-          {{ item.title }}
+  </div>
+  <div v-else class="cart__container">
+    <div v-for="post of posts" :key="post.id" class="cart__item">
+      <img src="/item.jpg" class="cart__item--img" alt="" />
+      <div class="mt-3 space-y-2 text-center">
+        <h1 class="">
+          <NuxtLink :to="`/${post.id}`">
+            {{ post.name }}
+          </NuxtLink>
         </h1>
-        <p class="h-4 w-[250px]">
-          {{ item.body }}
+        <p class="">
+          {{ post.desc }}
         </p>
       </div>
     </div>
-    <p style="color: black">
-      {{ page }}
-    </p>
+  </div>
+  <div class="flex justify-center m-10">
     <UPagination
       v-model="page"
-      :page-count="5"
-      :total="items.length"
+      :page-count="10"
+      :total="postMaxitemsCount"
       show-last
       show-first
     />
   </div>
 </template>
+
+<style lang="scss">
+.cart {
+  background-color: red;
+  &__container {
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 15px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+
+    &--img {
+      height: auto;
+      widows: 100%;
+    }
+  }
+}
+</style>

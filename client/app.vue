@@ -1,9 +1,17 @@
+<script setup lang="ts">
+const layout = "admin"
+</script>
+
 <template>
-  <RouterView />
+  <NuxtLoadingIndicator />
+  <NuxtLayout :name="layout">
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <style>
 body {
   background-color: #fff;
+  color: black;
 }
 </style>
