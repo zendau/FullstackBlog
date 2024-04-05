@@ -8,8 +8,6 @@ const state = reactive({
   // password: "NhatDuyet@JSON*2023#",
 })
 
-const loadingIndicator = useLoadingIndicator()
-
 const schema = object().shape({
   email: string().email("Invalid email").required("Required"),
   password: string()
@@ -19,45 +17,16 @@ const schema = object().shape({
 
 type Schema = InferType<typeof schema>
 
-const isLoading = ref(false)
-const data = ref()
-const error = ref()
+const authStore = useAuthStore()
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  try {
-    isLoading.value = true
-    loadingIndicator.start()
-    const res = await $fetch<any>(
-      "https://api.fakestorejson.com/api/v1/auth/login",
-      {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: event.data.email,
-          password: event.data.password,
-        }),
-      },
-    )
-    data.value = res
-  } catch (e: any) {
-    if (e.status === 401) {
-      error.value =
-        "Пожалуйста, проверьте введенные данные и повторите попытку."
-    } else {
-      error.value =
-        "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
-    }
-
-    setTimeout(() => (error.value = ""), 5000)
-  } finally {
-    loadingIndicator.finish()
-    isLoading.value = false
-  }
+function onSubmit(event: FormSubmitEvent<Schema>) {
+  authStore.login(event.data)
 }
 </script>
 <template>
-  <h1 v-if="isLoading">is loading...</h1>
-  <p v-if="error" class="text-red-600">{{ error }}</p>
+  {{ authStore.token }}
+  <h1 v-if="authStore.isLoading">is loading...</h1>
+  <p v-if="authStore.error" class="text-red-600">{{ authStore.error }}</p>
   <div class="w-4/5 mx-auto">
     <UForm
       :schema="schema"
