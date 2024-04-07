@@ -7,7 +7,9 @@ export const useAuthStore = defineStore("auth", () => {
   const loadingIndicator = useLoadingIndicator()
   const router = useRouter()
 
-  const localStorage = useLocalStorage("token", "")
+  const localStorage = useCookie("token")
+
+  const userStore = useUserStore()
 
   const isLoading = ref(false)
   const token = ref("")
@@ -35,7 +37,10 @@ export const useAuthStore = defineStore("auth", () => {
 
       token.value = res.access_token
       localStorage.value = token.value
-      router.push("/")
+
+      await userStore.getProfile()
+
+      await router.push("/")
     } catch (e: any) {
       if (e.status === 401) {
         error.value =
@@ -54,45 +59,3 @@ export const useAuthStore = defineStore("auth", () => {
 
   return { isLoading, token, error, login }
 })
-
-// export const useAuthStore = defineStore("auth", {
-//   state: () => ({
-//     isLoading: false,
-//     data: [],
-//     error: "",
-//   }),
-//   actions: {
-//     async login(userData: IAuthUser) {
-//       const loadingIndicator = useLoadingIndicator()
-//       try {
-//         this.isLoading = true
-//         loadingIndicator.start()
-//         const res = await $fetch<any>(
-//           "https://api.fakestorejson.com/api/v1/auth/login",
-//           {
-//             method: "post",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({
-//               email: userData.email,
-//               password: userData.password,
-//             }),
-//           },
-//         )
-//         this.data = res
-//       } catch (e: any) {
-//         if (e.status === 401) {
-//           this.error =
-//             "Пожалуйста, проверьте введенные данные и повторите попытку."
-//         } else {
-//           this.error =
-//             "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
-//         }
-
-//         setTimeout(() => (this.error = ""), 5000)
-//       } finally {
-//         loadingIndicator.finish()
-//         this.isLoading = false
-//       }
-//     },
-//   },
-// })

@@ -2,6 +2,10 @@
 import { object, string, type InferType, mixed, array } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
+definePageMeta({
+  middleware: "protect-by-auth",
+})
+
 const state = reactive({
   email: null,
   password: null,

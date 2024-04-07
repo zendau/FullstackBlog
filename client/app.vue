@@ -1,10 +1,8 @@
-<script setup lang="ts">
-const layout = "admin"
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <NuxtLoadingIndicator />
-  <NuxtLayout :name="layout">
+  <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>
