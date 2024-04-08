@@ -1,14 +1,8 @@
-<script setup lang="ts">
-const userStore = useUserStore()
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <p>{{ userStore.isAuth ? "Auth" : "Not auth" }}</p>
-    <div>
-      <NuxtLink to="/"> List posts </NuxtLink>
-      <NuxtLink to="/login"> Login </NuxtLink>
-    </div>
+    <UiNavbar />
     <slot />
   </div>
 </template>
