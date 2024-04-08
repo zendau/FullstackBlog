@@ -3,6 +3,7 @@ import { object, string, type InferType, mixed, array } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
 definePageMeta({
+  layout: "admin",
   middleware: "protect-by-auth",
 })
 

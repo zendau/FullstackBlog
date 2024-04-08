@@ -1,7 +1,9 @@
 export const useUserStore = defineStore("user", () => {
-  const data = ref([])
+  const data = ref<any>([])
   const error = ref("")
   const isAuth = ref(false)
+
+  const isAdmin = ref(false)
 
   const router = useRouter()
   const tokenStorage = useLocalStorage("token", "")
@@ -14,22 +16,27 @@ export const useUserStore = defineStore("user", () => {
       })
 
       data.value = res
+      data.value.roles = ["admin"]
       isAuth.value = true
+
+      if (data.value.roles.includes("admin")) isAdmin.value = true
+
       return true
     } catch (e) {
       error.value = "invalid user data"
-      isAuth.value = false
+      logout()
       return false
     }
   }
 
   function logout() {
     isAuth.value = false
+    isAdmin.value = false
     router.push("/")
     tokenStorage.value = ""
     tokenCookie.value = ""
     data.value = []
   }
 
-  return { data, error, isAuth, getProfile, logout }
+  return { data, error, isAuth, isAdmin, getProfile, logout }
 })
