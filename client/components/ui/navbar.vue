@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isAuth } = storeToRefs(useUserStore())
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -12,7 +12,7 @@ const { isAuth } = storeToRefs(useUserStore())
         <NuxtLink to="/static"> Info </NuxtLink>
       </li>
     </ul>
-    <ul v-if="isAuth" class="navbar__list">
+    <ul v-if="!userStore.isAuth" class="navbar__list">
       <li class="navbar__item">
         <NuxtLink to="/login"> Register </NuxtLink>
       </li>
@@ -22,7 +22,7 @@ const { isAuth } = storeToRefs(useUserStore())
     </ul>
     <ul v-else class="navbar__list">
       <li class="navbar__item">
-        <NuxtLink to="/"> Logout </NuxtLink>
+        <NuxtLink to="/" @click="userStore.logout"> Logout </NuxtLink>
       </li>
     </ul>
   </nav>

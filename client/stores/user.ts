@@ -3,11 +3,17 @@ export const useUserStore = defineStore("user", () => {
   const error = ref("")
   const isAuth = ref(false)
 
+  const router = useRouter()
+  const tokenStorage = useLocalStorage("token", "")
+  const tokenCookie = useCookie("token")
+
   async function getProfile() {
     try {
       const res: any = await useFetchJWT("auth/user-profile", {
         method: "get",
       })
+
+      console.log("res data", res)
 
       data.value = res
       isAuth.value = true
@@ -19,5 +25,12 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { data, error, isAuth, getProfile }
+  function logout() {
+    isAuth.value = false
+    router.push("/")
+    tokenStorage.value = ""
+    tokenCookie.value = ""
+  }
+
+  return { data, error, isAuth, getProfile, logout }
 })
