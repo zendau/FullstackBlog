@@ -11,7 +11,7 @@ if (currentPage && currentPage > 1) page.value = currentPage
 
 const POST_ON_PAGE = 10
 
-const { data: posts, pending } = await useFetch(
+const { data: posts, pending } = useFetch(
   "https://api.fakestorejson.com/api/v1/public/products",
   {
     query: {
@@ -52,7 +52,7 @@ watch(page, () => {
   </div>
   <div v-else class="cart__container">
     <div v-for="post of posts" :key="post.id" class="cart__item">
-      <NuxtImg src="/item.jpg" class="cart__item--img" alt="" />
+      <NuxtImg loading="lazy" src="/item.jpg" class="cart__item--img" alt="" />
       <div class="mt-3 space-y-2 text-center">
         <h1 class="">
           <NuxtLink :to="`/${post.id}`">

@@ -4,8 +4,7 @@ import type { FormSubmitEvent } from "#ui/types"
 
 const state = reactive({
   email: "hello@nhatduyet.me",
-  password: "NhatDuyet@JSON*2023#22",
-  // password: "NhatDuyet@JSON*2023#",
+  password: "NhatDuyet@JSON*2023#",
 })
 
 const schema = object().shape({
@@ -24,7 +23,6 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 </script>
 <template>
-  {{ authStore.token }}
   <h1 v-if="authStore.isLoading">is loading...</h1>
   <p v-if="authStore.error" class="text-red-600">{{ authStore.error }}</p>
   <div class="w-4/5 mx-auto">
