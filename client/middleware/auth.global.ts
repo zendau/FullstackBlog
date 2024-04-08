@@ -1,16 +1,15 @@
 export default defineNuxtRouteMiddleware(async () => {
-  const token = useCookie("token")
+  const accessToken = useCookie("token")
   const userStore = useUserStore()
 
-  if (token.value) {
+  if (accessToken.value) {
     userStore.isAuth = true
   }
 
   if (import.meta.server) return
 
-  console.log("storage", localStorage.getItem("token"))
+  const refreshToken = useLocalStorage("token", "")
 
-  if (token.value && !userStore.isAuth) {
-    await userStore.getProfile()
-  }
+  if (!accessToken.value && !refreshToken.value) return
+  await userStore.getProfile()
 })

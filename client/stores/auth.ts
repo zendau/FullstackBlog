@@ -7,7 +7,8 @@ export const useAuthStore = defineStore("auth", () => {
   const loadingIndicator = useLoadingIndicator()
   const router = useRouter()
 
-  const localStorage = useCookie("token")
+  const accessToken = useCookie("token")
+  const refreshToken = useLocalStorage("token", "")
 
   const userStore = useUserStore()
 
@@ -36,7 +37,8 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       token.value = res.access_token
-      localStorage.value = token.value
+      accessToken.value = token.value
+      refreshToken.value = token.value
 
       await userStore.getProfile()
 

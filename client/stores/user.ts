@@ -13,8 +13,6 @@ export const useUserStore = defineStore("user", () => {
         method: "get",
       })
 
-      console.log("res data", res)
-
       data.value = res
       isAuth.value = true
       return true
@@ -30,6 +28,7 @@ export const useUserStore = defineStore("user", () => {
     router.push("/")
     tokenStorage.value = ""
     tokenCookie.value = ""
+    data.value = []
   }
 
   return { data, error, isAuth, getProfile, logout }
