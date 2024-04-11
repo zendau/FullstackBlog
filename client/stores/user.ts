@@ -6,8 +6,28 @@ export const useUserStore = defineStore("user", () => {
   const isAdmin = ref(false)
 
   const router = useRouter()
-  const tokenStorage = useLocalStorage("token", "")
-  const tokenCookie = useCookie("token")
+  const refreshToken = useLocalStorage("token", "")
+  const accessToken = useCookie("token")
+
+  function parseToken() {
+    console.log("parse isAdmin status")
+
+    if (!accessToken.value) return false
+
+    try {
+      const parts = accessToken.value.split(".")
+      const payload = JSON.parse(atob(parts[1]))
+
+      if (!payload && !payload.prv) return false
+
+      isAdmin.value = true
+      isAuth.value = true
+      return true
+    } catch (e) {
+      console.log("parse error", e)
+      return false
+    }
+  }
 
   async function getProfile() {
     try {
@@ -15,6 +35,7 @@ export const useUserStore = defineStore("user", () => {
         method: "get",
       })
 
+      console.log("get")
       data.value = res
       data.value.roles = ["admin"]
       isAuth.value = true
@@ -24,19 +45,21 @@ export const useUserStore = defineStore("user", () => {
       return true
     } catch (e) {
       error.value = "invalid user data"
+      console.log("E", e)
       logout()
       return false
     }
   }
 
   function logout() {
+    console.log("logout")
     isAuth.value = false
     isAdmin.value = false
     router.push("/")
-    tokenStorage.value = ""
-    tokenCookie.value = ""
+    refreshToken.value = ""
+    accessToken.value = ""
     data.value = []
   }
 
-  return { data, error, isAuth, isAdmin, getProfile, logout }
+  return { data, error, isAuth, isAdmin, getProfile, logout, parseToken }
 })

@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware(async () => {
   const userStore = useUserStore()
 
   if (accessToken.value) {
-    userStore.isAuth = true
+    userStore.parseToken()
   }
 
   if (import.meta.server) return
@@ -11,5 +11,6 @@ export default defineNuxtRouteMiddleware(async () => {
   const refreshToken = useLocalStorage("token", "")
 
   if (!accessToken.value && !refreshToken.value) return
+  console.log("global")
   await userStore.getProfile()
 })

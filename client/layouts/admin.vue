@@ -4,7 +4,9 @@
       <NuxtLink class="navbar__item" to="/admin/add"> Add post </NuxtLink>
       <NuxtLink class="navbar__item" to="/"> Back </NuxtLink>
     </div>
-    <slot />
+    <div class="workspace">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -13,6 +15,7 @@
   display: flex;
   min-height: 100vh;
   height: 100%;
+  min-width: 100%;
 }
 
 .navbar {
@@ -37,5 +40,9 @@
       background-color: #dba979;
     }
   }
+}
+
+.workspace {
+  min-width: 80%;
 }
 </style>
