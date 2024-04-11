@@ -123,6 +123,7 @@ class PostController {
     try {
       const schema = Joi.object({
         limit: Joi.number(),
+        page: Joi.number(),
         exclude: Joi.array(),
         sort: Joi.string(),
         tag: Joi.string(),
@@ -133,14 +134,19 @@ class PostController {
       const { error } = schema.validate(req.query)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { limit, exclude, sort, tag, authorId, substring, postId } =
+      const { limit, page, exclude, sort, tag, authorId, substring, postId } =
         req.query
+
+      const skip = (page ?? 0) * limit
+
+      console.log("skip", skip)
 
       const limitValue = limit ? parseInt(limit) : 1
 
       const data = await PostService.getPostsPagination(
         exclude,
         limitValue,
+        skip,
         sort,
         {
           postId,

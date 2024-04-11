@@ -464,7 +464,7 @@ class PostService {
     ]
   }
 
-  async getPostsPagination(idList, limit, sortType, filterType) {
+  async getPostsPagination(idList, limit, skip, sortType, filterType) {
     const filter = this.postsMatchFilter(idList, filterType)
     const postLookup = this.postLookup()
     const rating = this.postsRating(true)
@@ -472,6 +472,7 @@ class PostService {
     const sort = this.postsSort(sortType)
 
     const postsLimit = { $limit: limit }
+    const postsSkip = { $skip: skip }
 
     const combineAggregate = [
       ...filter,
@@ -479,6 +480,7 @@ class PostService {
       ...rating,
       ...extended,
       ...sort,
+      postsSkip,
       postsLimit,
     ]
 
