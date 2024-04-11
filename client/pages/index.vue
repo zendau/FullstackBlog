@@ -55,7 +55,7 @@ watch(page, () => {
       <NuxtImg loading="lazy" src="/item.jpg" class="cart__item--img" alt="" />
       <div class="mt-3 space-y-2 text-center">
         <h1 class="">
-          <NuxtLink :to="`/${post.id}`">
+          <NuxtLink :to="`/post/${post.id}`">
             {{ post.name }}
           </NuxtLink>
         </h1>
