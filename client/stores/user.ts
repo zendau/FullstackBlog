@@ -31,7 +31,7 @@ export const useUserStore = defineStore("user", () => {
 
   async function getProfile() {
     try {
-      const res: any = await useFetchJWT("auth/user-profile", {
+      const res: any = await useApiFetch("auth/user-profile", {
         method: "get",
       })
 
