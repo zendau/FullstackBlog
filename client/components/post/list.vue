@@ -6,10 +6,9 @@ const { data: articles } = storeToRefs(useArticleStore())
   <PostLayoutSingl>
     <PostCard
       v-for="post of articles"
-      :id="post.id"
       :key="post.id"
-      :description="post.description"
-      :title="post.name"
+      :post="post"
+      :is-extended="true"
     />
   </PostLayoutSingl>
 </template>

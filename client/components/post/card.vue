@@ -1,16 +1,24 @@
 <script setup lang="ts">
-const { id, title, description } = defineProps({
-  id: {
-    type: Number,
+import type { PropType } from "vue"
+
+interface postData {
+  id: number
+  name: string
+  description: string
+  created_at: string
+  discount: number
+  price: number
+  view: number
+}
+
+const { post } = defineProps({
+  post: {
+    type: Object as PropType<postData>,
     required: true,
   },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
+  isExtended: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>
@@ -20,13 +28,19 @@ const { id, title, description } = defineProps({
     <NuxtImg loading="lazy" src="/item.jpg" class="cart__item--img" alt="" />
     <div class="mt-3 space-y-2 text-center">
       <h1 class="">
-        <NuxtLink :to="`/post/${id}`">
-          {{ title }}
+        <NuxtLink :to="`/post/${post.id}`">
+          {{ post.name }}
         </NuxtLink>
       </h1>
       <p class="">
-        {{ description }}
+        {{ post.description }}
       </p>
+    </div>
+    <div v-if="isExtended">
+      <p>date: {{ post.created_at }}</p>
+      <p>discount: {{ post.discount }}</p>
+      <p>price: {{ post.price }}</p>
+      <p>view: {{ post.view }}</p>
     </div>
   </div>
 </template>

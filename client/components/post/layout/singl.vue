@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .cart {
   background-color: red;
   &__container {
