@@ -12,18 +12,17 @@ export const useArticleStore = defineStore("article", () => {
     isLoading.value = true
 
     try {
-      const res: { data: any[]; next_page_url: string | null } =
-        await useApiFetch(
-          "https://api.fakestorejson.com/api/v1/public/products",
-          {
-            query: {
-              per_page: count.value,
-              page: page.value,
-            },
-          },
-        )
+      const res = await useApiFetch<{
+        data: any
+        next_page_url: string
+      }>("https://api.fakestorejson.com/api/v1/public/products", {
+        query: {
+          per_page: count.value,
+          page: page.value,
+        },
+      })
 
-      if (!res.data) {
+      if (!res || !res.data) {
         error.value = "Error receiving articles. Try later"
         return
       }
@@ -33,8 +32,10 @@ export const useArticleStore = defineStore("article", () => {
       }
 
       data.push(...res.data)
+      return true
     } catch (e) {
       error.value = "Unexpected error. Try later"
+      return false
     } finally {
       isLoading.value = false
     }

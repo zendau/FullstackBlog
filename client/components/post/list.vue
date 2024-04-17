@@ -14,7 +14,7 @@ const { data: articles } = storeToRefs(useArticleStore())
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .cart {
   background-color: red;
   &__container {

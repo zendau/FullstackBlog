@@ -31,7 +31,7 @@ const { id, title, description } = defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .cart {
   &__item {
     display: flex;
