@@ -3,7 +3,7 @@ const { data: articles } = storeToRefs(useArticleStore())
 </script>
 
 <template>
-  <div class="cart__container">
+  <PostLayoutSingl>
     <PostCard
       v-for="post of articles"
       :id="post.id"
@@ -11,7 +11,7 @@ const { data: articles } = storeToRefs(useArticleStore())
       :description="post.description"
       :title="post.name"
     />
-  </div>
+  </PostLayoutSingl>
 </template>
 
 <style lang="scss">
