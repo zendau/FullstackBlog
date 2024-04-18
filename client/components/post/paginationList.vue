@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const articleStore = useArticleStore()
+const articleParams = useArticleParamsStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -12,15 +13,19 @@ const { y } = useWindowScroll({ behavior: "smooth" })
 watch(
   () => articleStore.page,
   (page) => {
-    router.push({ query: { page } })
-    articleStore.fetch(true)
+    router.push({ query: { ...route.query, page } })
+    articleStore.fetch({ isRewrite: true })
     y.value = 0
   },
 )
 
-const { pending } = useAsyncData("posts", () => articleStore.fetch(true), {
-  server: true,
-})
+const { pending } = useAsyncData(
+  "posts",
+  () => articleParams.fetchFilterData(),
+  {
+    server: true,
+  },
+)
 </script>
 
 <template>
@@ -29,6 +34,7 @@ const { pending } = useAsyncData("posts", () => articleStore.fetch(true), {
 
   <div class="flex justify-center m-10">
     <UPagination
+      v-if="!articleParams.isFilter"
       v-model="articleStore.page"
       :page-count="10"
       :total="articleStore.total"

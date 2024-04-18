@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const articleParams = useArticleParamsStore()
+
 const {
   data: categories,
   error,
@@ -13,7 +15,10 @@ const {
   },
 )
 
-const selected = ref(null)
+watch(
+  () => articleParams.category,
+  () => articleParams.addQuery("category"),
+)
 </script>
 
 <template>
@@ -24,7 +29,7 @@ const selected = ref(null)
     <UFormGroup label="Category">
       <!-- <USkeleton v-if="pending" class="h-6 w-full" /> -->
       <USelectMenu
-        v-model="selected"
+        v-model="articleParams.category"
         :loading="pending"
         :options="categories"
         placeholder="Select category"

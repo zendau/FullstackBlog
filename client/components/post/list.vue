@@ -3,14 +3,14 @@ const { data: articles } = storeToRefs(useArticleStore())
 </script>
 
 <template>
-  <PostLayoutSingl>
+  <PostLayoutGrid>
     <PostCard
       v-for="post of articles"
       :key="post.id"
       :post="post"
       :is-extended="true"
     />
-  </PostLayoutSingl>
+  </PostLayoutGrid>
 </template>
 
 <style lang="scss">

@@ -60,8 +60,8 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
 
   function fetchFilterData() {
     articleStore.page = 1
-    const filter = prepareFilterQuery()
-    return articleStore.fetch(true, filter)
+    const params = prepareFilterQuery()
+    return articleStore.fetch({ isRewrite: true, params })
   }
 
   return {

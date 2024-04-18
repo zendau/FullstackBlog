@@ -9,8 +9,18 @@ export const useArticleStore = defineStore("article", () => {
 
   const hasMore = ref(true)
 
-  async function fetch(isRewrite = false) {
+  interface q {
+    isRewrite?: boolean
+    params?: { keyword?: string; category?: string }
+  }
+
+  async function fetch({ isRewrite, params }: q = {}) {
     isLoading.value = true
+
+    const defaultParams = {
+      per_page: count.value,
+      page: page.value,
+    }
 
     try {
       const res = await useApiFetch<{
@@ -18,10 +28,7 @@ export const useArticleStore = defineStore("article", () => {
         next_page_url: string
         total: number
       }>("https://api.fakestorejson.com/api/v1/public/products", {
-        query: {
-          per_page: count.value,
-          page: page.value,
-        },
+        query: params ?? defaultParams,
       })
 
       if (!res || !res.data) {

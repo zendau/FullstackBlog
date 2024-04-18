@@ -1,39 +1,21 @@
 <script setup lang="ts">
-const value = ref("")
+const articleParams = useArticleParamsStore()
 
-const router = useRouter()
-
-async function onInpitTitle(title: string) {
-  router.push({ query: { search: title } })
-
-  const w = await useApiFetch(
-    "https://api.fakestorejson.com/api/v1/public/products",
-    {
-      params: {
-        keyword: title,
-      },
-    },
-  )
-
-  // const q = await $fetch(
-  //   "https://api.fakestorejson.com/api/v1/public/products",
-  //   {
-  //     params: {
-  //       keyword: title,
-  //     },
-  //   },
-  // )
-
-  console.log(w)
+function onInpitTitle() {
+  if (articleParams.search) {
+    articleParams.addQuery("search")
+  } else {
+    articleParams.removeQuery("search")
+  }
 }
 
-watch(value, useDebounceFn(onInpitTitle, 500))
+watch(() => articleParams.search, useDebounceFn(onInpitTitle, 500))
 </script>
 
 <template>
   <div>
     <UFormGroup label="Title">
-      <UInput v-model="value" placeholder="Search post..." />
+      <UInput v-model="articleParams.search" placeholder="Search post..." />
     </UFormGroup>
   </div>
 </template>
