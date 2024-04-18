@@ -12,10 +12,9 @@ watch(isFilter, (status) => {
 
 <template>
   <div class="container">
-    {{ articleParams.isFilter }}
     <PostFilterSearch />
     <PostFilterCategories />
-    <button @click="reset">reset</button>
+    <UButton @click="reset">reset</UButton>
   </div>
 </template>
 

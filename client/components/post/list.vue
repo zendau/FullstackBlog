@@ -8,7 +8,7 @@ const { data: articles } = storeToRefs(useArticleStore())
       v-for="post of articles"
       :key="post.id"
       :post="post"
-      :is-extended="true"
+      is-extended
     />
   </PostLayoutGrid>
 </template>

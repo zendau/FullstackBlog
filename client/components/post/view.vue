@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { data } = storeToRefs(useArticleStore())
+const { data, isLoading } = storeToRefs(useArticleStore())
 </script>
 
 <template>
-  <div v-if="!data.length">no posts</div>
+  <PostEmpty v-if="!isLoading && !data.length" />
   <PostPaginationList />
   <!-- <PostInfinityList /> -->
 </template>
