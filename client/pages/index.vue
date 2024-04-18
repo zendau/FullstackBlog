@@ -4,6 +4,7 @@
   <h1 class="text-center text-4xl m-4">Catalog</h1>
 
   <PostFilter />
+  <PostSetting />
   <PostView />
 </template>
 
