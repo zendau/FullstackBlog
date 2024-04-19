@@ -59,5 +59,12 @@ export const useArticleStore = defineStore("article", () => {
     }
   }
 
-  return { data, count, total, hasMore, page, error, isLoading, fetch }
+  function reset() {
+    data.length = 0
+    page.value = 1
+    total.value = 0
+    hasMore.value = true
+  }
+
+  return { data, count, total, hasMore, page, error, isLoading, fetch, reset }
 })

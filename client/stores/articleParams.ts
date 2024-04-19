@@ -1,12 +1,15 @@
+import type { LocationQueryValue } from "vue-router"
+
 type filter = "search" | "category"
+type routeFilter = LocationQueryValue | undefined
 
 export const useArticleParamsStore = defineStore("articleParams", () => {
   const route = useRoute()
   const router = useRouter()
   const articleStore = useArticleStore()
 
-  const search = ref(route.query.search)
-  const category = ref(route.query.category)
+  const search = ref<routeFilter>(route.query.search as LocationQueryValue)
+  const category = ref<routeFilter>(route.query.category as LocationQueryValue)
 
   const isFilter = computed(
     () => Boolean(search.value) || Boolean(category.value),
@@ -37,11 +40,7 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
 
   function reset() {
     search.value = ""
-    category.value = ""
-
-    const page = route.query?.page
-
-    router.push({ query: { page } })
+    category.value = undefined
   }
 
   function prepareFilterQuery() {
@@ -59,7 +58,8 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
   }
 
   function fetchFilterData() {
-    articleStore.page = 1
+    reset()
+    articleStore.reset()
     const params = prepareFilterQuery()
     return articleStore.fetch({ isRewrite: true, params })
   }

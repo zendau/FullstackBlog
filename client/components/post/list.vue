@@ -1,16 +1,27 @@
 <script setup lang="ts">
+import { PostLayoutGrid, PostLayoutSingl } from "#components"
+
 const { data: articles } = storeToRefs(useArticleStore())
+const setting = useArticleSettingStore()
+
+const postLayout = computed(() => {
+  if (setting.currentView === "grid") {
+    return PostLayoutGrid
+  }
+
+  return PostLayoutSingl
+})
 </script>
 
 <template>
-  <PostLayoutGrid>
+  <component :is="postLayout">
     <PostCard
       v-for="post of articles"
       :key="post.id"
       :post="post"
       is-extended
     />
-  </PostLayoutGrid>
+  </component>
 </template>
 
 <style lang="scss">

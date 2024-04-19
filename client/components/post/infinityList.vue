@@ -2,12 +2,16 @@
 import { vIntersectionObserver } from "@vueuse/components"
 
 const articleStore = useArticleStore()
+const articleParams = useArticleParamsStore()
 const isVisible = ref(false)
 
-const { pending } = useAsyncData("posts", () => articleStore.fetch(), {
-  server: true,
-  lazy: true,
-})
+const { pending } = useAsyncData(
+  "posts",
+  () => articleParams.fetchFilterData(),
+  {
+    server: true,
+  },
+)
 
 async function onIntersectionObserver([
   { isIntersecting },
