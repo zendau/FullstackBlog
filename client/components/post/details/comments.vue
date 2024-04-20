@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>comments</div>
+  <CommentAddForm />
 </template>
 
 <style lang="scss" scoped></style>
