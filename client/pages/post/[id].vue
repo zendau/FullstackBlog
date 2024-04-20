@@ -6,22 +6,25 @@ interface IPost {
 }
 
 const { params } = useRoute()
+const articleId = params.id as string
 
 const { data: post } = await useFetch<IPost>(
   `https://api.fakestorejson.com/api/v1/public/products/${params.id}`,
   {
-    key: `post/${params.id}`,
+    key: `post/${articleId}`,
   },
 )
 </script>
 
 <template>
-  <div v-if="!post">Post not found</div>
-  <div v-else>
+  <PostNotFount v-if="!post" :id="articleId" />
+  <template v-else>
+    <PostDetailsHeader />
     <NuxtImg src="/item.jpg" />
     <h1>{{ post.name }}</h1>
     <p>{{ post.content }}</p>
-  </div>
+    <PostDetailsFoouter />
+  </template>
 </template>
 
 <style scoped></style>
