@@ -1,16 +1,26 @@
 <script setup lang="ts">
-// доп инфа статьи
+// const { data } = storeToRefs(useUserStore())
+
+const { post } = defineProps({
+  post: {
+    type: Object,
+    required: true,
+  },
+})
+
+// const isPostAuthor = computed(() => data.value.id === post.user_id)
+const isPostAuthor = computed(() => post.user_id === 1)
 </script>
 
 <template>
   <div>
-    <p>userId:</p>
-    <p>view:</p>
-    <p>price:</p>
-    <p>discount:</p>
-    <p>created:</p>
+    <p>userId: {{ post.user_id }}</p>
+    <p>view: {{ post.view }}</p>
+    <p>price: {{ post.price }}</p>
+    <p>discount: {{ post.discount }}</p>
+    <p>created: {{ post.created_at }}</p>
   </div>
-  <div>Edit</div>
+  <div v-if="isPostAuthor">Edit</div>
 </template>
 
 <style lang="scss" scoped></style>

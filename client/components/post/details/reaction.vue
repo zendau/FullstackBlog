@@ -3,7 +3,8 @@
 </script>
 
 <template>
-  <div>реакция</div>
+  <UButton>Like</UButton>
+  <UButton>Dislike</UButton>
 </template>
 
 <style lang="scss" scoped></style>

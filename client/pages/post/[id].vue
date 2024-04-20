@@ -19,7 +19,7 @@ const { data: post } = await useFetch<IPost>(
 <template>
   <PostNotFount v-if="!post" :id="articleId" />
   <template v-else>
-    <PostDetailsHeader />
+    <PostDetailsHeader :post="post" />
     <NuxtImg src="/item.jpg" />
     <h1>{{ post.name }}</h1>
     <p>{{ post.content }}</p>
