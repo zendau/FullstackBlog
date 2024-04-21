@@ -1,8 +1,7 @@
 <script setup lang="ts">
-// Форма добавления коммента
 const uploadImgPreviewURL = ref<string>()
 const inputFile = ref<HTMLInputElement>()
-const commentText = ref()
+const commentText = ref("")
 
 function onFIleUpload(e: Event) {
   const files = (e.target as HTMLInputElement).files
@@ -23,7 +22,7 @@ function resetUploadFile() {
 </script>
 
 <template>
-  <UForm>
+  <form>
     <UTextarea
       v-model="commentText"
       color="primary"
@@ -39,7 +38,7 @@ function resetUploadFile() {
       </div>
       <UButton v-if="commentText.length > 0">send</UButton>
     </div>
-  </UForm>
+  </form>
 </template>
 
 <style lang="scss" scoped>
