@@ -2,6 +2,8 @@
 const uploadImgPreviewURL = ref<string>()
 const inputFile = ref<HTMLInputElement>()
 const commentText = ref("")
+const userStore = useUserStore()
+const commentStore = useCommentStore()
 
 function onFIleUpload(e: Event) {
   const files = (e.target as HTMLInputElement).files
@@ -18,6 +20,21 @@ function resetUploadFile() {
   uploadImgPreviewURL.value = ""
   if (!inputFile.value) return
   inputFile.value.value = ""
+}
+
+function onSendMessage() {
+  const commentBody = {
+    id: new Date(),
+    slug: commentText.value,
+    name: userStore.data.name,
+    created_at: new Date().toString(),
+  }
+
+  commentText.value = ""
+
+  commentStore.add(commentBody)
+
+  // console.log(commentBody)
 }
 </script>
 
@@ -36,7 +53,9 @@ function resetUploadFile() {
         <img :src="uploadImgPreviewURL" class="preview-img" />
         <button class="preview-btn" @click="resetUploadFile">✕</button>
       </div>
-      <UButton v-if="commentText.length > 0">send</UButton>
+      <UButton v-if="commentText.length > 0" @click="onSendMessage">
+        send
+      </UButton>
     </div>
   </form>
 </template>

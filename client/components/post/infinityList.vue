@@ -5,9 +5,9 @@ const articleStore = useArticleStore()
 const articleParams = useArticleParamsStore()
 const isVisible = ref(false)
 
-const { pending } = useAsyncData(
+const { pending } = await useAsyncData(
   "posts",
-  () => articleParams.fetchFilterData(),
+  async () => await articleParams.fetchFilterData(),
   {
     server: true,
   },

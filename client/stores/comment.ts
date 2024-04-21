@@ -44,6 +44,11 @@ export const useCommentStore = defineStore("comment", () => {
     }
   }
 
+  function add(comment: any) {
+    data.unshift(comment)
+    total.value++
+  }
+
   return {
     page,
     isLoading,
@@ -51,6 +56,7 @@ export const useCommentStore = defineStore("comment", () => {
     data,
     hasMore,
     total,
+    add,
     fetch,
     reset,
   }

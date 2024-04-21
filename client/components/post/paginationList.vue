@@ -32,7 +32,7 @@ await useAsyncData("posts", async () => await articleParams.fetchFilterData(), {
     <UPagination
       v-if="!articleParams.isFilter"
       v-model="articleStore.page"
-      :page-count="10"
+      :page-count="articleStore.count"
       :total="articleStore.total"
       show-last
       show-first
