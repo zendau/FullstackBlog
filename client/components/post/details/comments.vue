@@ -4,6 +4,7 @@
 
 <template>
   <CommentAddForm />
+  <CommentList />
 </template>
 
 <style lang="scss" scoped></style>
