@@ -19,17 +19,13 @@ watch(
   },
 )
 
-const { pending } = useAsyncData(
-  "posts",
-  () => articleParams.fetchFilterData(),
-  {
-    server: true,
-  },
-)
+await useAsyncData("posts", async () => await articleParams.fetchFilterData(), {
+  server: true,
+})
 </script>
 
 <template>
-  <PostSkeletonList v-if="pending || articleStore.isLoading" />
+  <PostSkeletonList v-if="articleStore.isLoading" />
   <PostList v-else />
 
   <div class="flex justify-center m-10">

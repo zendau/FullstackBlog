@@ -15,8 +15,8 @@ const postListType = computed(() => {
 </script>
 
 <template>
-  <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
   <component :is="postListType" />
+  <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
 </template>
 
 <style lang="scss" scoped></style>
