@@ -116,6 +116,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UButton type="submit"> Submit </UButton>
     </UForm>
   </div>
+  <AdminPostEditor />
 </template>
 
 <style scoped lang="scss">
