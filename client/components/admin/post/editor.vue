@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ComponentOptionsMixin, DefineComponent, PublicProps } from "vue"
+import type { VueComponent } from "@/types"
 import {
   AdminPostBlockHeader,
   AdminPostBlockCode,
@@ -10,22 +10,6 @@ import {
   AdminPostBlockMedia,
   AdminPostBlockSlider,
 } from "#components"
-
-type VueComponent = DefineComponent<
-  {},
-  {},
-  {},
-  {},
-  {},
-  ComponentOptionsMixin,
-  ComponentOptionsMixin,
-  {},
-  string,
-  PublicProps,
-  Readonly<globalThis.ExtractPropTypes<{}>>,
-  {},
-  {}
->
 
 interface IBlockContent {
   block: string
@@ -73,6 +57,7 @@ const setBlockRef = (el: any, key: number) => {
 function create() {
   for (const block of createdBlocks.values()) {
     if (!block.ref) continue
+    console.log(block.ref.getData())
   }
 }
 </script>
@@ -82,13 +67,19 @@ function create() {
     <h1>Create post</h1>
     <button @click="create">test create</button>
     <AdminPostToolbar />
-    <div v-for="postBlock in createdBlocks.entries()" :key="postBlock[0]">
-      <component
-        :is="postBlock[1].component"
-        :ref="(el) => setBlockRef(el, postBlock[0])"
-      />
+
+    <AdminPostBlockComponent
+      v-for="postBlock in createdBlocks.entries()"
+      :key="postBlock[0]"
+      :component="postBlock[1].component"
+      :data-id="postBlock[0]"
+      @remove-block="removeBlock"
+      @set-block-ref="setBlockRef"
+    />
+    <!-- <div>
+      <component :is="" :ref="(el) => setBlockRef(el)" />
       <button @click="removeBlock(postBlock[0])">X</button>
-    </div>
+    </div> -->
     <AdminPostBlocksMenu :list="blocksKeys" @select="selectBlock" />
   </div>
 </template>
