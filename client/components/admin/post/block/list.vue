@@ -1,6 +1,22 @@
 <script setup lang="ts">
-function onClick(event: any) {
+defineExpose({
+  getData,
+})
+
+const content = ref()
+
+function getData() {
+  if (!content.value) return
+
+  return {
+    block: "list",
+    content: content.value,
+  }
+}
+
+function onKeyDown(event: any) {
   const target = event.target
+  content.value = target.innerHTML
   if (event.code === "Enter") {
     const lastChild = target.lastChild
     const text = lastChild.textContent
@@ -20,6 +36,11 @@ function onClick(event: any) {
     }
   }
 }
+
+function onKeyUp(event: any) {
+  const target = event.target
+  content.value = target.innerHTML
+}
 </script>
 
 <template>
@@ -27,7 +48,8 @@ function onClick(event: any) {
     contenteditable="true"
     class="test"
     :class="$style.test"
-    @keydown="onClick"
+    @keydown="onKeyDown"
+    @keyup="onKeyUp"
   >
     <li></li>
   </ul>

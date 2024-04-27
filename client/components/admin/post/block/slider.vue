@@ -1,6 +1,19 @@
 <script setup lang="ts">
+defineExpose({
+  getData,
+})
+
 const files = reactive([])
 provide("files", files)
+
+function getData() {
+  if (!files.length) return
+
+  return {
+    block: "slider",
+    content: files,
+  }
+}
 
 function getFilesListSrc() {
   return files.map((file) => getMediaSrc(file))

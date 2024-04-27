@@ -1,13 +1,28 @@
 <script setup lang="ts">
+defineExpose({
+  getData,
+})
 const text = ref("")
 const author = ref("")
 
+function getData() {
+  if (!text.value || !author.value) return
+
+  return {
+    block: "quoute",
+    content: {
+      text: text.value,
+      author: author.value,
+    },
+  }
+}
+
 function onInputText(e: Event) {
-  text.value = (e.target as HTMLInputElement).innerText
+  text.value = (e.target as HTMLInputElement).innerHTML
 }
 
 function onInputAuthor(e: Event) {
-  author.value = (e.target as HTMLInputElement).innerText
+  author.value = (e.target as HTMLInputElement).innerHTML
 }
 </script>
 

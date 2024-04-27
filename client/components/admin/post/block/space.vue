@@ -1,4 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineExpose({
+  getData,
+})
+
+function getData() {
+  return {
+    block: "space",
+  }
+}
+</script>
 
 <template>
   <UDivider>

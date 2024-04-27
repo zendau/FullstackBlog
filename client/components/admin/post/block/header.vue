@@ -1,8 +1,21 @@
 <script setup lang="ts">
+defineExpose({
+  getData,
+})
+
 const text = ref("")
 
+function getData() {
+  if (!text.value) return
+
+  return {
+    block: "header",
+    content: text.value,
+  }
+}
+
 function onInput(e: Event) {
-  text.value = (e.target as HTMLInputElement).innerText
+  text.value = (e.target as HTMLInputElement).innerHTML
 }
 </script>
 

@@ -2,6 +2,10 @@
 import hljs from "highlight.js"
 import "highlight.js/styles/atom-one-dark.min.css"
 
+defineExpose({
+  getData,
+})
+
 const languages = ["JAVASCRIPT", "PHP", "PYTHON", "RUST", "JAVA"]
 const selectedLanguage = ref(languages[0])
 const code = ref(
@@ -11,6 +15,15 @@ const code = ref(
 const hihgtlighCode = computed(() =>
   hljs.highlight(code.value, { language: selectedLanguage.value }),
 )
+
+function getData() {
+  if (!code.value) return
+
+  return {
+    block: "code",
+    content: code.value,
+  }
+}
 
 function onInput(e: Event) {
   code.value = (e.target as HTMLInputElement).innerText

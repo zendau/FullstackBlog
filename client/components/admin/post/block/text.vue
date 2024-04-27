@@ -1,16 +1,18 @@
 <script setup lang="ts">
+defineExpose({
+  getData,
+})
+
 const text = ref("")
 
 function getData() {
+  if (!text.value) return
+
   return {
     block: "text",
     content: text.value,
   }
 }
-
-defineExpose({
-  getData,
-})
 
 function onKeyDown(event: any) {
   if (event.code !== "Backspace") {
