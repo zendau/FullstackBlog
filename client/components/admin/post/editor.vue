@@ -57,7 +57,7 @@ const setBlockRef = (el: any, key: number) => {
 function create() {
   for (const block of createdBlocks.values()) {
     if (!block.ref) continue
-    console.log(block.ref.getData())
+    // console.log(block.ref.getData())
   }
 }
 </script>

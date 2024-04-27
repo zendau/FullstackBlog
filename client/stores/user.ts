@@ -10,8 +10,6 @@ export const useUserStore = defineStore("user", () => {
   const accessToken = useCookie("token")
 
   function parseToken() {
-    console.log("parse isAdmin status")
-
     if (!accessToken.value) return false
 
     try {
@@ -24,7 +22,6 @@ export const useUserStore = defineStore("user", () => {
       isAuth.value = true
       return true
     } catch (e) {
-      console.log("parse error", e)
       return false
     }
   }
@@ -35,7 +32,6 @@ export const useUserStore = defineStore("user", () => {
         method: "get",
       })
 
-      console.log("get")
       data.value = res
       data.value.roles = ["admin"]
       isAuth.value = true
@@ -45,14 +41,13 @@ export const useUserStore = defineStore("user", () => {
       return true
     } catch (e) {
       error.value = "invalid user data"
-      console.log("E", e)
+
       logout()
       return false
     }
   }
 
   function logout() {
-    console.log("logout")
     isAuth.value = false
     isAdmin.value = false
     router.push("/")

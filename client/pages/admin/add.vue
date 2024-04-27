@@ -62,7 +62,6 @@ const { data: categories } = await useFetch(
 )
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
   await console.log(event.data)
 }
 </script>

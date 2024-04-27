@@ -11,6 +11,5 @@ export default defineNuxtRouteMiddleware(async () => {
   const refreshToken = useLocalStorage("token", "")
 
   if (!accessToken.value && !refreshToken.value) return
-  console.log("global")
   await userStore.getProfile()
 })
