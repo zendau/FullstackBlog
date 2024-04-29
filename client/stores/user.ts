@@ -1,60 +1,55 @@
+enum Roles {
+  User = "user",
+  Admin = "admin",
+}
+
+interface IUser {
+  id: string
+  email: string
+  roles: Roles
+  isActivated: boolean
+  isBlocked: boolean
+}
+
+interface ITokenBody {
+  payload: IUser
+  iat: number
+  exp: number
+}
+
 export const useUserStore = defineStore("user", () => {
-  const data = ref<any>([])
-  const error = ref("")
-  const isAuth = ref(false)
+  const data = ref<IUser>()
+  const isAdmin = computed(() => {
+    if (!data.value) return false
 
-  const isAdmin = ref(false)
+    return data.value.roles.includes(Roles.Admin)
+  })
 
-  const router = useRouter()
-  const refreshToken = useLocalStorage("token", "")
-  const accessToken = useCookie("token")
-
-  function parseToken() {
-    if (!accessToken.value) return false
+  function decodeToken(token: string) {
+    if (!token) return false
 
     try {
-      const parts = accessToken.value.split(".")
-      const payload = JSON.parse(atob(parts[1]))
+      const parts = token.split(".")
+      const tokenBody: ITokenBody = JSON.parse(atob(parts[1]))
 
-      if (!payload && !payload.prv) return false
-
-      isAdmin.value = true
-      isAuth.value = true
-      return true
+      if (!tokenBody || !tokenBody.payload) return false
+      return tokenBody
     } catch (e) {
       return false
     }
   }
 
-  async function getProfile() {
-    try {
-      const res: any = await useApiFetch("auth/user-profile", {
-        method: "get",
-      })
+  function saveUserData(token: string) {
+    const decodeData = decodeToken(token)
 
-      data.value = res
-      data.value.roles = ["admin"]
-      isAuth.value = true
-
-      if (data.value.roles.includes("admin")) isAdmin.value = true
-
-      return true
-    } catch (e) {
-      error.value = "invalid user data"
-
-      logout()
-      return false
-    }
+    if (!decodeData) return false
+    data.value = decodeData.payload
+    return true
   }
 
-  function logout() {
-    isAuth.value = false
-    isAdmin.value = false
-    router.push("/")
-    refreshToken.value = ""
-    accessToken.value = ""
-    data.value = []
+  function $reset() {
+    data.value = undefined
   }
 
-  return { data, error, isAuth, isAdmin, getProfile, logout, parseToken }
+  return { data, isAdmin, $reset, decodeToken, saveUserData }
 })
