@@ -120,7 +120,7 @@ router.get("/refresh", UserController.refresh)
  *         description: Unexpected error
  */
 
-router.get("/logout", userGuard, UserController.logoutUser)
+router.get("/logout", UserController.logoutUser)
 
 /**
  * @swagger

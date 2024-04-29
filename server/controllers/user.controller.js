@@ -1,8 +1,8 @@
 import Joi from "joi"
 import objectId from "joi-objectid"
-import { Logger } from "winston"
 
 import ApiError from "../exceprions/api.error.js"
+import Logger from "../libs/logger.js"
 import UserService from "../services/user.service.js"
 
 Joi.objectId = objectId(Joi)
