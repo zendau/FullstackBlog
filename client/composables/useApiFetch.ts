@@ -10,19 +10,18 @@ export function useApiFetch<T>(
 ) {
   const token = useCookie("token")
 
-  const userStore = useUserStore()
   const authStore = useAuthStore()
   const toast = useToast()
 
   const defaults: ReqOptions = {
-    baseURL: "https://api.fakestorejson.com/api/v1/",
-    headers: userStore.isAuth
-      ? { Authorization: `Bearer ${authStore.refreshToken}` }
+    baseURL: import.meta.env.VITE_API,
+    headers: authStore.isAuth
+      ? { Authorization: `Bearer ${authStore.accessToken}` }
       : {},
 
     retry: 1,
     retryStatusCodes: [401],
-    // credentials: "include",
+    credentials: "include",
     onRequest: (ctx) => {
       ctx.options.headers = new Headers({
         Authorization: `Bearer ${token.value}`,
@@ -39,7 +38,7 @@ export function useApiFetch<T>(
           if (import.meta.client) {
             toast.add({ title: "Unexpected error. Try later" })
           }
-          userStore.logout()
+          authStore.logout()
         }
       }
     },
