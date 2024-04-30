@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const userStore = useUserStore()
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -12,34 +12,12 @@ const userStore = useUserStore()
         <NuxtLink to="/static"> Info </NuxtLink>
       </li>
     </ul>
-
-    <ul v-if="!userStore.isAuth" class="navbar__list">
-      <li class="navbar__item">
-        <NuxtLink to="/login"> Register </NuxtLink>
-      </li>
-      <li class="navbar__item">
-        <NuxtLink to="/login"> Login </NuxtLink>
-      </li>
-    </ul>
-    <ul v-else class="navbar__list">
-      <ClientOnly fallback-tag="span">
-        <template #fallback>
-          <USkeleton class="navbar__item" />
-        </template>
-        <template v-if="userStore.isAdmin">
-          <li class="navbar__item">
-            <NuxtLink to="/admin"> Admin </NuxtLink>
-          </li>
-        </template>
-      </ClientOnly>
-      <li class="navbar__item">
-        <NuxtLink to="/" @click="userStore.logout"> Logout </NuxtLink>
-      </li>
-    </ul>
+    <UiNavbarPublic v-if="!authStore.isAuth" />
+    <UiNavbarAuth v-else />
   </nav>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .navbar {
   height: 60px;
   width: 100%;
