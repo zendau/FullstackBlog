@@ -8,32 +8,28 @@ export function useApiFetch<T>(
   url: NitroFetchRequest,
   options: ReqOptions = {},
 ) {
-  const token = useCookie("token")
-
   const authStore = useAuthStore()
   const toast = useToast()
 
   const defaults: ReqOptions = {
     baseURL: import.meta.env.VITE_API,
-    headers: authStore.isAuth
-      ? { Authorization: `Bearer ${authStore.accessToken}` }
-      : {},
-
     retry: 1,
     retryStatusCodes: [401],
     credentials: "include",
     onRequest: (ctx) => {
-      ctx.options.headers = new Headers({
-        Authorization: `Bearer ${token.value}`,
-      })
+      if (authStore.isAuth) {
+        ctx.options.headers = new Headers({
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        })
+      }
     },
     onResponseError: async (ctx) => {
       if (ctx.response.status === 401) {
         try {
-          const res: any = await fetchApi("auth/refresh-token", {
+          const res: any = await fetchApi("user/refresh", {
             method: "post",
           })
-          token.value = res.access_token
+          authStore.refresh(res.accessToken)
         } catch (e) {
           if (import.meta.client) {
             toast.add({ title: "Unexpected error. Try later" })

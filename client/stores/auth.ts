@@ -12,7 +12,6 @@ export const useAuthStore = defineStore("auth", () => {
   const loadingIndicator = useLoadingIndicator()
   const router = useRouter()
 
-  const accessToken = useLocalStorage("token", "", { initOnMounted: true })
   const refreshToken = useCookie("JWTRefreshToken")
 
   const userStore = useUserStore()
@@ -24,6 +23,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function login(userData: IAuthUser) {
     try {
+      error.value = ""
       isLoading.value = true
       loadingIndicator.start()
       const res = await useApiFetch<IAuthRes>("/user/login", {
@@ -41,6 +41,8 @@ export const useAuthStore = defineStore("auth", () => {
         throw Error
       }
 
+      localStorage.setItem("token", res.accessToken)
+      isAuth.value = true
       await router.push("/")
     } catch (e: any) {
       if (e.status === 401) {
@@ -51,7 +53,6 @@ export const useAuthStore = defineStore("auth", () => {
           "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
       }
 
-      isAuth.value = true
       setTimeout(() => (error.value = ""), 5000)
     } finally {
       loadingIndicator.finish()
@@ -61,6 +62,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function register(userData: IAuthUser) {
     try {
+      error.value = ""
       isLoading.value = true
       loadingIndicator.start()
       const res = await useApiFetch<IAuthRes>("/user/register", {
@@ -78,11 +80,9 @@ export const useAuthStore = defineStore("auth", () => {
         throw Error
       }
 
-      accessToken.value = res.accessToken
+      localStorage.setItem("token", res.accessToken)
       isAuth.value = true
-      await router.push("/")
     } catch (e: any) {
-      console.log("e", e)
       if (e.status === 400) {
         error.value = e.data.message
       } else if (e.status === 401) {
@@ -110,10 +110,19 @@ export const useAuthStore = defineStore("auth", () => {
     return saveStatus
   }
 
+  function refresh(accessToken: string) {
+    const saveStatus = userStore.saveUserData(accessToken)
+
+    if (!saveStatus) {
+      throw Error
+    }
+
+    localStorage.setItem("token", accessToken)
+  }
+
   function logout() {
     isAuth.value = false
-    refreshToken.value = ""
-    accessToken.value = ""
+    localStorage.setItem("token", "")
 
     userStore.$reset()
     useApiFetch("/user/logout")
@@ -121,14 +130,53 @@ export const useAuthStore = defineStore("auth", () => {
     router.push("/")
   }
 
+  async function resetPassword({ email }: { email: string }) {
+    try {
+      error.value = ""
+      isLoading.value = true
+      loadingIndicator.start()
+      const res = await useApiFetch<IAuthRes>("/user/resetPassword", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+        }),
+      })
+
+      const saveStatus = userStore.saveUserData(res.accessToken)
+
+      if (!saveStatus) {
+        throw Error
+      }
+
+      localStorage.setItem("token", res.accessToken)
+      isAuth.value = true
+      await router.push("/")
+    } catch (e: any) {
+      if (e.status === 401) {
+        error.value =
+          "Пожалуйста, проверьте введенные данные и повторите попытку."
+      } else {
+        error.value =
+          "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
+      }
+
+      setTimeout(() => (error.value = ""), 5000)
+    } finally {
+      loadingIndicator.finish()
+      isLoading.value = false
+    }
+  }
+
   return {
     error,
     isAuth,
     isLoading,
-    accessToken,
     login,
     logout,
+    refresh,
     initJWT,
     register,
+    resetPassword,
   }
 })
