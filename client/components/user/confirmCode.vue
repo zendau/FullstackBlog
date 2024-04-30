@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { object, string } from "yup"
+import { object, string, type InferType } from "yup"
+import type { FormSubmitEvent } from "#ui/types"
 
-const { onSubmit, email } = defineProps<{
+const { onSend, email } = defineProps<{
   email?: string
-  onSubmit: (data: any) => void
+  onSend: (data: any) => void
+}>()
+
+defineEmits<{
+  onReset: []
 }>()
 
 const state = reactive({
@@ -14,10 +19,16 @@ const schema = object().shape({
   confirmCode: string().required().min(6, "Must be at least 6 characters"),
 })
 
+type Schema = InferType<typeof schema>
+
 const userStore = useUserStore()
 
 function resendConfirmCode() {
   userStore.sendConfirmCode(email ?? userStore.data?.email)
+}
+
+function onSubmit(event: FormSubmitEvent<Schema>) {
+  onSend(event.data.confirmCode)
 }
 </script>
 
@@ -42,6 +53,7 @@ function resendConfirmCode() {
       <UButton type="submit"> Send confirm code </UButton>
     </UForm>
     <UButton @click="resendConfirmCode">Resend confirm code</UButton>
+    <UButton @click="$emit('onReset')">Reset</UButton>
   </div>
 </template>
 

@@ -5,9 +5,9 @@ const userStore = useUserStore()
 const email = ref("")
 const message = ref("")
 
-async function onSubmit(event: { data: { confirmCode: string } }) {
+async function onSubmit(confirmCode: string) {
   const resStatus = await userStore.resetPassword({
-    confirmCode: event.data.confirmCode,
+    confirmCode,
     email: email.value,
   })
 
@@ -27,7 +27,7 @@ function onReset(emailData: string) {
   <p v-if="message">{{ message }}</p>
   <UserConfirmCode
     v-if="isShowConfirmCode"
-    :on-submit="onSubmit"
+    :on-send="onSubmit"
     :email="email"
   />
   <AuthReset v-else @on-reset="onReset" />

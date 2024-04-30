@@ -3,9 +3,9 @@ const isShowConfirmCode = ref(false)
 const userStore = useUserStore()
 const router = useRouter()
 
-async function onActiveAccount(event: { data: { confirmCode: string } }) {
+async function onActiveAccount(confirmCode: string) {
   const resStatus = await userStore.activateAccount({
-    confirmCode: event.data.confirmCode,
+    confirmCode,
   })
 
   if (resStatus) {
@@ -18,7 +18,7 @@ function onSubmit() {
 }
 </script>
 <template>
-  <UserConfirmCode v-if="isShowConfirmCode" :on-submit="onActiveAccount" />
+  <UserConfirmCode v-if="isShowConfirmCode" :on-send="onActiveAccount" />
   <AuthRegister v-else @on-sumbit="onSubmit" />
 </template>
 
