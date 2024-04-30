@@ -2,6 +2,10 @@
 import { object, string, type InferType, ref as yupRef } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
+const emit = defineEmits<{
+  onSumbit: []
+}>()
+
 const state = reactive({
   email: "",
   password: "",
@@ -25,6 +29,7 @@ const authStore = useAuthStore()
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
   authStore.register(event.data)
+  emit("onSumbit")
 }
 </script>
 
