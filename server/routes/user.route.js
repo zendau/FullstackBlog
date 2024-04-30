@@ -139,7 +139,7 @@ router.get("/logout", UserController.logoutUser)
  *         description: Unexpected error
  */
 
-router.get("/resendConfirmCode", userGuard, UserController.resendConfirmCode)
+router.post("/sendConfirmCode", UserController.sendConfirmCode)
 
 /**
  * @swagger

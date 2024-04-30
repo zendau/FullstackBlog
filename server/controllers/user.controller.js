@@ -87,9 +87,15 @@ class UserController {
     }
   }
 
-  async resendConfirmCode(req, res, next) {
+  async sendConfirmCode(req, res, next) {
     try {
-      const { email } = req.user.payload
+      const schema = Joi.object({
+        email: Joi.string().email(),
+      })
+      const { error } = schema.validate(req.body)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { email } = req.body
       await UserService.setConfirmCode(email)
       return res.send(true)
     } catch (e) {

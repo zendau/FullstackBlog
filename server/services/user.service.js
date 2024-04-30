@@ -170,7 +170,7 @@ class UserService {
 
   async logout(token) {
     if (!token) {
-      throw ApiError.UnauthorizedError()
+      return false
     }
 
     await TokenService.removeToken(token)
@@ -270,7 +270,7 @@ class UserService {
     const userData = await this.getByEmail(email)
     await ConfirmCodeService.checkCode(confirmCode)
 
-    const newPaswword = uuid.v4()
+    const newPaswword = uuid()
     const hashPassword = await this.getHashPassword(newPaswword)
 
     userData.password = hashPassword
