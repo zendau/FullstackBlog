@@ -3,6 +3,12 @@ enum Roles {
   Admin = "admin",
 }
 
+interface IUpdatehUser {
+  email?: string
+  password?: string
+  confirmCode: string
+}
+
 interface IUser {
   id: string
   email: string
@@ -15,6 +21,11 @@ interface ITokenBody {
   payload: IUser
   iat: number
   exp: number
+}
+
+interface IAuthRes {
+  accessToken: string
+  refreshToken: string
 }
 
 export const useUserStore = defineStore("user", () => {
@@ -47,6 +58,11 @@ export const useUserStore = defineStore("user", () => {
 
     if (!decodeData) return false
     data.value = decodeData.payload
+
+    if (process.client) {
+      localStorage.setItem("token", token)
+    }
+
     return true
   }
 
@@ -135,19 +151,56 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
+  async function updateUserData({
+    email,
+    password,
+    confirmCode,
+  }: IUpdatehUser) {
+    try {
+      error.value = ""
+      isLoading.value = true
+      const res = await useApiFetch<IAuthRes>("/user/saveNewData", {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: confirmCode,
+          ...(email && { newEmail: email }),
+          ...(password && { newPassword: password }),
+        }),
+      })
+
+      const saveStatus = saveUserData(res.accessToken)
+
+      if (!saveStatus) {
+        throw Error
+      }
+      return true
+    } catch (e: any) {
+      error.value =
+        e.data.message ??
+        "An error occurred when sending the confirmation code. Repeat later."
+
+      setTimeout(() => (error.value = ""), 5000)
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   function $reset() {
     data.value = undefined
   }
 
   return {
     data,
+    error,
     isAdmin,
     isLoading,
-    error,
     $reset,
     decodeToken,
     saveUserData,
     resetPassword,
+    updateUserData,
     activateAccount,
     sendConfirmCode,
   }

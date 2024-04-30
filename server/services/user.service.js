@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid"
 // import PostDataDTO from "../dtos/postData.dto.js"
 import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceprions/api.error.js"
+import Logger from "../libs/logger.js"
 import userModel from "../models/user.model.js"
 import ConfirmCodeService from "./confirmCode.service.js"
 import nodemailerService from "./nodemailer.service.js"
@@ -56,6 +57,7 @@ class UserService {
       throw ApiError.UnauthorizedError()
     }
     const userData = TokenService.validateRefreshToken(refreshToken)
+
     const tokenFromDb = await TokenService.findToken(refreshToken)
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError()
@@ -63,6 +65,7 @@ class UserService {
     const user = await userModel.findById(userData.id)
     const userDTO = new UserDTO(user)
     const tokens = TokenService.generateTokens({ ...userDTO })
+    Logger.info(`Update token to ${userDTO.email}`)
 
     await TokenService.saveToken(userDTO.id, tokens.refreshToken)
     return tokens
