@@ -41,7 +41,6 @@ export const useAuthStore = defineStore("auth", () => {
         throw Error
       }
 
-      localStorage.setItem("token", res.accessToken)
       isAuth.value = true
       await router.push("/")
     } catch (e: any) {
@@ -80,7 +79,6 @@ export const useAuthStore = defineStore("auth", () => {
         throw Error
       }
 
-      localStorage.setItem("token", res.accessToken)
       isAuth.value = true
     } catch (e: any) {
       if (e.status === 400) {
@@ -117,7 +115,9 @@ export const useAuthStore = defineStore("auth", () => {
       throw Error
     }
 
-    localStorage.setItem("token", accessToken)
+    if (process.client) {
+      localStorage.setItem("token", accessToken)
+    }
   }
 
   function logout() {
@@ -149,7 +149,6 @@ export const useAuthStore = defineStore("auth", () => {
         throw Error
       }
 
-      localStorage.setItem("token", res.accessToken)
       isAuth.value = true
       await router.push("/")
     } catch (e: any) {
