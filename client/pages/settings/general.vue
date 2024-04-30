@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "private",
+})
+
 const userStore = useUserStore()
 </script>
 

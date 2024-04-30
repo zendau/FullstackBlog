@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "public",
+})
+
 const isShowConfirmCode = ref(false)
 const userStore = useUserStore()
 
