@@ -137,9 +137,9 @@ class PostController {
       const { limit, page, exclude, sort, tag, authorId, substring, postId } =
         req.query
 
-      const skip = (page ?? 0) * limit
+      const skipValue = (page ?? 0) * limit
 
-      console.log("skip", skip)
+      const skip = Number.isNaN(skipValue) ? 0 : skipValue
 
       const limitValue = limit ? parseInt(limit) : 1
 

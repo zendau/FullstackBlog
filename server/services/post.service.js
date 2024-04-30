@@ -464,6 +464,55 @@ class PostService {
     ]
   }
 
+  postFacet(skip, limit, sort) {
+    const postsLimit = { $limit: limit }
+    const postsSkip = { $skip: skip }
+
+    const facetPosts = []
+
+    if (skip) {
+      facetPosts.push(postsSkip)
+    }
+    if (limit >= 0) {
+      facetPosts.push(postsLimit)
+    }
+
+    const facet = [
+      {
+        $facet: {
+          posts: [...sort, ...facetPosts],
+          total: [
+            {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                count: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$total",
+      },
+      {
+        $project: {
+          posts: 1,
+          total: "$total.count",
+        },
+      },
+    ]
+
+    return facet
+  }
+
   async getPostsPagination(idList, limit, skip, sortType, filterType) {
     const filter = this.postsMatchFilter(idList, filterType)
     const postLookup = this.postLookup()
@@ -471,22 +520,25 @@ class PostService {
     const extended = this.postsExtendedData()
     const sort = this.postsSort(sortType)
 
-    const postsLimit = { $limit: limit }
-    const postsSkip = { $skip: skip }
+    const facet = this.postFacet(skip, limit, sort)
 
     const combineAggregate = [
       ...filter,
       ...postLookup,
       ...rating,
       ...extended,
-      ...sort,
-      postsSkip,
-      postsLimit,
+      ...facet,
     ]
 
-    const posts = await postModel.aggregate(combineAggregate)
+    const resData = await postModel.aggregate(combineAggregate)
 
-    return posts
+    if (resData[0] && resData[0].posts && resData[0].posts.length === limit) {
+      resData[0].hasMore = true
+    } else {
+      resData[0].hasMore = false
+    }
+
+    return resData
   }
 }
 
