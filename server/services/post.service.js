@@ -312,7 +312,7 @@ class PostService {
     // Выборка постов по конкретному тегу
     if (filter?.tag) {
       matchData.tags = {
-        $elemMatch: { $eq: mongoose.Types.ObjectId(filter.tag) },
+        $elemMatch: { $eq: filter.tag },
       }
     }
 
@@ -398,13 +398,14 @@ class PostService {
           body: {
             $substr: ["$post.body", 0, 10],
           },
-          tags: {
-            $map: {
-              input: "$tags",
-              as: "tag",
-              in: "$$tag.title",
-            },
-          },
+          tags: "$post.tags",
+          // tags: {
+          //   $map: {
+          //     input: "$tags",
+          //     as: "tag",
+          //     in: "$$tag.title",
+          //   },
+          // },
           author: {
             id: "$author._id",
             email: 1,
@@ -531,8 +532,9 @@ class PostService {
     ]
 
     const resData = await postModel.aggregate(combineAggregate)
+    if (!resData[0]) return [{ posts: [], hasMore: false, total: 0 }]
 
-    if (resData[0] && resData[0].posts && resData[0].posts.length === limit) {
+    if (resData[0].posts.length === limit) {
       resData[0].hasMore = true
     } else {
       resData[0].hasMore = false

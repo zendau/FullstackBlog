@@ -48,16 +48,10 @@ const { Schema, model } = mongoose
 const PostSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "Users", required: true },
   file: { type: Schema.Types.ObjectId, ref: "Files", required: true },
-  tags: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Tags",
-    },
-  ],
+  tags: { type: Array, required: true },
   title: { type: String, required: true },
   body: { type: String, required: true },
   timeRead: { type: Number, required: true },
-  // readCount: { type: Number, default: 0 },
   createdDate: { type: Date, required: true, default: Date.now },
 })
 
