@@ -7,7 +7,7 @@ const isVisible = ref(false)
 
 const { pending } = await useAsyncData(
   "posts",
-  async () => await articleParams.fetchFilterData(),
+  async () => await articleParams.fetchFilterData(false),
   {
     server: true,
   },
@@ -16,17 +16,24 @@ const { pending } = await useAsyncData(
 async function onIntersectionObserver([
   { isIntersecting },
 ]: IntersectionObserverEntry[]) {
-  if (isVisible.value || !articleStore.hasMore || !isIntersecting) return
+  if (
+    pending.value ||
+    articleStore.isLoading ||
+    isVisible.value ||
+    !articleStore.hasMore ||
+    !isIntersecting
+  )
+    return
   isVisible.value = true
 
   articleStore.page++
-  await articleStore.fetch()
+  await articleParams.fetchFilterData(false)
   isVisible.value = false
 }
 </script>
 
 <template>
-  <PostSkeletonList v-if="pending" />
+  <PostSkeletonList v-if="articleStore.isLoading" />
   <PostList v-else />
 
   <UiUpBtn />

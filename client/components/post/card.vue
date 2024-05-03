@@ -1,26 +1,40 @@
 <script setup lang="ts">
-import type { PropType } from "vue"
-
-interface postData {
-  id: number
-  name: string
-  description: string
-  created_at: string
-  discount: number
-  price: number
-  view: number
+interface IFile {
+  fileName: string
+  size: number
+  mimetype: string
+  id: string
 }
 
-const { post } = defineProps({
-  post: {
-    type: Object as PropType<postData>,
-    required: true,
-  },
-  isExtended: {
-    type: Boolean,
-    default: false,
-  },
-})
+interface IAuthor {
+  email: string
+  id: string
+}
+
+interface postData {
+  id: string
+  author: IAuthor
+  counterLikes: number
+  counterDislikes: number
+  counterComments: number
+  counterReads: number
+  file: IFile
+  body: string
+  tags: string[]
+  title: string
+  timeRead: number
+  createdDate: string
+  rating: number
+}
+
+const { post } = withDefaults(
+  defineProps<{
+    post: postData
+    isExtended?: boolean
+  }>(),
+  { isExtended: false },
+)
+const { addTag } = useArticleParamsStore()
 </script>
 
 <template>
@@ -29,18 +43,26 @@ const { post } = defineProps({
     <div class="mt-3 space-y-2 text-center">
       <h1 class="">
         <NuxtLink :to="`/post/${post.id}`">
-          {{ post.name }}
+          {{ post.title }}
         </NuxtLink>
       </h1>
       <p class="">
-        {{ post.description }}
+        {{ post.body }}
       </p>
     </div>
     <div v-if="isExtended">
-      <p>date: {{ post.created_at }}</p>
-      <p>discount: {{ post.discount }}</p>
-      <p>price: {{ post.price }}</p>
-      <p>view: {{ post.view }}</p>
+      <p>date: {{ post.createdDate }}</p>
+      <p>
+        tags:
+        <span v-for="tag in post.tags" :key="tag" @click="addTag(tag)">
+          {{ tag }}
+          <br />
+        </span>
+      </p>
+      <p>rating: {{ post.rating }}</p>
+      <p>timeRead: {{ post.timeRead }}</p>
+      <p>counterReads: {{ post.counterReads }}</p>
+      <p>counterComments: {{ post.counterComments }}</p>
     </div>
   </div>
 </template>

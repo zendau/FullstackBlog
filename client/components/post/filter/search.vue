@@ -2,6 +2,7 @@
 const articleParams = useArticleParamsStore()
 
 function onInpitTitle() {
+  if (articleParams.search === undefined) return
   if (articleParams.search) {
     articleParams.addQuery("search")
   } else {

@@ -19,9 +19,13 @@ watch(
   },
 )
 
-await useAsyncData("posts", async () => await articleParams.fetchFilterData(), {
-  server: true,
-})
+await useAsyncData(
+  "posts",
+  async () => await articleParams.fetchFilterData(false),
+  {
+    server: true,
+  },
+)
 </script>
 
 <template>
