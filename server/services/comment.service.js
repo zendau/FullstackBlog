@@ -195,18 +195,34 @@ class CommentService {
     ]
   }
 
-  async getCommentsPagination(idList, limit, sortType, filterType) {
+  async getCommentsPagination(idList, limit, skip, filterType) {
     const filter = this.commentsMatchFilter(idList, filterType)
     const extended = this.commentssExtendedData()
-    const sort = this.postsSort(sortType)
 
+    const skipPrepare = { $skip: skip }
     const limitCount = { $limit: limit }
 
-    const combineAggregate = [...filter, ...extended, ...sort, limitCount]
+    const combineAggregate = [...filter, ...extended, skipPrepare, limitCount]
 
-    const posts = await commentModel.aggregate(combineAggregate)
+    const commens = await commentModel.aggregate(combineAggregate)
 
-    return posts
+    if (!commens || commens.length === 0)
+      return {
+        list: [],
+        hasMore: false,
+      }
+
+    if (commens.length === limit) {
+      return {
+        list: commens,
+        hasMore: true,
+      }
+    }
+
+    return {
+      list: commens,
+      hasMore: false,
+    }
   }
 }
 

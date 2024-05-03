@@ -119,4 +119,6 @@ router.put("/edit", userGuard, CommentController.edit)
 
 router.delete("/delete", userGuard, CommentController.delete)
 
+router.get("/list", CommentController.list)
+
 export default router

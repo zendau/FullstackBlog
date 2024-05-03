@@ -67,6 +67,42 @@ class CommentController {
       next(e)
     }
   }
+
+  async list(req, res, next) {
+    try {
+      const schema = Joi.object({
+        limit: Joi.number(),
+        page: Joi.number(),
+        exclude: Joi.array(),
+        authorId: Joi.string(),
+        postId: Joi.string(),
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { limit, page, exclude, authorId, postId } = req.query
+
+      const skipValue = (page ?? 0) * limit
+
+      const skip = Number.isNaN(skipValue) ? 0 : skipValue
+
+      const limitValue = limit ? parseInt(limit) : 1
+
+      const data = await CommentService.getCommentsPagination(
+        exclude,
+        limitValue,
+        skip,
+        {
+          postId,
+          authorId,
+        },
+      )
+
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 export default new CommentController()
