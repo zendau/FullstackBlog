@@ -11,6 +11,8 @@ export function useApiFetch<T>(
   const authStore = useAuthStore()
   const toast = useToast()
 
+  const token = process.client ? localStorage.getItem("token") : ""
+
   const defaults: ReqOptions = {
     baseURL: import.meta.env.VITE_API,
     retry: 1,
@@ -19,7 +21,7 @@ export function useApiFetch<T>(
     onRequest: (ctx) => {
       if (authStore.isAuth) {
         ctx.options.headers = new Headers({
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         })
       }
     },

@@ -18,29 +18,29 @@ export const useArticleStore = defineStore("article", () => {
     isLoading.value = true
 
     const defaultParams = {
-      per_page: count.value,
-      page: page.value,
+      limit: count.value,
+      page: page.value - 1,
     }
 
+    const reqParams = Object.assign(defaultParams, params ?? {})
+
     try {
-      const res = await useApiFetch<{
-        data: any
-        next_page_url: string
-        total: number
-      }>("https://api.fakestorejson.com/api/v1/public/products", {
-        query: params ?? defaultParams,
+      const res = await useApiFetch<any>("post/pagination", {
+        query: reqParams,
       })
 
-      if (!res || !res.data) {
+      if (!res && !res[0]) {
         error.value = "Error receiving articles. Try later"
         return
       }
 
-      if (res.total) {
-        total.value = res.total
+      const postData = res[0]
+
+      if (postData.total) {
+        total.value = postData.total
       }
 
-      if (!res.next_page_url) {
+      if (!postData.hasMore) {
         hasMore.value = false
       }
 
@@ -48,7 +48,7 @@ export const useArticleStore = defineStore("article", () => {
         data.length = 0
       }
 
-      data.push(...res.data)
+      data.push(...postData.posts)
 
       return true
     } catch (e) {
