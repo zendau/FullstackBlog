@@ -9,24 +9,31 @@ export const useArticleStore = defineStore("article", () => {
 
   const hasMore = ref(true)
 
-  interface q {
-    isRewrite?: boolean
-    params?: { keyword?: string; category?: string }
+  interface IFetchParam {
+    keyword?: string
+    category?: string
+    authorId?: string
   }
 
-  async function fetch({ isRewrite, params }: q = {}) {
+  interface IFetch {
+    isRewrite?: boolean
+    params?: IFetchParam
+  }
+
+  async function fetch({ isRewrite, params }: IFetch = {}) {
     isLoading.value = true
 
-    const defaultParams = {
-      limit: count.value,
-      page: page.value - 1,
+    if (isRewrite) {
+      $reset()
     }
-
-    const reqParams = Object.assign(defaultParams, params ?? {})
 
     try {
       const res = await useApiFetch<any>("post/pagination", {
-        query: reqParams,
+        query: {
+          limit: count.value,
+          page: page.value - 1,
+          ...params,
+        },
       })
 
       if (!res && !res[0]) {
@@ -44,10 +51,6 @@ export const useArticleStore = defineStore("article", () => {
         hasMore.value = false
       }
 
-      if (isRewrite) {
-        data.length = 0
-      }
-
       data.push(...postData.posts)
 
       return true
@@ -59,12 +62,12 @@ export const useArticleStore = defineStore("article", () => {
     }
   }
 
-  function reset() {
+  function $reset() {
     data.length = 0
     page.value = 1
     total.value = 0
     hasMore.value = true
   }
 
-  return { data, count, total, hasMore, page, error, isLoading, fetch, reset }
+  return { data, count, total, hasMore, page, error, isLoading, fetch, $reset }
 })

@@ -10,6 +10,7 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
 
   const defaultSort = "byRating"
 
+  const authorId = ref("")
   const search = ref<routeFilter>(route.query.search as LocationQueryValue)
   const category = ref<routeFilter>(route.query.category as LocationQueryValue)
   const tag = ref<routeFilter>(route.query.tag as LocationQueryValue)
@@ -24,7 +25,7 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
   function addTag(value: string) {
     tag.value = value
     router.push({ query: { tag: value } })
-    fetchFilterData()
+    fetchFilterData(true)
   }
 
   function addQuery(field: filter) {
@@ -42,14 +43,14 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
       default:
         break
     }
-    fetchFilterData()
+    fetchFilterData(true)
     router.push({ query: { ...route.query, [field]: value } })
   }
 
   function removeQuery(field: filter) {
     const query = { ...route.query }
     delete query[field]
-    fetchFilterData()
+    fetchFilterData(true)
     router.push({ query })
   }
 
@@ -58,8 +59,12 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
     category.value = undefined
     tag.value = undefined
     sort.value = defaultSort
+    authorId.value = ""
+  }
 
-    fetchFilterData()
+  function defaultFilter() {
+    reset()
+    fetchFilterData(true)
     router.push(route.path)
   }
 
@@ -69,6 +74,7 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
       category?: string
       tag?: string
       sort?: string
+      authorId?: string
     } = {}
 
     if (search.value) {
@@ -87,16 +93,16 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
       filter.sort = sort.value as string
     }
 
+    if (authorId.value) {
+      filter.authorId = authorId.value
+    }
+
     return filter
   }
 
-  function fetchFilterData(withHardReset = true) {
-    if (withHardReset) {
-      articleStore.reset()
-    }
-
+  function fetchFilterData(isRewrite: boolean) {
     const params = prepareFilterQuery()
-    return articleStore.fetch({ isRewrite: true, params })
+    return articleStore.fetch({ isRewrite, params })
   }
 
   return {
@@ -104,11 +110,13 @@ export const useArticleParamsStore = defineStore("articleParams", () => {
     sort,
     search,
     category,
+    authorId,
     isFilter,
     addTag,
     addQuery,
     removeQuery,
     reset,
+    defaultFilter,
     prepareFilterQuery,
     fetchFilterData,
   }
