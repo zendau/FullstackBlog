@@ -1,10 +1,94 @@
 <script setup lang="ts">
-// установка реакции (лайк, дизлайнк)
+const { isAuth } = storeToRefs(useAuthStore())
+
+const articleId = inject("articleId", "")
+
+const isError = ref(false)
+const reactingStatus = ref<boolean | "null">()
+
+onMounted(async () => {
+  if (!isAuth.value) return
+
+  const status = await useApiFetch<boolean | "null">("post/reaction", {
+    method: "get",
+    query: {
+      postId: articleId,
+    },
+  })
+  reactingStatus.value = status
+})
+
+function checkAuth() {
+  if (isAuth.value) return true
+
+  isError.value = true
+
+  setTimeout(() => (isError.value = false), 50000)
+
+  return false
+}
+
+function setLike() {
+  if (!checkAuth()) return
+
+  reactingStatus.value = reactingStatus.value === true ? "null" : true
+
+  useApiFetch("post/reacting", {
+    method: "patch",
+    query: {
+      postId: articleId,
+      isLiked: reactingStatus.value,
+    },
+  })
+}
+
+function setDislike() {
+  if (!checkAuth()) return
+
+  reactingStatus.value = reactingStatus.value === false ? "null" : false
+
+  useApiFetch("post/reacting", {
+    method: "patch",
+    query: {
+      postId: articleId,
+      isLiked: reactingStatus.value,
+    },
+  })
+}
+
+function closeErrorAlert() {
+  isError.value = false
+}
 </script>
 
 <template>
-  <UButton>Like</UButton>
-  <UButton>Dislike</UButton>
+  <UAlert
+    v-if="isError"
+    icon="i-heroicons-user-16-solid"
+    color="red"
+    variant="solid"
+    title="Authorization is required"
+    description="For this action, please log in"
+    :close-button="{
+      icon: 'i-heroicons-x-mark-20-solid',
+      color: 'gray',
+      variant: 'link',
+      padded: false,
+    }"
+    @close="closeErrorAlert"
+  />
+  <UButton
+    :color="reactingStatus === true ? 'red' : 'primary'"
+    @click="setLike"
+  >
+    Like
+  </UButton>
+  <UButton
+    :color="reactingStatus === false ? 'red' : 'primary'"
+    @click="setDislike"
+  >
+    Dislike
+  </UButton>
 </template>
 
 <style lang="scss" scoped></style>
