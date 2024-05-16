@@ -105,16 +105,16 @@ class CommentService {
       : []
 
     // Выборка комментариев пользователя
-    if (filter?.user) {
-      matchData.author = {
-        $eq: mongoose.Types.ObjectId(filter.user),
+    if (filter?.authorId) {
+      matchData.user = {
+        $eq: mongoose.Types.ObjectId(filter.authorId),
       }
     }
 
     // Выборка комментариев поста
-    if (filter?.post) {
+    if (filter?.postId) {
       matchData.post = {
-        $eq: mongoose.Types.ObjectId(filter.post),
+        $eq: mongoose.Types.ObjectId(filter.postId),
       }
     }
 
@@ -195,34 +195,73 @@ class CommentService {
     ]
   }
 
+  postFacet(skip, limit) {
+    const postsLimit = { $limit: limit }
+    const postsSkip = { $skip: skip }
+
+    const facetPosts = []
+
+    if (skip) {
+      facetPosts.push(postsSkip)
+    }
+    if (limit >= 0) {
+      facetPosts.push(postsLimit)
+    }
+
+    const facet = [
+      {
+        $facet: {
+          list: [{ $sort: { createdDate: -1 } }, ...facetPosts],
+          total: [
+            {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                count: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$total",
+      },
+      {
+        $project: {
+          list: 1,
+          total: "$total.count",
+        },
+      },
+    ]
+
+    return facet
+  }
+
   async getCommentsPagination(idList, limit, skip, filterType) {
     const filter = this.commentsMatchFilter(idList, filterType)
     const extended = this.commentssExtendedData()
+    const facet = this.postFacet(skip, limit)
 
-    const skipPrepare = { $skip: skip }
-    const limitCount = { $limit: limit }
-
-    const combineAggregate = [...filter, ...extended, skipPrepare, limitCount]
+    const combineAggregate = [...filter, ...extended, ...facet]
 
     const commens = await commentModel.aggregate(combineAggregate)
 
-    if (!commens || commens.length === 0)
-      return {
-        list: [],
-        hasMore: false,
-      }
+    if (!commens[0]) return [{ list: [], hasMore: false, total: 0 }]
 
-    if (commens.length === limit) {
-      return {
-        list: commens,
-        hasMore: true,
-      }
+    if (commens[0].list.length === limit) {
+      commens[0].hasMore = true
+    } else {
+      commens[0].hasMore = false
     }
 
-    return {
-      list: commens,
-      hasMore: false,
-    }
+    return commens
   }
 }
 

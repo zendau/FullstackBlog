@@ -99,7 +99,7 @@ router.post("/login", UserController.login)
  *         description: Unexpected error
  */
 
-router.get("/refresh", UserController.refresh)
+router.post("/refresh", UserController.refresh)
 
 /**
  * @swagger
@@ -265,6 +265,6 @@ router.post("/resetPassword", UserController.resetPassword)
  *         description: Unexpected error
  */
 
-router.get("/data/:id", userGuard, UserController.getUserById)
+router.get("/data/:id", UserController.getUserById)
 
 export default router
