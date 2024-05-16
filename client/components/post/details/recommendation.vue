@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// список рекомендальных постов (с бесконечной загрузкой)
 const isShowList = ref(false)
 
 onMounted(() => {

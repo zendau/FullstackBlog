@@ -8,22 +8,32 @@ interface IPost {
 const { params } = useRoute()
 const articleId = params.id as string
 
-const { data: post } = await useFetch<IPost>(
-  `https://api.fakestorejson.com/api/v1/public/products/${params.id}`,
+provide("articleId", articleId)
+
+const {
+  pending,
+  error,
+  data: post,
+} = await useAsyncData<IPost>(
+  `post/${articleId}`,
+  async () => await useApiFetch(`post/get/${params.id}`),
   {
-    key: `post/${articleId}`,
+    server: true,
   },
 )
 </script>
 
 <template>
+  {{ pending }}
+
+  {{ error }}
   <PostNotFount v-if="!post" :id="articleId" />
   <template v-else>
     <PostDetailsHeader :post="post" />
     <NuxtImg src="/item.jpg" />
     <h1>{{ post.name }}</h1>
     <p>{{ post.content }}</p>
-    <PostDetailsFoouter />
+    <PostDetailsFouter />
   </template>
 </template>
 

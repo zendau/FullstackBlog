@@ -1,9 +1,16 @@
 <script setup lang="ts">
-// компонент содержащий форму добавления и список комментов
+const { isAuth } = storeToRefs(useAuthStore())
+
+const articleId = inject("articleId", "")
+
+const commnentStore = useCommentStore()
+commnentStore.$reset()
+commnentStore.postId = articleId
 </script>
 
 <template>
-  <CommentAddForm />
+  <CommentAddForm v-if="isAuth" />
+  <CommentNoAuth v-else />
   <CommentList />
 </template>
 

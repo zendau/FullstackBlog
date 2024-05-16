@@ -5,6 +5,7 @@ const { data: articles } = storeToRefs(useArticleStore())
 const setting = useArticleSettingStore()
 const articleStore = useArticleStore()
 const articleParams = useArticleParamsStore()
+const postId = inject("articleId")
 
 const postLayout = computed(() => {
   if (setting.currentView === "grid") {
@@ -17,10 +18,6 @@ const postLayout = computed(() => {
 onUnmounted(() => {
   articleParams.reset()
 })
-
-const route = useRoute()
-const postId = route.params.id
-console.log(postId)
 </script>
 
 <template>
