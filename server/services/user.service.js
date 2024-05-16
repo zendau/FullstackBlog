@@ -2,7 +2,6 @@ import bcrypt from "bcrypt"
 import mongoose from "mongoose"
 import { v4 as uuid } from "uuid"
 
-// import PostDataDTO from "../dtos/postData.dto.js"
 import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceprions/api.error.js"
 import Logger from "../libs/logger.js"
@@ -153,16 +152,79 @@ class UserService {
         },
       },
       {
+        $lookup: {
+          from: "reactions",
+          localField: "_id",
+          foreignField: "user",
+          as: "react",
+        },
+      },
+      {
+        $unwind: {
+          path: "$react",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          counterLikes: {
+            $sum: {
+              $cond: {
+                if: {
+                  $eq: ["$react.isLiked", true],
+                },
+                then: 1,
+                else: 0,
+              },
+            },
+          },
+          counterDislikes: {
+            $sum: {
+              $cond: {
+                if: {
+                  $eq: ["$react.isLiked", false],
+                },
+                then: 1,
+                else: 0,
+              },
+            },
+          },
+          rating: {
+            $first: "$rating",
+          },
+          user: {
+            $first: "$user",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "_id",
+          foreignField: "user",
+          as: "comments",
+        },
+      },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "author",
+          as: "posts",
+        },
+      },
+      {
         $project: {
-          counterLikes: 1,
-          counterDislikes: 1,
-          counterReads: 1,
-          counterComments: 1,
           rating: 1,
           id: "$user._id",
           _id: 0,
           isBlocked: "$user.isBlocked",
           email: "$user.email",
+          counterLikes: 1,
+          counterDislikes: 1,
+          counterPosts: { $size: "$posts" },
+          counterComments: { $size: "$comments" },
         },
       },
     ]
