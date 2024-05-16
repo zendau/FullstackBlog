@@ -1,23 +1,21 @@
 <script setup lang="ts">
-const { author, date, message } = defineProps({
-  author: {
-    type: String,
-    required: true,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: String,
-    required: true,
-  },
-})
+interface IAuthor {
+  email: string
+  id: string
+  isActivated: boolean
+  isBlocked: boolean
+}
+
+const { author, date, message } = defineProps<{
+  author: IAuthor
+  date: string
+  message: string
+}>()
 </script>
 
 <template>
   <div class="comment__container">
-    <p>Name: {{ author }}</p>
+    <NuxtLink :to="`/user/${author.id}`">Name: {{ author.email }}</NuxtLink>
     <p>Message: {{ message }}</p>
     <p>Date: {{ date }}</p>
   </div>

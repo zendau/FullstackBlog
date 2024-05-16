@@ -4,7 +4,7 @@ import { vIntersectionObserver } from "@vueuse/components"
 const commentStore = useCommentStore()
 
 const { pending } = await useAsyncData(
-  "posts",
+  "comment",
   async () => await commentStore.fetch(),
   {
     server: true,
@@ -23,25 +23,27 @@ const isShowMoreComments = ref(false)
 
 <template>
   <br />
-  <p>{{ commentStore.total }} comments</p>
+  <CommentEmpty v-if="commentStore.data.length === 0" />
+  <template v-else>
+    <p>{{ commentStore.total }} comments</p>
+    <CommentCard
+      v-for="comment in commentStore.data"
+      :key="comment.id"
+      :message="comment.message"
+      :date="comment.createdDate"
+      :author="comment.user"
+    />
 
-  <CommentCard
-    v-for="comment in commentStore.data"
-    :key="comment.id"
-    :message="comment.slug"
-    :date="comment.created_at"
-    :author="comment.name"
-  />
-
-  <UiLoader v-if="pending || commentStore.isLoading" />
-  <div
-    v-if="isShowMoreComments"
-    v-intersection-observer="onIntersectionObserver"
-    class="observer"
-  ></div>
-  <UButton v-else @click="isShowMoreComments = !isShowMoreComments">
-    Раскрыть
-  </UButton>
+    <UiLoader v-if="pending || commentStore.isLoading" />
+    <div
+      v-if="isShowMoreComments"
+      v-intersection-observer="onIntersectionObserver"
+      class="observer"
+    ></div>
+    <UButton v-else @click="isShowMoreComments = !isShowMoreComments">
+      Раскрыть
+    </UButton>
+  </template>
 </template>
 
 <style lang="scss" scoped></style>
