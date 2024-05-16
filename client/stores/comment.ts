@@ -1,40 +1,119 @@
+interface IPost {
+  id: string
+  title: string
+}
+
+interface IUser {
+  email: string
+  id: string
+  roles: string[]
+  isActivated: boolean
+  isBlocked: boolean
+}
+
+interface IComment {
+  createdDate: string
+  edited: boolean
+  id: string
+  message: string
+  post: IPost
+  user: IUser
+}
+
 export const useCommentStore = defineStore("comment", () => {
-  const page = ref(1)
-  const isLoading = ref(false)
+  const data = reactive<IComment[]>([])
   const error = ref("")
-  const data = reactive<any[]>([])
-  const hasMore = ref(true)
+  const isLoading = ref(false)
+
+  const page = ref(1)
+  const count = ref(5)
   const total = ref()
 
-  function reset() {
+  const postId = ref("")
+  const authorId = ref("")
+
+  const hasMore = ref(true)
+  function $reset() {
     page.value = 1
     isLoading.value = false
     error.value = ""
     data.length = 0
     hasMore.value = true
     total.value = undefined
+
+    postId.value = ""
+    authorId.value = ""
+  }
+
+  function prepareFilterQuery() {
+    const filter: {
+      postId?: string
+      authorId?: string
+    } = {}
+
+    if (postId.value) {
+      filter.postId = postId.value
+    }
+
+    if (authorId.value) {
+      filter.authorId = authorId.value
+    }
+
+    return filter
   }
 
   async function fetch() {
     isLoading.value = true
 
     try {
-      const res = await useApiFetch<{
-        next_page_url: string
-        data: any[]
-        total: number
-      }>("https://api.fakestorejson.com/api/v1/public/posts", {
+      const res = await useApiFetch<
+        {
+          hasMore: boolean
+          list: IComment[]
+          total: number
+        }[]
+      >("comment/list", {
         query: {
-          per_page: 10,
-          page: page.value,
+          limit: count.value,
+          page: page.value - 1,
+          ...prepareFilterQuery(),
         },
       })
 
-      if (!res.next_page_url) hasMore.value = false
-      if (res.total) total.value = res.total
+      if (!res && !res[0]) {
+        error.value = "Error receiving comment. Try later"
+        return
+      }
+
+      const commentsData = res[0]
+
+      if (!commentsData.hasMore) hasMore.value = false
+      if (commentsData.total) total.value = commentsData.total
 
       page.value++
-      data.push(...res.data)
+      data.push(...commentsData.list)
+      return true
+    } catch (e) {
+      error.value = ""
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function send(comment: any) {
+    isLoading.value = true
+
+    try {
+      const commentData = await useApiFetch<IComment>("comment/add", {
+        method: "post",
+        body: {
+          ...comment,
+        },
+      })
+
+      data.unshift(commentData)
+
       return true
     } catch (e) {
       error.value = ""
@@ -45,19 +124,21 @@ export const useCommentStore = defineStore("comment", () => {
   }
 
   function add(comment: any) {
-    data.unshift(comment)
+    send(comment)
     total.value++
   }
 
   return {
     page,
-    isLoading,
-    error,
     data,
-    hasMore,
+    error,
     total,
+    postId,
+    hasMore,
+    authorId,
+    isLoading,
     add,
     fetch,
-    reset,
+    $reset,
   }
 })
