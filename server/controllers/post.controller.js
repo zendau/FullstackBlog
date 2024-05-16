@@ -3,6 +3,7 @@ import objectId from "joi-objectid"
 
 import ApiError from "../exceprions/api.error.js"
 import PostService from "../services/post.service.js"
+import reactionService from "../services/reaction.service.js"
 
 Joi.objectId = objectId(Joi)
 
@@ -88,12 +89,10 @@ class PostController {
       const { error } = schema.validate(req.params)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { id } = req.params
+      const { id: postId } = req.params
       const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
 
-      const userId = req.user?.payload?.id || null
-
-      const data = await PostService.getOne(id, userId, ip)
+      const data = await PostService.getOne(postId, ip)
       res.json(data)
     } catch (e) {
       next(e)
@@ -157,6 +156,24 @@ class PostController {
       )
 
       res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getPostReactionStatus(req, res, next) {
+    try {
+      const schema = Joi.object({
+        postId: Joi.objectId().required(),
+      })
+      const { error } = schema.validate(req.query)
+      if (error) throw ApiError.HttpException(error.details[0].message)
+
+      const { postId } = req.query
+      const userId = req.user.payload.id
+
+      const resData = await reactionService.reactionStatus(userId, postId)
+      res.json(resData)
     } catch (e) {
       next(e)
     }

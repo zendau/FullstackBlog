@@ -26,7 +26,6 @@ const { Schema, model } = mongoose
 const UserPostReadSchema = new Schema({
   post: { type: Schema.Types.ObjectId, ref: "Posts", required: true },
   ip: { type: String, required: true },
-  user: { type: Schema.Types.ObjectId, ref: "Users", required: true },
 })
 
 export default model("UserPostRead", UserPostReadSchema)

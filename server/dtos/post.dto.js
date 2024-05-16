@@ -54,6 +54,7 @@ export default class PostDto {
     this.title = model.title
     this.date = model.createdDate
     this.body = model.body
+    this.tags = model.tags
   }
 
   setUserName(user) {

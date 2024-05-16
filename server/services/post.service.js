@@ -71,7 +71,6 @@ class PostService {
       .findById(postId)
       .populate("author")
       .populate("file")
-      .populate("tags")
 
     if (post === null) {
       throw ApiError.HttpException(`Post with id ${postId} not found`)
@@ -80,59 +79,19 @@ class PostService {
     return post
   }
 
-  async getOne(postId, userId, ip) {
-    const post = await this.postExist(postId)
-    const postDTO = await this.getExtendedPostDTO(post, userId)
+  async getOne(postId, ip) {
+    const filter = this.postsMatchFilter(null, { postId })
+    const postLookup = this.postLookup()
+    const rating = this.postsRating(true)
+    const extended = this.postsExtendedData()
 
-    const checkStatus = await UserPostReadService.chechIsReadStatus(postId, ip)
+    const combineAggregate = [...filter, ...postLookup, ...rating, ...extended]
 
-    if (checkStatus) {
-      UserPostReadService.setIsReadStatus(postId, ip)
-    }
+    const resData = await postModel.aggregate(combineAggregate)
 
-    return postDTO
-  }
+    UserPostReadService.incCounter(postId, ip)
 
-  async searchBySubstring(substring) {
-    const posts = await postModel
-      .find({
-        title: { $regex: substring },
-      })
-      .populate("author")
-
-    const postsDTO = posts.map((post) => this.createPostListDTO(post))
-    return postsDTO
-  }
-
-  async getLimitUserPosts(currentPage, limit, userId) {
-    const postsData = await this.getPosts(
-      {
-        author: userId,
-      },
-      currentPage,
-      limit,
-    )
-    return postsData
-  }
-
-  async getPosts(filter, currentPage, limit) {
-    const posts = await postModel
-      .find(filter)
-      .skip((currentPage - 1) * limit)
-      .limit(parseInt(limit))
-      .populate("author")
-
-    const postsDTO = posts.map((post) => this.createPostListDTO(post))
-
-    let nextPage = null
-
-    if (postsDTO.length === parseInt(limit)) {
-      nextPage = true
-    } else {
-      nextPage = false
-    }
-
-    return { nextPage, posts: postsDTO }
+    return resData[0]
   }
 
   checkPostAuthor(userId, postAuthor) {
@@ -143,22 +102,13 @@ class PostService {
     }
   }
 
-  createPostListDTO(postModelData) {
-    const postDTO = new PostDTO(postModelData)
-    postDTO.setUserName(postModel.author.email)
-    return postDTO
-  }
-
   async getExtendedPostDTO(postModelData, userId) {
     const postDTO = new PostDTO(postModelData)
     const userDTO = new UserDTO(postModelData.author)
     const fileDTO = new FileDTO(postModelData.file)
 
-    const tagsList = postModelData.tags.map((tag) => tag.title)
-
     postDTO.setAuthor(userDTO)
     postDTO.setImage(fileDTO)
-    postDTO.setTags(tagsList)
 
     const reactionData = await ReactionService.getReactionsCount(
       postDTO.id,
@@ -384,14 +334,6 @@ class PostService {
         $unwind: "$author",
       },
       {
-        $lookup: {
-          from: "tags",
-          localField: "post.tags",
-          foreignField: "_id",
-          as: "tags",
-        },
-      },
-      {
         $project: {
           _id: 0,
           id: "$_id",
@@ -399,13 +341,6 @@ class PostService {
             $substr: ["$post.body", 0, 10],
           },
           tags: "$post.tags",
-          // tags: {
-          //   $map: {
-          //     input: "$tags",
-          //     as: "tag",
-          //     in: "$$tag.title",
-          //   },
-          // },
           author: {
             id: "$author._id",
             email: 1,
