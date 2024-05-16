@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const articleParams = useArticleParamsStore()
-const { reset } = articleParams
+const { defaultFilter } = articleParams
 </script>
 
 <template>
   <div class="container">
     <PostFilterSearch />
     <PostFilterSort />
-    <UButton @click="reset">reset</UButton>
+    <UButton @click="defaultFilter">reset</UButton>
   </div>
 </template>
 

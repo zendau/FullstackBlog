@@ -3,6 +3,8 @@ import { PostLayoutGrid, PostLayoutSingl } from "#components"
 
 const { data: articles } = storeToRefs(useArticleStore())
 const setting = useArticleSettingStore()
+const articleStore = useArticleStore()
+const articleParams = useArticleParamsStore()
 
 const postLayout = computed(() => {
   if (setting.currentView === "grid") {
@@ -11,17 +13,24 @@ const postLayout = computed(() => {
 
   return PostLayoutSingl
 })
+
+onUnmounted(() => {
+  articleParams.reset()
+})
+
+const route = useRoute()
+const postId = route.params.id
+console.log(postId)
 </script>
 
 <template>
   <component :is="postLayout">
-    <PostCard
-      v-for="post of articles"
-      :key="post.id"
-      :post="post"
-      is-extended
-    />
+    <template v-for="post of articles" :key="post.id">
+      <PostCard v-if="postId !== post.id" :post="post" is-extended />
+    </template>
   </component>
+  <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
+  <PostSkeletonList v-if="articleStore.isLoading" />
 </template>
 
 <style lang="scss">

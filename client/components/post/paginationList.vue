@@ -21,7 +21,7 @@ watch(
 
 await useAsyncData(
   "posts",
-  async () => await articleParams.fetchFilterData(false),
+  async () => await articleParams.fetchFilterData(true),
   {
     server: true,
   },
@@ -29,9 +29,7 @@ await useAsyncData(
 </script>
 
 <template>
-  <PostSkeletonList v-if="articleStore.isLoading" />
-  <PostList v-else />
-
+  <PostList />
   <div class="flex justify-center m-10">
     <UPagination
       v-if="!articleParams.isFilter"
