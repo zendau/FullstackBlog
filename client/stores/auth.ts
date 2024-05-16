@@ -122,7 +122,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   function logout() {
     isAuth.value = false
-    localStorage.setItem("token", "")
+
+    if (process.client) {
+      localStorage.setItem("token", "")
+    }
 
     userStore.$reset()
     useApiFetch("/user/logout")

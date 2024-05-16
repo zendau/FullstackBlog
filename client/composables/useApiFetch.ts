@@ -9,12 +9,11 @@ export function useApiFetch<T>(
   options: ReqOptions = {},
 ) {
   const authStore = useAuthStore()
-  const toast = useToast()
 
   const token = process.client ? localStorage.getItem("token") : ""
 
   const defaults: ReqOptions = {
-    baseURL: import.meta.env.VITE_API,
+    baseURL: "http://localhost:8080",
     retry: 1,
     retryStatusCodes: [401],
     credentials: "include",
@@ -33,9 +32,6 @@ export function useApiFetch<T>(
           })
           authStore.refresh(res.accessToken)
         } catch (e) {
-          if (import.meta.client) {
-            toast.add({ title: "Unexpected error. Try later" })
-          }
           authStore.logout()
         }
       }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ error }}
     <p>{{ data.name }}</p>
     <p>{{ data.phone }}</p>
     <p>{{ data.email }}</p>
@@ -8,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-const { data } = await useFetch(
+const { data, error } = await useFetch(
   "https://api.fakestorejson.com/api/v1/public/orders/9638aee1f217b7e407fff540",
   {
     key: "static",

@@ -7,7 +7,7 @@ const { defaultFilter } = articleParams
   <div class="container">
     <PostFilterSearch />
     <PostFilterSort />
-    <UButton @click="defaultFilter">reset</UButton>
+    <UButton @click="defaultFilter">Reset</UButton>
   </div>
 </template>
 
