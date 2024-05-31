@@ -32,6 +32,7 @@ const FileSchema = new Schema({
   fileName: { type: String, required: true },
   size: { type: Number, required: true },
   mimetype: { type: String, required: true },
+  author: { type: Schema.Types.ObjectId, ref: "Users", required: true },
 })
 
 export default model("Files", FileSchema)

@@ -25,5 +25,6 @@ export default class FileDTO {
     this.id = model._id
     this.fileName = model.fileName
     this.mimetype = model.mimetype
+    this.authorId = model.author
   }
 }

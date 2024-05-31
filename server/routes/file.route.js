@@ -2,7 +2,10 @@ import { Router } from "express"
 
 import FileController from "../controllers/file.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
-import multer from "../middlewares/multer.middleware.js"
+import {
+  fileUpload,
+  muiltipleUpload,
+} from "../middlewares/multer.middleware.js"
 
 const router = new Router()
 
@@ -43,7 +46,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/add", userGuard, multer, FileController.add)
+router.post("/upload", userGuard, muiltipleUpload, FileController.upload)
 
 /**
  * @swagger
@@ -77,33 +80,6 @@ router.get("/get/:id", userGuard, FileController.getOne)
 
 /**
  * @swagger
- * /file/list:
- *   get:
- *     summary: Get all files
- *     tags: [File]
- *     security:
- *      - bearerAuth: []
- *     responses:
- *       200:
- *         description: Array of files data
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                $ref: '#/components/DTOs/File'
- *       400:
- *          description: Error message
- *       401:
- *         description: User is not auth
- *       500:
- *         description: Unexpected error
- */
-
-router.get("/list", userGuard, FileController.getList)
-
-/**
- * @swagger
  * /file/update/{id}:
  *   put:
  *     summary: Update file data by id
@@ -128,7 +104,7 @@ router.get("/list", userGuard, FileController.getList)
  *         description: Unexpected error
  */
 
-router.put("/update/:id", userGuard, multer, FileController.update)
+router.put("/update/:id", userGuard, fileUpload, FileController.update)
 
 /**
  * @swagger

@@ -4,22 +4,24 @@ import ApiError from "../exceprions/api.error.js"
 import FileService from "../services/file.service.js"
 
 class FileController {
-  async add(req, res, next) {
+  async upload(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
+      const { id: authorId, isActivated } = req.user.payload
 
-      const { file } = req
-      if (file === undefined) {
+      if (!isActivated) {
         throw ApiError.HttpException(
-          "file is required field and must be one of the types: png, jpg, jpeg",
+          "For this action you need to activate your account",
         )
       }
 
-      const fileInsered = await FileService.create(file)
+      const { files } = req
+      if (!files || files.length === 0) {
+        throw ApiError.HttpException(
+          "The presence of files for download is mandatory",
+        )
+      }
+
+      const fileInsered = await FileService.upload(files, authorId)
       res.json(fileInsered)
     } catch (e) {
       next(e)
@@ -28,6 +30,14 @@ class FileController {
 
   async update(req, res, next) {
     try {
+      const { id: authorId, isActivated } = req.user.payload
+
+      if (!isActivated) {
+        throw ApiError.HttpException(
+          "For this action you need to activate your account",
+        )
+      }
+
       const schema = Joi.object({
         id: Joi.objectId().required(),
       })
@@ -42,7 +52,7 @@ class FileController {
       }
 
       const { id } = req.params
-      const fileUpdated = await FileService.update(id, file)
+      const fileUpdated = await FileService.update(id, file, authorId)
 
       res.json(fileUpdated)
     } catch (e) {
@@ -79,15 +89,6 @@ class FileController {
       const fileData = await FileService.getById(id)
 
       res.json(fileData)
-    } catch (e) {
-      next(e)
-    }
-  }
-
-  async getList(req, res, next) {
-    try {
-      const filesData = await FileService.getList()
-      res.json(filesData)
     } catch (e) {
       next(e)
     }

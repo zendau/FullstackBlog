@@ -5,15 +5,19 @@ import ApiError from "../exceprions/api.error.js"
 import fileModel from "../models/file.model.js"
 
 class FileService {
-  async create(file) {
-    const fileInsered = await fileModel.create({
-      fileName: file.filename,
-      size: file.size,
-      mimetype: file.mimetype,
+  async upload(files, author) {
+    const createPromiseFiles = files.map((file) => {
+      return fileModel.create({
+        fileName: file.filename,
+        size: file.size,
+        mimetype: file.mimetype,
+        author,
+      })
     })
 
-    const fileDTO = new FileDTO(fileInsered)
-    return fileDTO
+    const createdFiles = await Promise.all(createPromiseFiles)
+
+    return createdFiles.map((file) => new FileDTO(file))
   }
 
   async getById(fileId) {
@@ -25,13 +29,6 @@ class FileService {
 
     const fileDTO = new FileDTO(file)
     return fileDTO
-  }
-
-  async getList() {
-    const files = await fileModel.find()
-
-    const filesDTO = files.map((file) => new FileDTO(file))
-    return filesDTO
   }
 
   async update(fileId, newFile) {
