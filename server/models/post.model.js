@@ -45,6 +45,35 @@ const { Schema, model } = mongoose
  *         createdDate: Fri Jul 08 2022 11:15:54 GMT+0000 (Coordinated Universal Time)
  */
 
+// Базовая схема для всех блоков
+const blockSchema = new Schema(
+  {
+    type: { type: String, required: true },
+  },
+  { _id: false, discriminatorKey: "type" },
+)
+
+// Дискриминатор для блока заголовка
+const headerBlockSchema = new Schema({
+  content: { type: String, required: true },
+})
+
+// Дискриминатор для текстового блока
+const textBlockSchema = new Schema({
+  content: { type: String, required: true },
+})
+
+// Дискриминатор для цитатного блока
+const quoteBlockSchema = new Schema({
+  author: { type: String, required: true },
+  content: { type: String, required: true },
+})
+
+// Пример нового типа блока
+const mediaBlockSchema = new Schema({
+  list: [{ type: Schema.Types.ObjectId, ref: "Files" }],
+})
+
 const PostSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "Users", required: true },
   file: { type: Schema.Types.ObjectId, ref: "Files", required: true },
@@ -53,6 +82,15 @@ const PostSchema = new Schema({
   body: { type: String, required: true },
   timeRead: { type: Number, required: true },
   createdDate: { type: Date, required: true, default: Date.now },
+  blocks: [blockSchema],
 })
 
-export default model("Posts", PostSchema)
+const Blocks = PostSchema.path("blocks")
+const HeaderBlock = Blocks.discriminator("header", headerBlockSchema)
+const TextBlock = Blocks.discriminator("text", textBlockSchema)
+const QuoteBlock = Blocks.discriminator("quote", quoteBlockSchema)
+const MediaBlock = Blocks.discriminator("media", mediaBlockSchema)
+
+const PostModel = model("Posts", PostSchema)
+
+export { PostModel, HeaderBlock, TextBlock, QuoteBlock, MediaBlock }
