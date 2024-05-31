@@ -1,5 +1,5 @@
 import ApiError from "../exceprions/api.error.js"
-import PostModel from "../models/post.model.js"
+import { PostModel } from "../models/post.model.js"
 import TagModel from "../models/tag.model.js"
 
 class TagService {

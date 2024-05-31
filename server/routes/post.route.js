@@ -2,7 +2,7 @@ import { Router } from "express"
 
 import PostController from "../controllers/post.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
-import multer from "../middlewares/multer.middleware.js"
+import { fileUpload } from "../middlewares/multer.middleware.js"
 
 const router = new Router()
 
@@ -49,7 +49,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/create", userGuard, multer, PostController.create)
+router.post("/create", userGuard, fileUpload, PostController.create)
 
 /**
  * @swagger
@@ -87,7 +87,7 @@ router.post("/create", userGuard, multer, PostController.create)
  *         description: Unexpected error
  */
 
-router.patch("/edit", userGuard, multer, PostController.edit)
+router.patch("/edit", userGuard, fileUpload, PostController.edit)
 
 /**
  * @swagger

@@ -15,6 +15,7 @@ class PostController {
         body: Joi.string().required(),
         timeRead: Joi.number().required(),
         tags: Joi.array().required(),
+        blocks: Joi.string().required(),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
@@ -31,10 +32,9 @@ class PostController {
       const { id, isActivated } = req.user.payload
 
       if (!isActivated) {
-        res.json({
-          message: "For this action you need to activate your account",
-        })
-        return
+        throw ApiError.HttpException(
+          "For this action you need to activate your account",
+        )
       }
 
       const data = await PostService.create(id, postData, file)

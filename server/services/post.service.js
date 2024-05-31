@@ -1,10 +1,13 @@
 import mongoose from "mongoose"
 
-import FileDTO from "../dtos/file.dto.js"
-import PostDTO from "../dtos/post.dto.js"
-import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceprions/api.error.js"
-import postModel from "../models/post.model.js"
+import {
+  HeaderBlock,
+  MediaBlock,
+  PostModel,
+  QuoteBlock,
+  TextBlock,
+} from "../models/post.model.js"
 import FileService from "./file.service.js"
 import ReactionService from "./reaction.service.js"
 import TagService from "./tag.service.js"
@@ -12,26 +15,84 @@ import UserPostReadService from "./userPostRead.service.js"
 
 class PostService {
   async create(author, postData, file) {
-    const fileData = await FileService.create(file)
-    const tagsList = await TagService.insertTags(postData.tags)
+    try {
+      const fileData = await FileService.upload([file], author)
+      const tagsList = await TagService.insertTags(postData.tags)
 
-    const post = await postModel.create({
-      author,
-      title: postData.title,
-      body: postData.body,
-      tags: tagsList,
-      timeRead: postData.timeRead,
-      file: fileData.id,
-    })
+      const postBlocks = []
 
-    const postPopulate = await post
-      .populate("author")
-      .populate("file")
-      .populate("tags")
-      .execPopulate()
+      const blocksData = postData.blocks ? JSON.parse(postData.blocks) : []
 
-    const postDTO = await this.getExtendedPostDTO(postPopulate, author)
-    return postDTO
+      blocksData.forEach((blockData) => {
+        switch (blockData.type) {
+          case "header": {
+            const tempBlock = new HeaderBlock({
+              type: "header",
+              content: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "text": {
+            const tempBlock = new TextBlock({
+              type: "text",
+              content: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "quote": {
+            const tempBlock = new QuoteBlock({
+              type: "quote",
+              content: blockData.content,
+              author: blockData.author,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "media": {
+            const tempBlock = new MediaBlock({
+              type: "media",
+              list: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          default:
+            break
+        }
+      })
+
+      const post = await PostModel.create({
+        author,
+        title: postData.title,
+        body: postData.body,
+        tags: tagsList,
+        timeRead: postData.timeRead,
+        file: fileData[0].id,
+        blocks: postBlocks,
+      })
+
+      const createdPostData = await this.getOne(post._id, null)
+
+      if (!createdPostData) {
+        throw new Error(
+          "An error occurred while receiving the extended data of the post",
+        )
+      }
+
+      return createdPostData
+    } catch (e) {
+      throw new Error(e.message ?? "An error occurred while creating a post.")
+    }
   }
 
   async edit(postId, userId, title, body, newFile) {
@@ -67,8 +128,7 @@ class PostService {
   }
 
   async postExist(postId) {
-    const post = await postModel
-      .findById(postId)
+    const post = await PostModel.findById(postId)
       .populate("author")
       .populate("file")
 
@@ -83,13 +143,22 @@ class PostService {
     const filter = this.postsMatchFilter(null, { postId })
     const postLookup = this.postLookup()
     const rating = this.postsRating(true)
-    const extended = this.postsExtendedData()
+    const postExtended = this.postsExtendedData()
+    const blocksExntended = this.blockExtended()
 
-    const combineAggregate = [...filter, ...postLookup, ...rating, ...extended]
+    const combineAggregate = [
+      ...filter,
+      ...postLookup,
+      ...rating,
+      ...postExtended,
+      ...blocksExntended,
+    ]
 
-    const resData = await postModel.aggregate(combineAggregate)
+    const resData = await PostModel.aggregate(combineAggregate)
 
-    UserPostReadService.incCounter(postId, ip)
+    if (ip) {
+      UserPostReadService.incCounter(postId, ip)
+    }
 
     return resData[0]
   }
@@ -100,23 +169,6 @@ class PostService {
         `User with id ${userId} not author this post`,
       )
     }
-  }
-
-  async getExtendedPostDTO(postModelData, userId) {
-    const postDTO = new PostDTO(postModelData)
-    const userDTO = new UserDTO(postModelData.author)
-    const fileDTO = new FileDTO(postModelData.file)
-
-    postDTO.setAuthor(userDTO)
-    postDTO.setImage(fileDTO)
-
-    const reactionData = await ReactionService.getReactionsCount(
-      postDTO.id,
-      userId,
-    )
-    postDTO.setLikes(reactionData)
-
-    return postDTO
   }
 
   async postReaction(postId, userId, isLiked) {
@@ -346,6 +398,7 @@ class PostService {
             email: 1,
           },
           title: "$post.title",
+          blocks: "$post.blocks",
           timeRead: "$post.timeRead",
           file: {
             id: "$file._id",
@@ -370,6 +423,7 @@ class PostService {
               },
             ],
           },
+
           counterReads: 1,
           counterComments: 1,
           counterLikes: 1,
@@ -397,6 +451,93 @@ class PostService {
       {
         $sort: sort,
       },
+    ]
+  }
+
+  blockExtended() {
+    return [
+      {
+        $unwind: "$blocks",
+      },
+      {
+        $lookup: {
+          from: "files",
+          localField: "blocks.list",
+          foreignField: "_id",
+          as: "blocks.list",
+        },
+      },
+      {
+        $addFields: {
+          blocks: {
+            _id: "$$REMOVE",
+            list: {
+              $map: {
+                input: "$blocks.list",
+                as: "item",
+                in: {
+                  id: "$$item._id",
+                  fileName: "$$item.fileName",
+                  size: "$$item.size",
+                  mimetype: "$$item.mimetype",
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          blocks: {
+            list: {
+              $cond: {
+                if: {
+                  $eq: ["$blocks.list", []],
+                },
+                then: "$$REMOVE",
+                else: "$blocks.list",
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$id",
+          doc: {
+            $first: "$$ROOT",
+          },
+          blocks: {
+            $push: "$blocks",
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$doc", "$$ROOT"],
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          doc: 0,
+        },
+      },
+      // {
+      //   $project: {
+      //     id: "$_id",
+      //     blocks: 1,
+      //     tags: "$doc.tags",
+      //     author: "$doc.author",
+      //     title: "$doc.title",
+      //     body: "$doc.body",
+      //     timeRead: "$doc.timeRead",
+      //     createdDate: "$doc.createdDate",
+      //     test: "$doc",
+      //   },
+      // },
     ]
   }
 
@@ -466,7 +607,7 @@ class PostService {
       ...facet,
     ]
 
-    const resData = await postModel.aggregate(combineAggregate)
+    const resData = await PostModel.aggregate(combineAggregate)
     if (!resData[0]) return [{ posts: [], hasMore: false, total: 0 }]
 
     if (resData[0].posts.length === limit) {
