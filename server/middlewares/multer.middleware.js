@@ -23,7 +23,14 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-export default multer({
+const fileUpload = multer({
   storage: storageConfig,
   fileFilter,
 }).single("file")
+
+const muiltipleUpload = multer({
+  storage: storageConfig,
+  fileFilter,
+}).array("files")
+
+export { fileUpload, muiltipleUpload }
