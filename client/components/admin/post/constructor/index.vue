@@ -55,18 +55,33 @@ const setBlockRef = (el: any, key: number) => {
 }
 
 function create() {
+  const blocksData = []
+
   for (const block of createdBlocks.values()) {
     if (!block.ref) continue
-    // console.log(block.ref.getData())
+    blocksData.push(block.ref.getData())
   }
+
+  console.log(blocksData)
+
+  const fdata = new FormData()
+
+  fdata.set("title", "test22")
+  fdata.set("body", "test22")
+  fdata.set("timeRead", "10")
+  fdata.set("blocks", JSON.stringify(blocksData))
+
+  useApiFetch("/post/create", {
+    method: "post",
+    body: fdata,
+  })
 }
 </script>
 
 <template>
   <div class="editor">
-    <h1>Create post</h1>
     <button @click="create">test create</button>
-    <AdminPostToolbar />
+    <AdminPostConstructorToolbar />
 
     <AdminPostBlockComponent
       v-for="postBlock in createdBlocks.entries()"
@@ -76,11 +91,7 @@ function create() {
       @remove-block="removeBlock"
       @set-block-ref="setBlockRef"
     />
-    <!-- <div>
-      <component :is="" :ref="(el) => setBlockRef(el)" />
-      <button @click="removeBlock(postBlock[0])">X</button>
-    </div> -->
-    <AdminPostBlocksMenu :list="blocksKeys" @select="selectBlock" />
+    <AdminPostConstructorMenu :list="blocksKeys" @select="selectBlock" />
   </div>
 </template>
 
