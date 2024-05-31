@@ -1,4 +1,15 @@
 <script setup lang="ts">
+const { isMultiple, accept } = withDefaults(
+  defineProps<{
+    isMultiple?: boolean
+    accept?: string
+  }>(),
+  {
+    isMultiple: false,
+    accept: undefined,
+  },
+)
+
 const dragStatus = ref(false)
 
 function dragStart() {
@@ -21,6 +32,10 @@ function dataDrop(e: DragEvent) {
 }
 
 function onFIleUpload(e: Event) {
+  if (!isMultiple) {
+    files.length = 0
+  }
+
   const uploadFiles = (e.target as HTMLInputElement).files
   if (!uploadFiles) return
 
@@ -42,7 +57,13 @@ const inputId = useId()
     </p>
     <p v-else :class="$style.uploadArea" @dragenter.prevent="dragStart">
       <label :for="inputId">upload files</label>
-      <input :id="inputId" type="file" multiple @change="onFIleUpload" />
+      <input
+        :id="inputId"
+        type="file"
+        :accept="accept"
+        :multiple="isMultiple"
+        @change="onFIleUpload"
+      />
     </p>
   </div>
 </template>
