@@ -2,11 +2,13 @@
 import { object, string, type InferType, mixed, array, number } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
-const files = reactive([])
+const files = ref([])
 provide("files", files)
 
 const tags = reactive<string[]>([])
 provide("tags", tags)
+
+const blockConstructor = ref()
 
 const state = reactive({
   title: null,
@@ -64,9 +66,16 @@ const schema = object().shape({
 })
 
 type Schema = InferType<typeof schema>
-
+type postData = Schema & { block: any }
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data)
+  if (!blockConstructor.value) return
+
+  const createdData: postData = {
+    ...event.data,
+    block: blockConstructor.value.getBlocksContent(),
+  }
+
+  console.log(createdData)
 }
 </script>
 
@@ -98,7 +107,9 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
         <AdminPostFormTag />
       </UFormGroup>
 
-      <UButton type="submit"> Submit </UButton>
+      <AdminPostConstructor ref="blockConstructor" />
+
+      <UButton type="submit"> Create </UButton>
     </UForm>
   </div>
 </template>

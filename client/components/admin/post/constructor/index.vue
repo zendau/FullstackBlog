@@ -21,6 +21,12 @@ interface ICreateBlock {
   ref?: { getData: () => IBlockContent }
 }
 
+defineExpose({
+  getBlocksContent,
+})
+
+const errorMessage = ref("")
+
 const blocks = new Map<string, VueComponent>([])
 blocks.set("title", AdminPostBlockHeader)
 blocks.set("text", AdminPostBlockText)
@@ -54,7 +60,17 @@ const setBlockRef = (el: any, key: number) => {
   blockComponent.ref = el
 }
 
-function create() {
+function getBlocksContent() {
+  if (!createdBlocks.size) {
+    errorMessage.value = "At least 1 block must be selected"
+
+    setTimeout(() => {
+      errorMessage.value = ""
+    }, 5000)
+
+    return
+  }
+
   const blocksData = []
 
   for (const block of createdBlocks.values()) {
@@ -62,25 +78,14 @@ function create() {
     blocksData.push(block.ref.getData())
   }
 
-  console.log(blocksData)
-
-  const fdata = new FormData()
-
-  fdata.set("title", "test22")
-  fdata.set("body", "test22")
-  fdata.set("timeRead", "10")
-  fdata.set("blocks", JSON.stringify(blocksData))
-
-  useApiFetch("/post/create", {
-    method: "post",
-    body: fdata,
-  })
+  return blocksData
 }
 </script>
 
 <template>
   <div class="editor">
-    <button @click="create">test create</button>
+    <h2>Article body conscructor</h2>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
     <AdminPostConstructorToolbar />
 
     <AdminPostBlockComponent
