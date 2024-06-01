@@ -1,14 +1,18 @@
 <script setup lang="ts">
-const { isMultiple, accept } = withDefaults(
+const { multiple, accept } = withDefaults(
   defineProps<{
-    isMultiple?: boolean
+    multiple?: boolean
     accept?: string
   }>(),
   {
-    isMultiple: false,
+    multiple: false,
     accept: undefined,
   },
 )
+
+const emit = defineEmits<{
+  upload: [files: FileList, multiple?: boolean]
+}>()
 
 const dragStatus = ref(false)
 
@@ -20,26 +24,29 @@ function dragLeave() {
   dragStatus.value = false
 }
 
-const files = inject<File[]>("files", [])
+const files = defineModel<File[]>({ default: [] })
+
 function dataDrop(e: DragEvent) {
   dragStatus.value = false
 
   const uploadFiles = e.dataTransfer?.files
-
-  if (!uploadFiles) return
-
-  files.push(...uploadFiles)
+  applyFiles(uploadFiles)
 }
 
 function onFIleUpload(e: Event) {
-  if (!isMultiple) {
-    files.length = 0
-  }
-
   const uploadFiles = (e.target as HTMLInputElement).files
+  applyFiles(uploadFiles)
+}
+
+function applyFiles(uploadFiles: FileList | undefined | null) {
   if (!uploadFiles) return
 
-  files.push(...uploadFiles)
+  if (!multiple) {
+    files.value.length = 0
+  }
+
+  files.value.push(...uploadFiles)
+  emit("upload", uploadFiles, multiple)
 }
 
 const inputId = useId()
@@ -61,7 +68,7 @@ const inputId = useId()
         :id="inputId"
         type="file"
         :accept="accept"
-        :multiple="isMultiple"
+        :multiple="multiple"
         @change="onFIleUpload"
       />
     </p>
