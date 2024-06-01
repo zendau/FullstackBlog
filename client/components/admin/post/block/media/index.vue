@@ -1,23 +1,27 @@
 <script setup lang="ts">
+import type { IFile } from "./upload.vue"
+
 defineExpose({
   getData,
 })
 
-const files = reactive([])
-provide("files", files)
+const media = reactive<IFile[]>([])
+provide("media", media)
 
 function getData() {
-  if (!files.length) return
+  if (!media.length) return
+
+  const idList = media.map((file) => file.id)
 
   return {
     block: "media",
-    content: files,
+    content: idList,
   }
 }
 </script>
 
 <template>
-  <UiFileUpload />
+  <AdminPostBlockMediaUpload />
   <AdminPostBlockMediaList />
 </template>
 
