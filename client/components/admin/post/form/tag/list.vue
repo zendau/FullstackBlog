@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const tags = inject("tags", [])
+
+function removeItem(index: number) {
+  tags.splice(index, 1)
+}
 </script>
 
 <template>
@@ -7,7 +11,7 @@ const tags = inject("tags", [])
     v-for="(tag, index) in tags"
     :key="index"
     :tag="tag"
-    :index="index"
+    @remove-item="removeItem(index)"
   />
 </template>
 
