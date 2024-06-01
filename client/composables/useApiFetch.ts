@@ -10,14 +10,13 @@ export function useApiFetch<T>(
 ) {
   const authStore = useAuthStore()
 
-  const token = process.client ? localStorage.getItem("token") : ""
-
   const defaults: ReqOptions = {
     baseURL: "http://localhost:8080",
     retry: 1,
     retryStatusCodes: [401],
     credentials: "include",
     onRequest: (ctx) => {
+      const token = process.client ? localStorage.getItem("token") : ""
       if (authStore.isAuth) {
         ctx.options.headers = new Headers({
           Authorization: `Bearer ${token}`,
