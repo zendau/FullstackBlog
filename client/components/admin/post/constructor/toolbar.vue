@@ -1,72 +1,49 @@
 <script setup lang="ts">
 const isOpenLinkForm = ref(false)
 const linkHref = ref("")
-let linkRange: Range | null = null
 
-function getSelectedRange() {
-  const selection = window.getSelection()
-
-  if (selection && selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0)
-    return range
-  }
-
-  return null
-}
+const selectedRange = ref()
 
 function setBolt() {
-  const range = getSelectedRange()
-
-  if (!range) return
-
-  const span = document.createElement("span")
-  span.style.fontWeight = "bold"
-
-  range.surroundContents(span)
+  document.execCommand("bold", false, undefined)
 }
 
 function setItalic() {
-  const range = getSelectedRange()
-
-  if (!range) return
-
-  const span = document.createElement("span")
-  span.style.fontStyle = "italic"
-
-  range.surroundContents(span)
+  document.execCommand("italic", false, undefined)
 }
 
 function setLink() {
-  const range = getSelectedRange()
+  const selection = window.getSelection()
+
+  if (!selection) return
+  const range = selection.getRangeAt(0)
 
   if (!range) return
-  linkRange = range
+
+  selectedRange.value = range
 }
 
 function applyLink() {
-  if (!linkRange) return
+  const selection = window.getSelection()
 
-  isOpenLinkForm.value = false
-  const link = document.createElement("a")
-  link.href = linkHref.value
-  linkHref.value = ""
-  link.style.fontWeight = "bold"
-  link.style.color = "blue"
-  linkRange.surroundContents(link)
-  linkRange = null
+  selection?.removeAllRanges()
+
+  selection?.addRange(selectedRange.value)
+
+  document.execCommand("createLink", false, `http://${linkHref.value}`)
 }
 </script>
 
 <template>
-  <div class="toolbar">
+  <div class="toolbar absolute top-0 right-0">
     <UButton @click="setBolt">B</UButton>
     <UButton @click="setItalic">I</UButton>
     <UPopover v-model:open="isOpenLinkForm">
       <UButton color="white" label="A" @click="setLink" />
 
       <template #panel>
-        <div class="p-4">
-          <UInput v-model="linkHref" placeholder="Paste link..." />
+        <div class="p-4 z-10">
+          <input v-model="linkHref" type="text" placeholder="Paste link..." />
           <UButton label="Apply" @click="applyLink" />
         </div>
       </template>
