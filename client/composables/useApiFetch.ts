@@ -10,11 +10,11 @@ export function useApiFetch<T>(
 ) {
   const authStore = useAuthStore()
 
-  const defaults: ReqOptions = {
-    baseURL: "http://localhost:8080",
+  const defaultParams: ReqOptions = {
+    baseURL: import.meta.env.VITE_API,
+    credentials: "include",
     retry: 1,
     retryStatusCodes: [401],
-    credentials: "include",
     onRequest: (ctx) => {
       const token = process.client ? localStorage.getItem("token") : ""
       if (authStore.isAuth) {
@@ -23,11 +23,16 @@ export function useApiFetch<T>(
         })
       }
     },
+  }
+
+  const fetchParams: ReqOptions = {
+    ...defaultParams,
     onResponseError: async (ctx) => {
       if (ctx.response.status === 401) {
         try {
-          const res: any = await fetchApi("user/refresh", {
+          const res: any = await $fetch("user/refresh", {
             method: "post",
+            ...defaultParams,
           })
           authStore.refresh(res.accessToken)
         } catch (e) {
@@ -37,7 +42,7 @@ export function useApiFetch<T>(
     },
   }
 
-  const params = defu(options, defaults)
+  const params = defu(options, fetchParams)
 
   const fetchApi = $fetch.create(params)
 

@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken"
 
-import ApiError from "../exceprions/api.error.js"
 import tokenModel from "../models/token.model.js"
 
 class TokenService {
@@ -59,10 +58,7 @@ class TokenService {
 
   async removeToken(refreshToken) {
     const tokenData = await tokenModel.deleteOne({ refreshToken })
-
-    if (!tokenData.deletedCount) {
-      throw ApiError.UnauthorizedError()
-    }
+    return tokenData
   }
 }
 
