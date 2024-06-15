@@ -14,7 +14,11 @@ const emit = defineEmits<{
 
 <template>
   <div>
-    <component :is="component" :ref="(el) => emit('setBlockRef', el, dataId)" />
+    <component
+      :is="component"
+      :ref="(el) => emit('setBlockRef', el, dataId)"
+      is-edit
+    />
     <button @click="() => emit('removeBlock', dataId)">X</button>
   </div>
 </template>

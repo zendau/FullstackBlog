@@ -1,26 +1,41 @@
 <script setup lang="ts">
-import type { IFile } from "./upload.vue"
+import type { MediaMap } from "./index.vue"
 
-const media = inject<IFile[]>("media", [])
+const media = inject<MediaMap>("media", new Map())
 
-function removeUploadImg(index: number) {
-  const removeFile = media[index]
+function removeUploadImg(key: string) {
+  const removeFile = media.get(key)
+  if (!removeFile) return
 
-  useApiFetch(`/file/delete/${removeFile.id}`, {
-    method: "delete",
-  })
+  if ("id" in removeFile) {
+    useApiFetch(`/file/delete/${removeFile.id}`, {
+      method: "delete",
+    })
+  }
 
-  media.splice(index, 1)
+  media.delete(key)
 }
 </script>
 
 <template>
-  <AdminPostBlockMediaItem
-    v-for="(file, index) in media"
-    :key="file.id"
-    :file="file"
-    @remove-img="removeUploadImg(index)"
-  />
+  <div class="file-container">
+    <AdminPostBlockMediaItem
+      v-for="[key, file] in media"
+      :key="key"
+      :file="file"
+      :index="key"
+      @remove-img="removeUploadImg"
+    />
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.file-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  align-content: center;
+}
+</style>

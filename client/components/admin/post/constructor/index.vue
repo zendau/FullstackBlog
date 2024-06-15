@@ -7,8 +7,8 @@ import {
   AdminPostBlockQuoute,
   AdminPostBlockText,
   AdminPostBlockSpace,
-  AdminPostBlockMedia,
-  AdminPostBlockSlider,
+  AdminPostBlockMediaFile,
+  AdminPostBlockMediaSlider,
 } from "#components"
 
 interface IBlockContent {
@@ -27,15 +27,15 @@ defineExpose({
 
 const errorMessage = ref("")
 
-const blocks = new Map<string, VueComponent>([])
+const blocks = new Map<string, any>([])
 blocks.set("title", AdminPostBlockHeader)
 blocks.set("text", AdminPostBlockText)
 blocks.set("quoute", AdminPostBlockQuoute)
 blocks.set("space", AdminPostBlockSpace)
 blocks.set("code", AdminPostBlockCode)
 blocks.set("list", AdminPostBlockList)
-blocks.set("media", AdminPostBlockMedia)
-blocks.set("slider", AdminPostBlockSlider)
+blocks.set("media", AdminPostBlockMediaFile)
+blocks.set("slider", AdminPostBlockMediaSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
 

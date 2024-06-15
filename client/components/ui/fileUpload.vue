@@ -16,6 +16,9 @@ const emit = defineEmits<{
 
 const dragStatus = ref(false)
 
+const files = defineModel<File[]>({ default: [] })
+const inputId = useId()
+
 function dragStart() {
   dragStatus.value = true
 }
@@ -23,8 +26,6 @@ function dragStart() {
 function dragLeave() {
   dragStatus.value = false
 }
-
-const files = defineModel<File[]>({ default: [] })
 
 function dataDrop(e: DragEvent) {
   dragStatus.value = false
@@ -34,8 +35,12 @@ function dataDrop(e: DragEvent) {
 }
 
 function onFIleUpload(e: Event) {
-  const uploadFiles = (e.target as HTMLInputElement).files
+  const target = e.target as HTMLInputElement
+
+  const uploadFiles = target.files
   applyFiles(uploadFiles)
+
+  target.value = ""
 }
 
 function applyFiles(uploadFiles: FileList | undefined | null) {
@@ -48,8 +53,6 @@ function applyFiles(uploadFiles: FileList | undefined | null) {
   files.value.push(...uploadFiles)
   emit("upload", uploadFiles, multiple)
 }
-
-const inputId = useId()
 </script>
 
 <template>
