@@ -60,10 +60,15 @@ const inputId = useId()
       @dragleave.prevent="dragLeave"
       @drop="dataDrop"
     >
-      drop files
+      <UIcon
+        name="i-heroicons-document-arrow-up-16-solid"
+        :class="$style.icon"
+      />
     </p>
     <p v-else :class="$style.uploadArea" @dragenter.prevent="dragStart">
-      <label :for="inputId">upload files</label>
+      <label :for="inputId">
+        <UIcon name="i-heroicons-photo-16-solid" :class="$style.icon" />
+      </label>
       <input
         :id="inputId"
         type="file"
@@ -77,33 +82,49 @@ const inputId = useId()
 
 <style module lans="scss">
 .file {
-  border: 1px solid black;
-  height: 100px;
-  width: 200px;
+  aspect-ratio: 1.5 / 1;
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
   overflow: hidden;
+  background-color: #303031;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover {
+    background-color: #334e64;
+  }
+}
+
+.icon {
+  background-color: #418af4;
+  font-size: 50px;
 }
 
 .dropArea {
   width: 100%;
   height: 100%;
   display: flex;
-  border: 1px dashed black;
   align-items: center;
   justify-content: center;
   color: red;
-  background-color: blue;
+  background-color: #334e64;
 }
 
 .uploadArea {
   width: 100%;
   height: 100%;
   display: flex;
-  border: 1px dashed black;
   align-items: center;
   justify-content: center;
 
   label {
     cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   input {
