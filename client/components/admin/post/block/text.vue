@@ -9,7 +9,7 @@ function getData() {
   if (!text.value) return
 
   return {
-    block: "text",
+    type: "text",
     content: text.value,
   }
 }

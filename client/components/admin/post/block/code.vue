@@ -20,7 +20,7 @@ function getData() {
   if (!code.value) return
 
   return {
-    block: "code",
+    type: "code",
     content: code.value,
   }
 }

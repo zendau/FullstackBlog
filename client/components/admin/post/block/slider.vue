@@ -10,7 +10,7 @@ function getData() {
   if (!files.length) return
 
   return {
-    block: "slider",
+    type: "slider",
     content: files,
   }
 }

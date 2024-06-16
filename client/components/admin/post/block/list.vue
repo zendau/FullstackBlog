@@ -9,7 +9,7 @@ function getData() {
   if (!content.value) return
 
   return {
-    block: "list",
+    type: "list",
     content: content.value,
   }
 }

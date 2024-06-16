@@ -9,7 +9,7 @@ function getData() {
   if (!text.value || !author.value) return
 
   return {
-    block: "quoute",
+    type: "quoute",
     content: {
       text: text.value,
       author: author.value,
