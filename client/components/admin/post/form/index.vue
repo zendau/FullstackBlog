@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { object, string, type InferType, mixed, array, number } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
+import type { IArticle } from "../../../../stores/article"
+
+const { type } = withDefaults(
+  defineProps<{
+    articleData?: IArticle | null
+    type?: "create" | "edit"
+  }>(),
+  {
+    type: "create",
+    articleData: null,
+  },
+)
+
+const articleStore = useArticleStore()
+const router = useRouter()
+
+const blockConstructor = ref()
 
 const files = ref([])
 provide("files", files)
 
 const tags = reactive<string[]>([])
 provide("tags", tags)
-
-const blockConstructor = ref()
 
 const state = reactive({
   title: null,
@@ -17,8 +32,6 @@ const state = reactive({
   timeRead: null,
   tags,
 })
-
-const type = "create"
 
 function imageFilter() {
   let filter: any = mixed()
@@ -65,17 +78,47 @@ const schema = object().shape({
   tags: array(),
 })
 
-type Schema = InferType<typeof schema>
-type postData = Schema & { block: any }
-function onSubmit(event: FormSubmitEvent<Schema>) {
-  if (!blockConstructor.value) return
+export type ArticleSchema = InferType<typeof schema>
+// function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
+//   if (!blockConstructor.value) return
 
-  const createdData: postData = {
+//   const createdData: postData = {
+//     ...event.data,
+//     block: blockConstructor.value.getBlocksContent(),
+//   }
+
+//   console.log(createdData)
+// }
+
+function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
+  if (type === "create") onSubmitCreate(event)
+  else if (type === "edit") onSubmitEdit(event)
+  else console.error("unknown product type form")
+}
+
+async function onSubmitCreate(event: FormSubmitEvent<ArticleSchema>) {
+  const articleId = await articleStore.add({
     ...event.data,
-    block: blockConstructor.value.getBlocksContent(),
-  }
+    blocks: blockConstructor.value.getBlocksContent(),
+    ...(event.data.file.length === 1 && { file: event.data.file[0] }),
+  })
 
-  console.log(createdData)
+  if (!articleId) return
+
+  router.push(`/post/${articleId}`)
+}
+
+async function onSubmitEdit(event: FormSubmitEvent<ArticleSchema>) {
+  console.log(event)
+  // const { image, ...data } = event.data
+  // const productId = await productStore.edit({
+  //   id: productData?.id,
+  //   ...data,
+  //   ...(image.length === 1 && { image: image[0] }),
+  //   blocks: blockConstructor.value.getBlocksContent(),
+  // })
+  // if (!productId) return
+  // router.push(`/product/${productId}`)
 }
 </script>
 

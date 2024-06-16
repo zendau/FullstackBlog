@@ -78,7 +78,7 @@ function getBlocksContent() {
     blocksData.push(block.ref.getData())
   }
 
-  return blocksData
+  return JSON.stringify(blocksData)
 }
 </script>
 
