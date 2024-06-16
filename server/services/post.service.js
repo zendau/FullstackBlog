@@ -10,14 +10,13 @@ import {
 } from "../models/post.model.js"
 import FileService from "./file.service.js"
 import ReactionService from "./reaction.service.js"
-import TagService from "./tag.service.js"
 import UserPostReadService from "./userPostRead.service.js"
 
 class PostService {
   async create(author, postData, file) {
     try {
       const fileData = await FileService.upload([file], author)
-      const tagsList = await TagService.insertTags(postData.tags)
+      const tagsList = postData.tags.split(",")
 
       const postBlocks = []
 
@@ -74,7 +73,7 @@ class PostService {
       const post = await PostModel.create({
         author,
         title: postData.title,
-        body: postData.body,
+        preview: postData.preview,
         tags: tagsList,
         timeRead: postData.timeRead,
         file: fileData[0].id,
@@ -616,7 +615,7 @@ class PostService {
       resData[0].hasMore = false
     }
 
-    return resData
+    return resData[0]
   }
 }
 

@@ -79,7 +79,7 @@ const PostSchema = new Schema({
   file: { type: Schema.Types.ObjectId, ref: "Files", required: true },
   tags: { type: Array, required: true },
   title: { type: String, required: true },
-  body: { type: String, required: true },
+  preview: { type: String, required: true },
   timeRead: { type: Number, required: true },
   createdDate: { type: Date, required: true, default: Date.now },
   blocks: [blockSchema],

@@ -12,9 +12,9 @@ class PostController {
     try {
       const schema = Joi.object({
         title: Joi.string().min(6).max(20).required(),
-        body: Joi.string().required(),
+        preview: Joi.string().required(),
         timeRead: Joi.number().required(),
-        tags: Joi.array().required(),
+        tags: Joi.string().required(),
         blocks: Joi.string().required(),
       })
       const { error } = schema.validate(req.body)
