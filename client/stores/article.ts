@@ -1,5 +1,60 @@
+import type { ArticleSchema } from "~/components/admin/post/form/index.vue"
+
+export interface IBlock {
+  type: string
+  content: string
+}
+
+export interface IFile {
+  fileName: string
+  size: number
+  mimetype: string
+  id: string
+}
+
+interface IAuthor {
+  email: string
+  id: string
+}
+
+export interface IArticle {
+  counterLikes: number
+  counterDislikes: number
+  counterComments: number
+  counterReads: number
+  file: IFile
+  author: IAuthor
+  id: string
+  preview: string
+  title: string
+  tags: string[]
+  timeRead: number
+  createDate: string
+  rating: number
+  blocks: IBlock[]
+}
+
+interface IFetchParam {
+  keyword?: string
+  category?: string
+  authorId?: string
+}
+
+interface IFetch {
+  isRewrite?: boolean
+  params?: IFetchParam
+}
+
+interface IArticleFetch {
+  posts: IArticle[]
+  total: number
+  hasMore: boolean
+}
+
+type ArticleFormData = ArticleSchema & { id?: string; blocks: IBlock[] }
+
 export const useArticleStore = defineStore("article", () => {
-  const data = reactive<any[]>([])
+  const data = reactive<IArticle[]>([])
   const error = ref("")
   const isLoading = ref(false)
 
@@ -9,17 +64,6 @@ export const useArticleStore = defineStore("article", () => {
 
   const hasMore = ref(true)
 
-  interface IFetchParam {
-    keyword?: string
-    category?: string
-    authorId?: string
-  }
-
-  interface IFetch {
-    isRewrite?: boolean
-    params?: IFetchParam
-  }
-
   async function fetch({ isRewrite, params }: IFetch = {}) {
     isLoading.value = true
 
@@ -28,7 +72,7 @@ export const useArticleStore = defineStore("article", () => {
     }
 
     try {
-      const res = await useApiFetch<any>("post/pagination", {
+      const res = await useApiFetch<IArticleFetch>("post/pagination", {
         query: {
           limit: count.value,
           page: page.value - 1,
@@ -36,22 +80,20 @@ export const useArticleStore = defineStore("article", () => {
         },
       })
 
-      if (!res && !res[0]) {
+      if (!res) {
         error.value = "Error receiving articles. Try later"
         return
       }
 
-      const postData = res[0]
-
-      if (postData.total) {
-        total.value = postData.total
+      if (res.total) {
+        total.value = res.total
       }
 
-      if (!postData.hasMore) {
+      if (!res.hasMore) {
         hasMore.value = false
       }
 
-      data.push(...postData.posts)
+      data.push(...res.posts)
 
       return true
     } catch (e) {
@@ -69,5 +111,48 @@ export const useArticleStore = defineStore("article", () => {
     hasMore.value = true
   }
 
-  return { data, count, total, hasMore, page, error, isLoading, fetch, $reset }
+  async function add(articleData: ArticleFormData) {
+    isLoading.value = true
+
+    try {
+      const formData = new FormData()
+
+      for (const [key, value] of Object.entries<any>(articleData)) {
+        formData.append(key, value)
+      }
+
+      const articleRes = await useApiFetch<IArticle>("post/create", {
+        method: "post",
+        body: formData,
+      })
+
+      if (!articleRes) {
+        throw new Error(
+          "Error occurred when creating the article. Repeat later",
+        )
+      }
+
+      data.push(articleRes)
+
+      return articleRes.id
+    } catch (e: any) {
+      error.value = e.message ?? "Unexpected error. Repeat later"
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return {
+    data,
+    page,
+    count,
+    error,
+    total,
+    hasMore,
+    isLoading,
+    add,
+    fetch,
+    $reset,
+  }
 })
