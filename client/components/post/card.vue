@@ -1,57 +1,41 @@
 <script setup lang="ts">
-interface IFile {
-  fileName: string
-  size: number
-  mimetype: string
-  id: string
-}
-
-interface IAuthor {
-  email: string
-  id: string
-}
-
-interface postData {
-  id: string
-  author: IAuthor
-  counterLikes: number
-  counterDislikes: number
-  counterComments: number
-  counterReads: number
-  file: IFile
-  body: string
-  tags: string[]
-  title: string
-  timeRead: number
-  createdDate: string
-  rating: number
-}
+import type { IArticle } from "../../stores/article"
 
 const { post } = withDefaults(
   defineProps<{
-    post: postData
+    post: IArticle
     isExtended?: boolean
   }>(),
   { isExtended: false },
 )
 const { addTag } = useArticleParamsStore()
+
+const url = import.meta.env.VITE_API
 </script>
 
 <template>
   <div class="cart__item">
-    <NuxtImg loading="lazy" src="/item.jpg" class="cart__item--img" alt="" />
+    <div>
+      <p>{{ post.author.email }}</p>
+      <p>{{ dateFormat(post.createdDate) }}</p>
+    </div>
+    <h1 class="">
+      <NuxtLink :to="`/post/${post.id}`">
+        {{ post.title }}
+      </NuxtLink>
+    </h1>
+    <NuxtImg
+      loading="lazy"
+      :src="`${url}/image/${post.file.fileName}`"
+      class="cart__item--img"
+      alt=""
+    />
     <div class="mt-3 space-y-2 text-center">
-      <h1 class="">
-        <NuxtLink :to="`/post/${post.id}`">
-          {{ post.title }}
-        </NuxtLink>
-      </h1>
       <p class="">
-        {{ post.body }}
+        {{ post.preview }}
       </p>
     </div>
     <div v-if="isExtended">
-      <p>date: {{ post.createdDate }}</p>
       <p>
         tags:
         <span v-for="tag in post.tags" :key="tag" @click="addTag(tag)">

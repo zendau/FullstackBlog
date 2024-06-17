@@ -29,7 +29,7 @@ export interface IArticle {
   title: string
   tags: string[]
   timeRead: number
-  createDate: string
+  createdDate: string
   rating: number
   blocks: IBlock[]
 }

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-interface IPost {
-  name: string
-  content: string
-  fetchTime?: Date
-}
+import type { IArticle } from "../../stores/article"
 
 const { params } = useRoute()
 const articleId = params.id as string
@@ -13,8 +9,8 @@ provide("articleId", articleId)
 const {
   pending,
   error,
-  data: post,
-} = await useAsyncData<IPost>(
+  data: article,
+} = await useAsyncData<IArticle>(
   `post/${articleId}`,
   async () => await useApiFetch(`post/get/${params.id}`),
   {
@@ -27,12 +23,12 @@ const {
   {{ pending }}
 
   {{ error }}
-  <PostNotFount v-if="!post" :id="articleId" />
+  <PostNotFount v-if="!article" :id="articleId" />
   <template v-else>
-    <PostDetailsHeader :post="post" />
+    <PostDetailsHeader :post="article" />
     <NuxtImg src="/item.jpg" />
-    <h1>{{ post.name }}</h1>
-    <p>{{ post.content }}</p>
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.preview }}</p>
     <PostDetailsFouter />
   </template>
 </template>
