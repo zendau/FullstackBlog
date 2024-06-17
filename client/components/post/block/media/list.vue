@@ -19,7 +19,7 @@ function removeUploadImg(key: string) {
 
 <template>
   <div class="file-container">
-    <AdminPostBlockMediaItem
+    <PostBlockMediaItem
       v-for="[key, file] in media"
       :key="key"
       :file="file"

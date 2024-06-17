@@ -59,8 +59,8 @@ function getData() {
 </script>
 
 <template>
-  <AdminPostBlockMediaUpload v-if="isEdit" :multiple="type === 'slider'" />
-  <AdminPostBlockMediaList />
+  <PostBlockMediaUpload v-if="isEdit" :multiple="type === 'slider'" />
+  <PostBlockMediaList />
 </template>
 
 <style lang="scss" scoped></style>

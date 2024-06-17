@@ -51,13 +51,13 @@ function onRemoveImg() {
 <template>
   <div class="img__container">
     <template v-if="'id' in file">
-      <AdminPostBlockMediaView
+      <PostBlockMediaView
         :src="`${url}/image/${file.fileName}`"
         :type="file.mimetype"
       />
     </template>
     <template v-else>
-      <AdminPostBlockMediaView :src="getMediaSrc(file)" :type="file.type" />
+      <PostBlockMediaView :src="getMediaSrc(file)" :type="file.type" />
       <div class="img__overlay"></div>
       <span class="loader"></span>
     </template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { VueComponent } from "@/types"
 import {
-  AdminPostBlockHeader,
-  AdminPostBlockCode,
-  AdminPostBlockList,
-  AdminPostBlockQuoute,
-  AdminPostBlockText,
-  AdminPostBlockSpace,
-  AdminPostBlockMediaFile,
-  AdminPostBlockMediaSlider,
+  PostBlockHeader,
+  PostBlockCode,
+  PostBlockList,
+  PostBlockQuoute,
+  PostBlockText,
+  PostBlockSpace,
+  PostBlockMediaFile,
+  PostBlockMediaSlider,
 } from "#components"
 
 interface IBlockContent {
@@ -28,14 +28,14 @@ defineExpose({
 const errorMessage = ref("")
 
 const blocks = new Map<string, any>([])
-blocks.set("title", AdminPostBlockHeader)
-blocks.set("text", AdminPostBlockText)
-blocks.set("quoute", AdminPostBlockQuoute)
-blocks.set("space", AdminPostBlockSpace)
-blocks.set("code", AdminPostBlockCode)
-blocks.set("list", AdminPostBlockList)
-blocks.set("media", AdminPostBlockMediaFile)
-blocks.set("slider", AdminPostBlockMediaSlider)
+blocks.set("title", PostBlockHeader)
+blocks.set("text", PostBlockText)
+blocks.set("quoute", PostBlockQuoute)
+blocks.set("space", PostBlockSpace)
+blocks.set("code", PostBlockCode)
+blocks.set("list", PostBlockList)
+blocks.set("media", PostBlockMediaFile)
+blocks.set("slider", PostBlockMediaSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
 

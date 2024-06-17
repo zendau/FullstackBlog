@@ -20,16 +20,16 @@ function getData() {
   if (!media.value) return
 
   return {
-    type: "file",
+    type: "slider",
     content: media.value.getData(),
   }
 }
 </script>
 
 <template>
-  <AdminPostBlockMedia
+  <PostBlockMedia
     ref="media"
-    type="file"
+    type="slider"
     :is-edit="isEdit"
     :content="content"
   />
