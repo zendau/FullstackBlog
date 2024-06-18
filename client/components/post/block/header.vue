@@ -3,7 +3,18 @@ defineExpose({
   getData,
 })
 
-const text = ref("")
+const { isEdit, content } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    content?: string
+  }>(),
+  {
+    isEdit: false,
+    content: "",
+  },
+)
+
+const text = ref(content)
 
 function getData() {
   if (!text.value) return
@@ -20,8 +31,12 @@ function onInput(e: Event) {
 </script>
 
 <template>
-  <!-- Заголовок 1 -->
-  <h1 placeholder="Заголовок 1" contenteditable="true" @input="onInput"></h1>
+  <h1
+    :placeholder="isEdit ? 'Заголовок 1' : undefined"
+    :contenteditable="isEdit || undefined"
+    @input="onInput"
+    v-html="content"
+  ></h1>
 </template>
 
 <style lang="scss" scoped>

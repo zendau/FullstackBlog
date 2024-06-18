@@ -29,6 +29,7 @@ const {
     <NuxtImg src="/item.jpg" />
     <h1>{{ article.title }}</h1>
     <p>{{ article.preview }}</p>
+    <PostBlocks :blocks="article.blocks" />
     <PostDetailsFouter />
   </template>
 </template>

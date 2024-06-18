@@ -3,6 +3,17 @@ defineExpose({
   getData,
 })
 
+withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    content?: string
+  }>(),
+  {
+    isEdit: false,
+    content: "",
+  },
+)
+
 function getData() {
   return {
     type: "space",

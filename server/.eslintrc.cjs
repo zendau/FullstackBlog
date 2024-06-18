@@ -27,5 +27,6 @@ module.exports = {
     radix: "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off",
+    "vue/no-v-html": "off",
   },
 }

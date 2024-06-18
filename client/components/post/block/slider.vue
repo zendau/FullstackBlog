@@ -1,31 +1,24 @@
 <script setup lang="ts">
-defineExpose({
-  getData,
-})
+const { content } = defineProps<{
+  content?: IFile[]
+}>()
 
-const files = reactive([])
-provide("files", files)
+const url = import.meta.env.VITE_API
 
-function getData() {
-  if (!files.length) return
+const filesList = getInitData()
 
-  return {
-    type: "slider",
-    content: files,
-  }
-}
+function getInitData(): string[] {
+  if (!content || !Array.isArray(content)) return []
 
-function getFilesListSrc() {
-  return files.map((file) => getMediaSrc(file))
+  return content.map((file) => `${url}/image/${file.fileName}`)
 }
 </script>
 
 <template>
-  <UiFileUpload />
   <UCarousel
-    v-if="files.length > 0"
+    v-if="filesList.length > 0"
     v-slot="{ item }"
-    :items="getFilesListSrc()"
+    :items="filesList"
     :ui="{ item: 'basis-full md:basis-1/2 lg:basis-1/3' }"
     arrows
     indicators

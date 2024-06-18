@@ -1,11 +1,4 @@
 <script setup lang="ts">
-export interface IFile {
-  authorId: string
-  fileName: string
-  id: string
-  mimetype: string
-}
-
 export type FileData = IFile | File
 
 export type MediaMap = Map<string, FileData>
@@ -48,13 +41,13 @@ function getData() {
 
   const pathList = filesList.reduce((list: string[], file: FileData) => {
     if ("fileName" in file) {
-      list.push(file.fileName)
+      list.push(file.id)
     }
 
     return list
   }, [])
 
-  return JSON.stringify(pathList)
+  return pathList
 }
 </script>
 

@@ -1,28 +1,46 @@
 <script setup lang="ts">
+interface IQuouteContent {
+  text: string
+  author: string
+}
+
 defineExpose({
   getData,
 })
-const text = ref("")
-const author = ref("")
+
+const { isEdit, content } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    content?: IQuouteContent
+  }>(),
+  {
+    isEdit: false,
+    content: () => ({
+      author: "",
+      text: "",
+    }),
+  },
+)
+
+const quoteData = reactive(content)
 
 function getData() {
-  if (!text.value || !author.value) return
-
+  if (!quoteData.text || !quoteData.author) return
   return {
     type: "quoute",
     content: {
-      text: text.value,
-      author: author.value,
+      text: quoteData.text,
+      author: quoteData.author,
     },
   }
 }
 
 function onInputText(e: Event) {
-  text.value = (e.target as HTMLInputElement).innerHTML
+  quoteData.text = (e.target as HTMLInputElement).innerHTML
 }
 
 function onInputAuthor(e: Event) {
-  author.value = (e.target as HTMLInputElement).innerHTML
+  quoteData.author = (e.target as HTMLInputElement).innerHTML
 }
 </script>
 
@@ -30,15 +48,17 @@ function onInputAuthor(e: Event) {
   <blockquote :class="$style.quote">
     <p
       :class="$style.text"
-      placeholder="Текст цитаты"
-      contenteditable="true"
+      :placeholder="isEdit ? 'Текст цитаты' : undefined"
+      :contenteditable="isEdit || undefined"
       @input="onInputText"
+      v-html="content.text"
     ></p>
     <p
       :class="$style.author"
-      placeholder="Подпись"
-      contenteditable="true"
+      :placeholder="isEdit ? 'Подпись' : undefined"
+      :contenteditable="isEdit || undefined"
       @input="onInputAuthor"
+      v-html="content.author"
     ></p>
   </blockquote>
 </template>

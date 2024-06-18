@@ -1,8 +1,8 @@
 import type { ArticleSchema } from "~/components/admin/post/form/index.vue"
 
-export interface IBlock {
-  type: string
-  content: string
+interface IQuoute {
+  text: string
+  author: string
 }
 
 export interface IFile {
@@ -10,6 +10,11 @@ export interface IFile {
   size: number
   mimetype: string
   id: string
+}
+
+export interface IBlock {
+  type: string
+  content: string | IQuoute | IFile
 }
 
 interface IAuthor {

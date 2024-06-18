@@ -3,20 +3,31 @@ defineExpose({
   getData,
 })
 
-const content = ref()
+const { isEdit, content } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    content?: string
+  }>(),
+  {
+    isEdit: false,
+    content: "<li></li>",
+  },
+)
+
+const contentData = ref(content)
 
 function getData() {
-  if (!content.value) return
+  if (!contentData.value) return
 
   return {
     type: "list",
-    content: content.value,
+    content: contentData.value,
   }
 }
 
 function onKeyDown(event: any) {
   const target = event.target
-  content.value = target.innerHTML
+  contentData.value = target.innerHTML
   if (event.code === "Enter") {
     const lastChild = target.lastChild
     const text = lastChild.textContent
@@ -39,20 +50,19 @@ function onKeyDown(event: any) {
 
 function onKeyUp(event: any) {
   const target = event.target
-  content.value = target.innerHTML
+  contentData.value = target.innerHTML
 }
 </script>
 
 <template>
   <ul
-    contenteditable="true"
+    :contenteditable="isEdit || undefined"
     class="test"
     :class="$style.test"
     @keydown="onKeyDown"
-    @keyup="onKeyUp"
-  >
-    <li></li>
-  </ul>
+    @input="onKeyUp"
+    v-html="content"
+  ></ul>
 </template>
 
 <style lang="scss" module>

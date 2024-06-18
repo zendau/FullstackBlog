@@ -6,11 +6,20 @@ defineExpose({
   getData,
 })
 
+const { isEdit, content } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    content?: string
+  }>(),
+  {
+    isEdit: false,
+    content: "",
+  },
+)
+
 const languages = ["JAVASCRIPT", "PHP", "PYTHON", "RUST", "JAVA"]
 const selectedLanguage = ref(languages[0])
-const code = ref(
-  'console.log("enter", event)\nconst target = event.target\nconst lastChild = target.lastChild\nconsole.log("la", lastChild.textContent)\nconst text = lastChild.textContent)',
-)
+const code = ref(content)
 
 const hihgtlighCode = computed(() =>
   hljs.highlight(code.value, { language: selectedLanguage.value }),
@@ -37,7 +46,7 @@ function onInput(e: Event) {
       :class="$style.selectMenu"
       :options="languages"
     />
-    <pre><code contenteditable="true" @input="onInput" v-html="hihgtlighCode.value"></code></pre>
+    <pre><code :contenteditable="isEdit" @input="onInput" v-html="hihgtlighCode.value"></code></pre>
   </div>
 </template>
 
