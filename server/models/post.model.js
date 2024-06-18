@@ -53,24 +53,33 @@ const blockSchema = new Schema(
   { _id: false, discriminatorKey: "type" },
 )
 
-// Дискриминатор для блока заголовка
 const headerBlockSchema = new Schema({
   content: { type: String, required: true },
 })
 
-// Дискриминатор для текстового блока
 const textBlockSchema = new Schema({
   content: { type: String, required: true },
 })
 
-// Дискриминатор для цитатного блока
 const quoteBlockSchema = new Schema({
-  author: { type: String, required: true },
+  content: { type: Object, required: true },
+})
+
+const spaceBlockSchema = new Schema()
+
+const codeBlockSchema = new Schema({
   content: { type: String, required: true },
 })
 
-// Пример нового типа блока
-const mediaBlockSchema = new Schema({
+const listBlockSchema = new Schema({
+  content: { type: String, required: true },
+})
+
+const fileBlockSchema = new Schema({
+  list: [{ type: Schema.Types.ObjectId, ref: "Files" }],
+})
+
+const sliderBlockSchema = new Schema({
   list: [{ type: Schema.Types.ObjectId, ref: "Files" }],
 })
 
@@ -89,8 +98,22 @@ const Blocks = PostSchema.path("blocks")
 const HeaderBlock = Blocks.discriminator("header", headerBlockSchema)
 const TextBlock = Blocks.discriminator("text", textBlockSchema)
 const QuoteBlock = Blocks.discriminator("quote", quoteBlockSchema)
-const MediaBlock = Blocks.discriminator("media", mediaBlockSchema)
+const SpaceBlock = Blocks.discriminator("space", spaceBlockSchema)
+const CodeBlock = Blocks.discriminator("code", codeBlockSchema)
+const ListBlock = Blocks.discriminator("list", listBlockSchema)
+const FileBlock = Blocks.discriminator("file", fileBlockSchema)
+const SliderBlock = Blocks.discriminator("slider", sliderBlockSchema)
 
 const PostModel = model("Posts", PostSchema)
 
-export { PostModel, HeaderBlock, TextBlock, QuoteBlock, MediaBlock }
+export {
+  PostModel,
+  HeaderBlock,
+  TextBlock,
+  QuoteBlock,
+  SpaceBlock,
+  CodeBlock,
+  ListBlock,
+  FileBlock,
+  SliderBlock,
+}

@@ -2,10 +2,14 @@ import mongoose from "mongoose"
 
 import ApiError from "../exceprions/api.error.js"
 import {
+  CodeBlock,
+  FileBlock,
   HeaderBlock,
-  MediaBlock,
+  ListBlock,
   PostModel,
   QuoteBlock,
+  SliderBlock,
+  SpaceBlock,
   TextBlock,
 } from "../models/post.model.js"
 import FileService from "./file.service.js"
@@ -44,20 +48,58 @@ class PostService {
 
             break
           }
-          case "quote": {
+          case "quoute": {
             const tempBlock = new QuoteBlock({
               type: "quote",
               content: blockData.content,
-              author: blockData.author,
             })
 
             postBlocks.push(tempBlock)
 
             break
           }
-          case "media": {
-            const tempBlock = new MediaBlock({
-              type: "media",
+          case "space": {
+            const tempBlock = new SpaceBlock({
+              type: "space",
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "code": {
+            const tempBlock = new CodeBlock({
+              type: "code",
+              content: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "list": {
+            const tempBlock = new ListBlock({
+              type: "list",
+              content: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "file": {
+            const tempBlock = new FileBlock({
+              type: "file",
+              list: blockData.content,
+            })
+
+            postBlocks.push(tempBlock)
+
+            break
+          }
+          case "slider": {
+            const tempBlock = new SliderBlock({
+              type: "slider",
               list: blockData.content,
             })
 
@@ -499,6 +541,34 @@ class PostService {
             },
           },
         },
+      },
+      {
+        $set: {
+          blocks: {
+            $cond: {
+              if: {
+                $and: [
+                  {
+                    $not: ["$blocks.content"],
+                  },
+                  "$blocks.list",
+                ],
+              },
+              then: {
+                $mergeObjects: [
+                  "$blocks",
+                  {
+                    content: "$blocks.list",
+                  },
+                ],
+              },
+              else: "$blocks",
+            },
+          },
+        },
+      },
+      {
+        $unset: "blocks.list",
       },
       {
         $group: {
