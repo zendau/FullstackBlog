@@ -10,8 +10,6 @@ const emit = defineEmits<{
   removeImg: [key: string]
 }>()
 
-const url = import.meta.env.VITE_API
-
 const media = inject<MediaMap>("media", new Map())
 
 const isUploadFile = ref(false)
@@ -52,7 +50,7 @@ function onRemoveImg() {
   <div class="img__container">
     <template v-if="'id' in file">
       <PostBlockMediaView
-        :src="`${url}/image/${file.fileName}`"
+        :src="getApiFile(file.fileName)"
         :type="file.mimetype"
       />
     </template>

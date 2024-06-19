@@ -3,8 +3,6 @@ const { image } = defineProps<{
   image: string | undefined
 }>()
 
-const url = import.meta.env.VITE_API
-
 const files = inject("files", [])
 </script>
 
@@ -14,7 +12,7 @@ const files = inject("files", [])
   <template v-if="files.length > 0">
     <img v-for="file in files" :key="file" :src="getMediaSrc(file)" alt="" />
   </template>
-  <img v-else-if="image" :src="`${url}/image/${image}`" alt="" />
+  <img v-else-if="image" :src="getApiFile(image)" alt="" />
 </template>
 
 <style lang="scss" scoped></style>

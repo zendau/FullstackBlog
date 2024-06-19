@@ -3,14 +3,12 @@ const { content } = defineProps<{
   content?: IFile[]
 }>()
 
-const url = import.meta.env.VITE_API
-
 const filesList = getInitData()
 
 function getInitData(): string[] {
   if (!content || !Array.isArray(content)) return []
 
-  return content.map((file) => `${url}/image/${file.fileName}`)
+  return content.map((file) => getApiFile(file.fileName))
 }
 </script>
 

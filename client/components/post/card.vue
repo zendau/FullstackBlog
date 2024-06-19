@@ -9,8 +9,6 @@ const { post } = withDefaults(
   { isExtended: false },
 )
 const { addTag } = useArticleParamsStore()
-
-const url = import.meta.env.VITE_API
 </script>
 
 <template>
@@ -26,7 +24,7 @@ const url = import.meta.env.VITE_API
     </h1>
     <NuxtImg
       loading="lazy"
-      :src="`${url}/image/${post.file.fileName}`"
+      :src="getApiFile(post.file.fileName)"
       class="cart__item--img"
       alt=""
     />
