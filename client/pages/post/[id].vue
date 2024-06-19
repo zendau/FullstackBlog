@@ -12,7 +12,7 @@ const {
   data: article,
 } = await useAsyncData<IArticle>(
   `post/${articleId}`,
-  async () => await useApiFetch(`post/get/${params.id}`),
+  async () => await useApiFetch(`post/get/${articleId}`),
   {
     server: true,
   },
@@ -25,6 +25,7 @@ const {
   {{ error }}
   <PostNotFount v-if="!article" :id="articleId" />
   <template v-else>
+    <PostAuthorMenu :author-id="article.author.id" />
     <PostDetailsHeader :post="article" />
     <NuxtImg src="/item.jpg" />
     <h1>{{ article.title }}</h1>
