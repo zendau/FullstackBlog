@@ -12,9 +12,11 @@ export interface IFile {
   id: string
 }
 
+export type BlockContent = string | IQuoute | IFile
+
 export interface IBlock {
   type: string
-  content: string | IQuoute | IFile
+  content: BlockContent
 }
 
 interface IAuthor {
@@ -59,7 +61,7 @@ interface IArticleFetch {
 type ArticleFormData = ArticleSchema & { id?: string; blocks: IBlock[] }
 
 export const useArticleStore = defineStore("article", () => {
-  const data = reactive<IArticle[]>([])
+  const data = ref<IArticle[]>([])
   const error = ref("")
   const isLoading = ref(false)
 
@@ -98,7 +100,7 @@ export const useArticleStore = defineStore("article", () => {
         hasMore.value = false
       }
 
-      data.push(...res.posts)
+      data.value.push(...res.posts)
 
       return true
     } catch (e) {
@@ -110,7 +112,7 @@ export const useArticleStore = defineStore("article", () => {
   }
 
   function $reset() {
-    data.length = 0
+    data.value = []
     page.value = 1
     total.value = 0
     hasMore.value = true
@@ -137,9 +139,65 @@ export const useArticleStore = defineStore("article", () => {
         )
       }
 
-      data.push(articleRes)
+      data.value.push(articleRes)
 
       return articleRes.id
+    } catch (e: any) {
+      error.value = e.message ?? "Unexpected error. Repeat later"
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function edit(articleData: ArticleFormData) {
+    isLoading.value = true
+
+    try {
+      const formData = new FormData()
+
+      for (const [key, value] of Object.entries<any>(articleData)) {
+        formData.set(key, value)
+      }
+
+      const productRes = await useApiFetch<IArticle>("post/edit", {
+        method: "patch",
+        body: formData,
+      })
+
+      if (!productRes) {
+        throw new Error("Error when changing the article. Repeat later")
+      }
+
+      return productRes.id
+    } catch (e: any) {
+      error.value = e.message ?? "Unexpected error. Repeat later"
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function remove(articleId: string) {
+    isLoading.value = true
+
+    try {
+      const productRes = await useApiFetch<boolean>(
+        `post/delete/${articleId}`,
+        {
+          method: "delete",
+        },
+      )
+
+      if (!productRes) {
+        throw new Error(
+          "Error occurred when deleting the article. Repeat later",
+        )
+      }
+
+      data.value = data.value.filter((article) => article.id !== articleId)
+
+      return true
     } catch (e: any) {
       error.value = e.message ?? "Unexpected error. Repeat later"
       return false
@@ -157,7 +215,9 @@ export const useArticleStore = defineStore("article", () => {
     hasMore,
     isLoading,
     add,
+    edit,
     fetch,
+    remove,
     $reset,
   }
 })
