@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { object, string, type InferType, mixed, array, number } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
-import type { IArticle } from "../../../../stores/article"
-
-const { type } = withDefaults(
+const { articleData, type } = withDefaults(
   defineProps<{
     articleData?: IArticle | null
     type?: "create" | "edit"
@@ -22,14 +20,14 @@ const blockConstructor = ref()
 const files = ref([])
 provide("files", files)
 
-const tags = reactive<string[]>([])
+const tags = reactive<string[]>(articleData?.tags ?? [])
 provide("tags", tags)
 
 const state = reactive({
-  title: null,
-  preview: null,
+  title: articleData?.title ?? "",
+  preview: articleData?.preview ?? "",
   file: files,
-  timeRead: null,
+  timeRead: articleData?.timeRead ?? "",
   tags,
 })
 
@@ -143,14 +141,19 @@ async function onSubmitEdit(event: FormSubmitEvent<ArticleSchema>) {
       </UFormGroup>
 
       <UFormGroup label="file" name="file">
-        <AdminPostFormImage />
+        <AdminPostFormImage :image="articleData?.file.fileName" />
       </UFormGroup>
 
       <UFormGroup label="Tags" name="tags">
         <AdminPostFormTag />
       </UFormGroup>
 
-      <AdminPostConstructor ref="blockConstructor" />
+      <ClientOnly>
+        <AdminPostConstructor
+          ref="blockConstructor"
+          :init-blocks="articleData?.blocks"
+        />
+      </ClientOnly>
 
       <UButton type="submit"> Create </UButton>
     </UForm>

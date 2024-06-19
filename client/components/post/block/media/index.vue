@@ -3,13 +3,13 @@ export type FileData = IFile | File
 
 export type MediaMap = Map<string, FileData>
 
-const { isEdit, type } = withDefaults(
+const { isEdit, type, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
     type: "file" | "slider"
-    content?: string
+    content?: IFile[]
   }>(),
-  { isEdit: false, type: "file", content: "" },
+  { isEdit: false, type: "file", content: () => [] },
 )
 
 defineExpose({
@@ -19,21 +19,13 @@ defineExpose({
 const media = reactive<MediaMap>(new Map())
 provide("media", media)
 
-// const initBlockData = parseInitData()
+if (content && content.length > 0) {
+  content.forEach((file) => {
+    const key = randomId()
 
-// function parseInitData(): string[] {
-//   try {
-//     if (!content) return []
-
-//     const initContentkData: string[] = JSON.parse(content)
-
-//     if (!Array.isArray(initContentkData)) throw Error
-
-//     return initContentkData
-//   } catch {
-//     return []
-//   }
-// }
+    media.set(key, file)
+  })
+}
 
 function getData() {
   if (!media.size) return

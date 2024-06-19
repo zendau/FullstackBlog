@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { VueComponent } from "@/types"
 
-const { component, dataId } = defineProps<{
+const { component, dataId, content } = defineProps<{
   component: VueComponent
-  dataId: number
+  dataId: string
+  content?: BlockContent
 }>()
 
 const emit = defineEmits<{
-  setBlockRef: [el: any, dataId: number]
-  removeBlock: [dataId: number]
+  setBlockRef: [el: any, dataId: string]
+  removeBlock: [dataId: string]
 }>()
 </script>
 
@@ -18,6 +19,7 @@ const emit = defineEmits<{
       :is="component"
       :ref="(el) => emit('setBlockRef', el, dataId)"
       is-edit
+      :content="content"
     />
     <button @click="() => emit('removeBlock', dataId)">X</button>
   </div>

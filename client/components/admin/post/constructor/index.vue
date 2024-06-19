@@ -11,50 +11,56 @@ import {
   PostBlockMediaSlider,
 } from "#components"
 
-interface IBlockContent {
-  block: string
-  content: any
-}
-
 interface ICreateBlock {
   component: VueComponent
-  ref?: { getData: () => IBlockContent }
+  content?: BlockContent
+  ref?: { getData: () => IBlock }
 }
 
 defineExpose({
   getBlocksContent,
 })
 
+const { initBlocks } = defineProps<{
+  initBlocks?: IBlock[]
+}>()
+
 const errorMessage = ref("")
 
 const blocks = new Map<string, any>([])
-blocks.set("title", PostBlockHeader)
+blocks.set("header", PostBlockHeader)
 blocks.set("text", PostBlockText)
 blocks.set("quoute", PostBlockQuoute)
 blocks.set("space", PostBlockSpace)
 blocks.set("code", PostBlockCode)
 blocks.set("list", PostBlockList)
-blocks.set("media", PostBlockMediaFile)
+blocks.set("file", PostBlockMediaFile)
 blocks.set("slider", PostBlockMediaSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
 
-const createdBlocks = shallowReactive<Map<number, ICreateBlock>>(new Map())
+const createdBlocks = shallowReactive<Map<string, ICreateBlock>>(new Map())
 
-function removeBlock(key: number) {
+initBlocksList()
+function initBlocksList() {
+  if (!initBlocks) return
+  initBlocks.forEach((block) => selectBlock(block.type, block.content))
+}
+
+function removeBlock(key: string) {
   createdBlocks.delete(key)
 }
 
-function selectBlock(block: string) {
+function selectBlock(block: string, content?: BlockContent) {
   const component = blocks.get(block)
   if (!component) return
 
-  const id = new Date().getTime()
+  const id = randomId()
 
-  createdBlocks.set(id, { component })
+  createdBlocks.set(id, { component, content })
 }
 
-const setBlockRef = (el: any, key: number) => {
+const setBlockRef = (el: any, key: string) => {
   const blockComponent = createdBlocks.get(key)
   if (!blockComponent) return
   blockComponent.ref = el
@@ -87,12 +93,12 @@ function getBlocksContent() {
     <h2>Article body conscructor</h2>
     <p v-if="errorMessage">{{ errorMessage }}</p>
     <AdminPostConstructorToolbar />
-
     <AdminPostBlockComponent
       v-for="postBlock in createdBlocks.entries()"
       :key="postBlock[0]"
       :component="postBlock[1].component"
       :data-id="postBlock[0]"
+      :content="postBlock[1].content"
       @remove-block="removeBlock"
       @set-block-ref="setBlockRef"
     />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FileData, IFile, MediaMap } from "./index.vue"
+import type { FileData, MediaMap } from "./index.vue"
 
 const { file, index: key } = defineProps<{
   file: FileData

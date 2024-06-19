@@ -6,11 +6,11 @@ defineExpose({
 const { isEdit, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string
+    content?: IFile[]
   }>(),
   {
     isEdit: false,
-    content: "",
+    content: () => [],
   },
 )
 
