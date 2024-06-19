@@ -430,8 +430,8 @@ class PostService {
         $project: {
           _id: 0,
           id: "$_id",
-          body: {
-            $substr: ["$post.body", 0, 10],
+          preview: {
+            $substr: ["$post.preview", 0, 10],
           },
           tags: "$post.tags",
           author: {
