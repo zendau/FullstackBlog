@@ -20,6 +20,31 @@ class PostService {
   async create(author, postData, file) {
     try {
       const fileData = await FileService.upload([file], author)
+      const fileId = fileData[0].id
+
+      if (!fileId) {
+        throw new ApiError.InternalError("Errors when saving the article file")
+      }
+
+      const createdPostData = await this.insert("create", author, {
+        postData,
+        fileId,
+      })
+
+      return createdPostData
+    } catch (e) {
+      if (e instanceof ApiError) {
+        throw e
+      } else {
+        throw new ApiError.InternalError(
+          "Unexpected error when creating an article",
+        )
+      }
+    }
+  }
+
+  async insert(type, author, { postData, fileId, postId }) {
+    try {
       const tagsList = postData.tags.split(",")
 
       const postBlocks = []
@@ -112,50 +137,73 @@ class PostService {
         }
       })
 
-      const post = await PostModel.create({
-        author,
+      const preparePostData = {
         title: postData.title,
         preview: postData.preview,
         tags: tagsList,
         timeRead: postData.timeRead,
-        file: fileData[0].id,
         blocks: postBlocks,
-      })
+      }
+
+      let post
+
+      if (type === "create") {
+        preparePostData.author = author
+        preparePostData.file = fileId
+
+        post = await PostModel.create(preparePostData)
+      } else if (type === "edit") {
+        post = await PostModel.findByIdAndUpdate(postId, preparePostData)
+      } else {
+        throw new ApiError.InternalError("unknown article operation type")
+      }
 
       const createdPostData = await this.getOne(post._id, null)
 
       if (!createdPostData) {
-        throw new Error(
+        throw new ApiError.InternalError(
           "An error occurred while receiving the extended data of the post",
         )
       }
 
       return createdPostData
     } catch (e) {
-      throw new Error(e.message ?? "An error occurred while creating a post.")
+      if (e instanceof ApiError) {
+        throw e
+      } else if (type === "create") {
+        throw new ApiError.InternalError("Error saving the article")
+      } else if (type === "edit") {
+        throw new ApiError.InternalError("Error updating the article")
+      } else {
+        throw new ApiError.UnexpectedError()
+      }
     }
   }
 
-  async edit(postId, userId, title, body, newFile) {
-    const postData = await this.postExist(postId)
-    this.checkPostAuthor(userId, postData.author.id)
+  async edit(author, postData, file) {
+    try {
+      const post = await this.isPostAuthor(author, postData.id)
 
-    if (newFile !== undefined) {
-      await FileService.update(postData.file, newFile)
+      if (file) {
+        await FileService.update(post.file, file)
+      }
+
+      const updatedPostData = await this.insert("edit", author, {
+        postData,
+        file: post.file,
+        postId: postData.id,
+      })
+
+      return updatedPostData
+    } catch (e) {
+      if (e instanceof ApiError) {
+        throw e
+      } else {
+        throw new ApiError.InternalError(
+          "Unexpected error when creating an article",
+        )
+      }
     }
-
-    if (title !== undefined) {
-      postData.title = title
-    }
-
-    if (body !== undefined) {
-      postData.body = body
-    }
-
-    const post = await postData.save()
-    const postPopulate = await post.populate("author").execPopulate()
-    const postDTO = await this.getExtendedPostDTO(postPopulate)
-    return postDTO
   }
 
   async delete(postId, userId) {
@@ -168,13 +216,11 @@ class PostService {
     return true
   }
 
-  async postExist(postId) {
+  async isPostExist(postId) {
     const post = await PostModel.findById(postId)
-      .populate("author")
-      .populate("file")
 
-    if (post === null) {
-      throw ApiError.HttpException(`Post with id ${postId} not found`)
+    if (!post) {
+      throw ApiError.HttpException(`Article with id '${postId}' not found`)
     }
 
     return post
@@ -204,12 +250,16 @@ class PostService {
     return resData[0]
   }
 
-  checkPostAuthor(userId, postAuthor) {
-    if (postAuthor.toString() !== userId) {
+  async isPostAuthor(userId, postId) {
+    const post = await this.isPostExist(postId)
+
+    if (!post.author.equals(userId)) {
       throw ApiError.HttpException(
         `User with id ${userId} not author this post`,
       )
     }
+
+    return post
   }
 
   async postReaction(postId, userId, isLiked) {
@@ -430,9 +480,7 @@ class PostService {
         $project: {
           _id: 0,
           id: "$_id",
-          preview: {
-            $substr: ["$post.preview", 0, 10],
-          },
+          preview: "$post.preview",
           tags: "$post.tags",
           author: {
             id: "$author._id",
