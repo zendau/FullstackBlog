@@ -1,5 +1,5 @@
 // middleware/validate.middleware.js
-import ApiError from "../exceprions/api.error"
+import ApiError from "../exceptions/api.error.js"
 
 const validate =
   (schema, property = "body") =>

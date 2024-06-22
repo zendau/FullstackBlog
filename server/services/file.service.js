@@ -1,7 +1,7 @@
 import fs from "fs"
 
 import FileDTO from "../dtos/file.dto.js"
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import fileModel from "../models/file.model.js"
 
 class FileService {

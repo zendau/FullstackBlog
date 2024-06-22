@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 
 class NodeMailerService {
   constructor() {

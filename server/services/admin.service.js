@@ -1,4 +1,4 @@
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import UserModel from "../models/user.model.js"
 
 class AdminService {

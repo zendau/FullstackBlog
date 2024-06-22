@@ -1,7 +1,7 @@
 import Joi from "joi"
 import objectId from "joi-objectid"
 
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import CommentService from "../services/comment.service.js"
 
 Joi.objectId = objectId(Joi)

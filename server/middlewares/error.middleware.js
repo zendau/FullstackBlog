@@ -1,4 +1,4 @@
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import Logger from "../libs/logger.js"
 
 // eslint-disable-next-line no-unused-vars

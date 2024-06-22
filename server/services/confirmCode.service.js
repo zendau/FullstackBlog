@@ -1,6 +1,6 @@
 import crypto from "crypto"
 
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import confirmCodeModel from "../models/confirmCode.model.js"
 import NodeMailerService from "./nodemailer.service.js"
 

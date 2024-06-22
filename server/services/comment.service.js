@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 import CommentDTO from "../dtos/comment.dto.js"
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import commentModel from "../models/comment.model.js"
 import PostService from "./post.service.js"
 

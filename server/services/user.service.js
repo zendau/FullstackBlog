@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import { v4 as uuid } from "uuid"
 
 import UserDTO from "../dtos/user.dto.js"
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import Logger from "../libs/logger.js"
 import userModel from "../models/user.model.js"
 import ConfirmCodeService from "./confirmCode.service.js"

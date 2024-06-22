@@ -3,7 +3,7 @@ import { Router } from "express"
 import PostController from "../controllers/post.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
 import { fileUpload } from "../middlewares/multer.middleware.js"
-import validate from "../middlewares/validate.middleware"
+import validate from "../middlewares/validate.middleware.js"
 import {
   createSchema,
   deleteSchema,

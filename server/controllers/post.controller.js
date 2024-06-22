@@ -1,4 +1,4 @@
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import PostService from "../services/post.service.js"
 import reactionService from "../services/reaction.service.js"
 

@@ -1,6 +1,6 @@
 import Joi from "joi"
 
-import ApiError from "../exceprions/api.error.js"
+import ApiError from "../exceptions/api.error.js"
 import FileService from "../services/file.service.js"
 
 class FileController {
