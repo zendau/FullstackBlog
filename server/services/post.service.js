@@ -13,12 +13,12 @@ import {
   FileBlock,
   HeaderBlock,
   ListBlock,
-  PostModel,
   QuoteBlock,
   SliderBlock,
   SpaceBlock,
   TextBlock,
 } from "../models/post.model.js"
+import PostRepository from "../repositories/post.repository.js"
 import FileService from "./file.service.js"
 import ReactionService from "./reaction.service.js"
 import UserPostReadService from "./userPostRead.service.js"
@@ -84,9 +84,9 @@ class PostService {
         preparePostData.author = author
         preparePostData.file = fileId
 
-        post = await PostModel.create(preparePostData)
+        post = await PostRepository.create(preparePostData)
       } else if (type === "edit") {
-        post = await PostModel.findByIdAndUpdate(postId, preparePostData)
+        post = await PostRepository.findByIdAndUpdate(postId, preparePostData)
       } else {
         throw new ApiError.InternalError("unknown article operation type")
       }
@@ -228,7 +228,7 @@ class PostService {
   }
 
   async isPostExist(postId) {
-    const post = await PostModel.findById(postId)
+    const post = await PostRepository.findById(postId)
 
     if (!post) {
       throw ApiError.HttpException(`Article with id '${postId}' not found`)
@@ -252,7 +252,7 @@ class PostService {
       ...blocksExntended,
     ]
 
-    const resData = await PostModel.aggregate(combineAggregate)
+    const resData = await PostRepository.aggregate(combineAggregate)
 
     if (ip) {
       UserPostReadService.incCounter(postId, ip)
@@ -305,7 +305,7 @@ class PostService {
       ...facet,
     ]
 
-    const resData = await PostModel.aggregate(combineAggregate)
+    const resData = await PostRepository.aggregate(combineAggregate)
     if (!resData[0]) return [{ posts: [], hasMore: false, total: 0 }]
 
     if (resData[0].posts.length === limit) {
