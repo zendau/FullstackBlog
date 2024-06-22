@@ -29,7 +29,7 @@ class PostController {
         )
       }
 
-      const { id, isActivated } = req.user.payload
+      const { id: userId, isActivated } = req.user.payload
 
       if (!isActivated) {
         throw ApiError.HttpException(
@@ -37,7 +37,7 @@ class PostController {
         )
       }
 
-      const data = await PostService.create(id, postData, file)
+      const data = await PostService.create(userId, postData, file)
       res.json(data)
     } catch (e) {
       next(e)
@@ -47,18 +47,21 @@ class PostController {
   async edit(req, res, next) {
     try {
       const schema = Joi.object({
-        postId: Joi.objectId().required(),
+        id: Joi.objectId().required(),
         title: Joi.string().min(6).max(20),
-        body: Joi.string(),
+        preview: Joi.string(),
+        timeRead: Joi.number(),
+        tags: Joi.string(),
+        blocks: Joi.string(),
       })
       const { error } = schema.validate(req.body)
       if (error) throw ApiError.HttpException(error.details[0].message)
 
-      const { postId, title, body } = req.body
+      const postData = req.body
       const userId = req.user.payload.id
       const { file } = req
 
-      const data = await PostService.edit(postId, userId, title, body, file)
+      const data = await PostService.edit(userId, postData, file)
       res.json(data)
     } catch (e) {
       next(e)
