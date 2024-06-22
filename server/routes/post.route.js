@@ -3,6 +3,16 @@ import { Router } from "express"
 import PostController from "../controllers/post.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
 import { fileUpload } from "../middlewares/multer.middleware.js"
+import validate from "../middlewares/validate.middleware"
+import {
+  createSchema,
+  deleteSchema,
+  editSchema,
+  getOneSchema,
+  paginationScheme,
+  reactSchema,
+  reactStatusSchema,
+} from "../validations/post.validation.js"
 
 const router = new Router()
 
@@ -49,7 +59,13 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/create", userGuard, fileUpload, PostController.create)
+router.post(
+  "/create",
+  userGuard,
+  validate(createSchema),
+  fileUpload,
+  PostController.create,
+)
 
 /**
  * @swagger
@@ -87,7 +103,13 @@ router.post("/create", userGuard, fileUpload, PostController.create)
  *         description: Unexpected error
  */
 
-router.patch("/edit", userGuard, fileUpload, PostController.edit)
+router.patch(
+  "/edit",
+  userGuard,
+  validate(editSchema),
+  fileUpload,
+  PostController.edit,
+)
 
 /**
  * @swagger
@@ -115,7 +137,12 @@ router.patch("/edit", userGuard, fileUpload, PostController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", userGuard, PostController.delete)
+router.delete(
+  "/delete/:id",
+  userGuard,
+  validate(deleteSchema, "params"),
+  PostController.delete,
+)
 
 /**
  * @swagger
@@ -151,7 +178,7 @@ router.delete("/delete/:id", userGuard, PostController.delete)
  *         description: Unexpected error
  */
 
-router.get("/get/:id", PostController.getOne)
+router.get("/get/:id", validate(getOneSchema, "params"), PostController.getOne)
 
 /**
  * @swagger
@@ -187,9 +214,23 @@ router.get("/get/:id", PostController.getOne)
  *         description: Unexpected error
  */
 
-router.patch("/reacting", userGuard, PostController.reactionPost)
+router.patch(
+  "/reacting",
+  userGuard,
+  validate(reactSchema, "query"),
+  PostController.reactionPost,
+)
 
-router.get("/pagination", PostController.getPostsPagination)
-router.get("/reaction", userGuard, PostController.getPostReactionStatus)
+router.get(
+  "/pagination",
+  validate(paginationScheme, "query"),
+  PostController.getPostsPagination,
+)
+router.get(
+  "/reaction",
+  userGuard,
+  validate(reactStatusSchema, "query"),
+  PostController.getPostReactionStatus,
+)
 
 export default router
