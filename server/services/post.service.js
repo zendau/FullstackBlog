@@ -7,6 +7,7 @@ import {
   postsRating,
   postsSort,
 } from "../aggregation/pagination.builder.js"
+import { ERROR_POST } from "../constants/error.messages.js"
 import ApiError from "../exceptions/api.error.js"
 import {
   CodeBlock,
@@ -30,7 +31,7 @@ class PostService {
       const fileId = fileData[0].id
 
       if (!fileId) {
-        throw new ApiError.InternalError("Errors when saving the article file")
+        throw new ApiError.InternalError(ERROR_POST.FILE_SAVE_ERROR)
       }
 
       const createdPostData = await this.insert("create", author, {
@@ -40,7 +41,7 @@ class PostService {
 
       return createdPostData
     } catch (e) {
-      this.handleError(e, "Unexpected error when creating an article")
+      this.handleError(e, ERROR_POST.POST_CREATION_ERROR)
     }
   }
 
@@ -60,7 +61,7 @@ class PostService {
 
       return updatedPostData
     } catch (e) {
-      this.handleError(e, "Unexpected error when editing an article")
+      this.handleError(e, ERROR_POST.POST_UPDATE_ERROR)
     }
   }
 
@@ -88,15 +89,13 @@ class PostService {
       } else if (type === "edit") {
         post = await PostRepository.findByIdAndUpdate(postId, preparePostData)
       } else {
-        throw new ApiError.InternalError("unknown article operation type")
+        throw new ApiError.InternalError(ERROR_POST.UNKNOWN_OPERATION_TYPE)
       }
 
       const createdPostData = await this.getOne(post._id, null)
 
       if (!createdPostData) {
-        throw new ApiError.InternalError(
-          "An error occurred while receiving the extended data of the post",
-        )
+        throw new ApiError.InternalError(ERROR_POST.ARTICLE_NOT_FOUND(post._id))
       }
 
       return createdPostData
@@ -173,7 +172,7 @@ class PostService {
         }
         default:
           throw new ApiError.InternalError(
-            `unknown block type - ${blockData.type}`,
+            ERROR_POST.UNKNOWN_BLOCK_TYPE(blockData.type),
           )
       }
     })
@@ -193,9 +192,9 @@ class PostService {
     if (e instanceof ApiError) {
       throw e
     } else if (type === "create") {
-      throw new ApiError.InternalError("Error saving the article")
+      throw new ApiError.InternalError(ERROR_POST.POST_CREATION_ERROR)
     } else if (type === "edit") {
-      throw new ApiError.InternalError("Error updating the article")
+      throw new ApiError.InternalError(ERROR_POST.POST_UPDATE_ERROR)
     } else {
       throw new ApiError.UnexpectedError()
     }
@@ -218,9 +217,7 @@ class PostService {
       if (e instanceof ApiError) {
         throw e
       } else {
-        throw new ApiError.InternalError(
-          "Unexpected error when creating an article",
-        )
+        throw new ApiError.InternalError(ERROR_POST.POST_DELETE_ERROR)
       }
     }
 
@@ -231,7 +228,7 @@ class PostService {
     const post = await PostRepository.findById(postId)
 
     if (!post) {
-      throw ApiError.HttpException(`Article with id '${postId}' not found`)
+      throw ApiError.HttpException(ERROR_POST.ARTICLE_NOT_FOUND(postId))
     }
 
     return post
@@ -265,9 +262,7 @@ class PostService {
     const post = await this.isPostExist(postId)
 
     if (!post.author.equals(userId)) {
-      throw ApiError.HttpException(
-        `User with id ${userId} not author this post`,
-      )
+      throw ApiError.HttpException(ERROR_POST.NOT_AUTHOR(userId))
     }
 
     return post
