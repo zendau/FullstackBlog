@@ -27,7 +27,7 @@ const {
   <template v-else>
     <PostAuthorMenu :author-id="article.author.id" />
     <PostDetailsHeader :post="article" />
-    <NuxtImg src="/item.jpg" />
+    <NuxtImg :src="getApiFile(article.file.fileName)" />
     <h1>{{ article.title }}</h1>
     <p>{{ article.preview }}</p>
     <PostBlocks :blocks="article.blocks" />

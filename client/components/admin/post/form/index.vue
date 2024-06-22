@@ -77,16 +77,6 @@ const schema = object().shape({
 })
 
 export type ArticleSchema = InferType<typeof schema>
-// function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
-//   if (!blockConstructor.value) return
-
-//   const createdData: postData = {
-//     ...event.data,
-//     block: blockConstructor.value.getBlocksContent(),
-//   }
-
-//   console.log(createdData)
-// }
 
 function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
   if (type === "create") onSubmitCreate(event)
@@ -107,16 +97,16 @@ async function onSubmitCreate(event: FormSubmitEvent<ArticleSchema>) {
 }
 
 async function onSubmitEdit(event: FormSubmitEvent<ArticleSchema>) {
-  console.log(event)
-  // const { image, ...data } = event.data
-  // const productId = await productStore.edit({
-  //   id: productData?.id,
-  //   ...data,
-  //   ...(image.length === 1 && { image: image[0] }),
-  //   blocks: blockConstructor.value.getBlocksContent(),
-  // })
-  // if (!productId) return
-  // router.push(`/product/${productId}`)
+  delete event.data.file
+  const articleId = await articleStore.edit({
+    ...event.data,
+    id: articleData?.id,
+    ...(files.value.length === 1 && { file: files.value[0] }),
+    blocks: blockConstructor.value.getBlocksContent(),
+  })
+
+  if (!articleId) return
+  router.push(`/post/${articleId}`)
 }
 </script>
 

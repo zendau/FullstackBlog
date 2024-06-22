@@ -14,7 +14,7 @@ const { isEdit, content } = withDefaults(
   },
 )
 
-const text = ref("")
+const text = ref(content)
 
 function getData() {
   if (!text.value) return
