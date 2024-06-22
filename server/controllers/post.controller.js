@@ -1,10 +1,12 @@
 import ApiError from "../exceptions/api.error.js"
+import Logger from "../libs/logger.js"
 import PostService from "../services/post.service.js"
 import reactionService from "../services/reaction.service.js"
 
 class PostController {
   async create(req, res, next) {
     try {
+      Logger.info("Creating a new post", { userId: req.user.payload.id })
       const postData = req.body
 
       const { file } = req
@@ -25,12 +27,16 @@ class PostController {
       const data = await PostService.create(userId, postData, file)
       res.json(data)
     } catch (e) {
+      Logger.error("Error creating a post", { error: e.message })
       next(e)
     }
   }
 
   async edit(req, res, next) {
     try {
+      Logger.info(`Editing post - ${req.body.id}`, {
+        userId: req.user.payload.id,
+      })
       const postData = req.body
       const userId = req.user.payload.id
       const { file } = req
@@ -38,16 +44,21 @@ class PostController {
       const data = await PostService.edit(userId, postData, file)
       res.json(data)
     } catch (e) {
+      Logger.error("Error editing a post", { error: e.message })
       next(e)
     }
   }
 
   async delete(req, res, next) {
     try {
+      Logger.info(`Deleting post - ${req.params.id}`, {
+        userId: req.user.payload.id,
+      })
       const userId = req.user.payload.id
       const data = await PostService.delete(req.params.id, userId)
       res.json(data)
     } catch (e) {
+      Logger.error("Error deleting a post", { error: e.message })
       next(e)
     }
   }
