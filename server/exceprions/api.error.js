@@ -27,4 +27,8 @@ export default class ApiError extends Error {
   static PageNotFoundError(msg) {
     return new ApiError(404, msg)
   }
+
+  static UnexpectedError() {
+    return new ApiError(500, "Unexpected error")
+  }
 }
