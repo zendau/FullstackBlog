@@ -11,4 +11,7 @@ export const ERROR_POST = {
     `User with id ${userId} is not the author of this post`,
 }
 
-export const ERROR_FILE = {}
+export const ERROR_FILE = {
+  NOT_FOUND: (file) => `File '${file}' not found`,
+  NOT_FOUND_BY_ID: (fileId) => `File with id '${fileId}' not found`,
+}

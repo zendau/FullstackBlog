@@ -1,5 +1,6 @@
 import fs from "fs/promises"
 
+import { ERROR_FILE } from "../constants/error.messages"
 import ApiError from "../exceptions/api.error"
 
 class FileStorage {
@@ -7,12 +8,12 @@ class FileStorage {
     this.storagePath = storagePath
   }
 
-  removeFile(filename) {
+  removeFile(fileName) {
     try {
-      fs.unlink(`${this.storagePath}/${filename}`)
+      fs.unlink(`${this.storagePath}/${fileName}`)
     } catch (err) {
       if (err.code === "ENOENT") {
-        throw new ApiError.PageNotFoundError("File not found")
+        throw new ApiError.PageNotFoundError(ERROR_FILE.NOT_FOUND(fileName))
       } else {
         throw new ApiError.ForbiddenError()
       }

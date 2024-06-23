@@ -1,6 +1,7 @@
+import { ERROR_FILE } from "../constants/error.messages.js"
 import FileDTO from "../dtos/file.dto.js"
 import ApiError from "../exceptions/api.error.js"
-import fileModel from "../models/file.model.js"
+import FileRepository from "../repositories/file.repository.js"
 import FileStorage from "../storage/file.storage.js"
 
 class FileService {
@@ -10,7 +11,7 @@ class FileService {
 
   async upload(files, author) {
     const createPromiseFiles = files.map((file) => {
-      return fileModel.create({
+      return FileRepository.create({
         fileName: file.filename,
         size: file.size,
         mimetype: file.mimetype,
@@ -24,10 +25,10 @@ class FileService {
   }
 
   async getById(fileId) {
-    const file = await fileModel.findById(fileId)
+    const file = await FileRepository.findById(fileId)
 
     if (file === null) {
-      throw ApiError.HttpException(`File id ${fileId} is not found`)
+      throw ApiError.HttpException(ERROR_FILE.NOT_FOUND_BY_ID(fileId))
     }
 
     const fileDTO = new FileDTO(file)
@@ -35,10 +36,10 @@ class FileService {
   }
 
   async update(fileId, newFile) {
-    const file = await fileModel.findById(fileId)
+    const file = await FileRepository.findById(fileId)
 
     if (file === null) {
-      throw ApiError.HttpException(`File id ${fileId} is not found`)
+      throw ApiError.HttpException(ERROR_FILE.NOT_FOUND_BY_ID(fileId))
     }
 
     const oldFileName = file.fileName
@@ -56,9 +57,9 @@ class FileService {
   }
 
   async delete(fileId) {
-    const DeleteStatus = await fileModel.findByIdAndDelete(fileId)
+    const DeleteStatus = await FileRepository.findByIdAndDelete(fileId)
     if (DeleteStatus === null) {
-      throw ApiError.HttpException(`File id ${fileId} is not found`)
+      throw ApiError.HttpException(ERROR_FILE.NOT_FOUND_BY_ID(fileId))
     }
 
     this.fileStorage.removeFile(DeleteStatus.fileName)
