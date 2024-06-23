@@ -1,10 +1,13 @@
-import fs from "fs"
-
 import FileDTO from "../dtos/file.dto.js"
 import ApiError from "../exceptions/api.error.js"
 import fileModel from "../models/file.model.js"
+import FileStorage from "../storage/file.storage.js"
 
 class FileService {
+  constructor() {
+    this.fileStorage = new FileStorage(process.env.FILE_FOULDER)
+  }
+
   async upload(files, author) {
     const createPromiseFiles = files.map((file) => {
       return fileModel.create({
@@ -52,23 +55,13 @@ class FileService {
     return fileDTO
   }
 
-  removeFromStorage(filename) {
-    fs.unlink(`${process.env.FILE_FOULDER}/${filename}`, (err) => {
-      if (err && err.code === "ENOENT") {
-        throw ApiError.PageNotFoundError("File not found")
-      } else if (err) {
-        throw ApiError.ForbiddenError()
-      }
-    })
-  }
-
   async delete(fileId) {
     const DeleteStatus = await fileModel.findByIdAndDelete(fileId)
     if (DeleteStatus === null) {
       throw ApiError.HttpException(`File id ${fileId} is not found`)
     }
 
-    this.removeFromStorage(DeleteStatus.fileName)
+    this.fileStorage.removeFile(DeleteStatus.fileName)
 
     return true
   }
