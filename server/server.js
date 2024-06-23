@@ -11,6 +11,7 @@ import adminRoute from "./routes/admin.route.js"
 import commentRoute from "./routes/comment.route.js"
 import fileRoute from "./routes/file.route.js"
 import postRoute from "./routes/post.route.js"
+import reactionRoute from "./routes/reaction.route.js"
 import userRoute from "./routes/user.route.js"
 import validateEnv from "./utils/validateEnv.js"
 
@@ -66,6 +67,7 @@ class App {
     this.app.use("/file", fileRoute)
     this.app.use("/comment", commentRoute)
     this.app.use("/admin", adminRoute)
+    this.app.use("/reaction", reactionRoute)
   }
 
   initializeErrorHandling() {

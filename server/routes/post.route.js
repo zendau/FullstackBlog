@@ -10,8 +10,6 @@ import {
   editSchema,
   getOneSchema,
   paginationScheme,
-  reactSchema,
-  reactStatusSchema,
 } from "../validations/post.validation.js"
 
 const router = new Router()
@@ -180,57 +178,10 @@ router.delete(
 
 router.get("/get/:id", validate(getOneSchema, "params"), PostController.getOne)
 
-/**
- * @swagger
- * /post/reacting:
- *   patch:
- *     summary: Set reaction on post
- *     tags: [Post]
- *     security:
- *      - bearerAuth: []
- *     parameters:
- *       - in: postId
- *         name: postId
- *         schema:
- *          type: objectId
- *         description: objectId of post
- *       - in: isLiked
- *         name: isLiked
- *         schema:
- *          type: boolean
- *         description: boolean reaction on post
- *     responses:
- *       200:
- *         description: true
- *         content:
- *           application/json:
- *             schema:
- *              type: string
- *       400:
- *          description: Error message
- *       401:
- *         description: User is not auth
- *       500:
- *         description: Unexpected error
- */
-
-router.patch(
-  "/reacting",
-  userGuard,
-  validate(reactSchema, "query"),
-  PostController.reactionPost,
-)
-
 router.get(
   "/pagination",
   validate(paginationScheme, "query"),
   PostController.getPostsPagination,
-)
-router.get(
-  "/reaction",
-  userGuard,
-  validate(reactStatusSchema, "query"),
-  PostController.getPostReactionStatus,
 )
 
 export default router

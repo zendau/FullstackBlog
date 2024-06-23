@@ -22,6 +22,10 @@ class ReactionService {
       { $set: { isLiked } },
     )
 
+    if (!res && isLiked !== "null") {
+      await this.add(postId, userId, isLiked)
+    }
+
     if (res === null) {
       return false
     }

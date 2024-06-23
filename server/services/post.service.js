@@ -268,21 +268,6 @@ class PostService {
     return post
   }
 
-  async postReaction(postId, userId, isLiked) {
-    const reactionStatus = await ReactionService.setReaction(
-      postId,
-      userId,
-      isLiked,
-    )
-
-    if (!reactionStatus && isLiked !== "null") {
-      await this.postExist(postId)
-      await ReactionService.add(postId, userId, isLiked)
-    }
-
-    return true
-  }
-
   async getPostsPagination(idList, limit, skip, sortType, filterType) {
     const filter = postsMatchFilter(idList, filterType)
     const postLookupData = postLookup()

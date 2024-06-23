@@ -1,7 +1,6 @@
 import ApiError from "../exceptions/api.error.js"
 import Logger from "../libs/logger.js"
 import PostService from "../services/post.service.js"
-import reactionService from "../services/reaction.service.js"
 
 class PostController {
   async create(req, res, next) {
@@ -75,18 +74,6 @@ class PostController {
     }
   }
 
-  async reactionPost(req, res, next) {
-    try {
-      const { postId, isLiked } = req.query
-      const userId = req.user.payload.id
-
-      const resData = await PostService.postReaction(postId, userId, isLiked)
-      res.json(resData)
-    } catch (e) {
-      next(e)
-    }
-  }
-
   async getPostsPagination(req, res, next) {
     try {
       const { limit, page, exclude, sort, tag, authorId, substring, postId } =
@@ -112,18 +99,6 @@ class PostController {
       )
 
       res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
-
-  async getPostReactionStatus(req, res, next) {
-    try {
-      const { postId } = req.query
-      const userId = req.user.payload.id
-
-      const resData = await reactionService.reactionStatus(userId, postId)
-      res.json(resData)
     } catch (e) {
       next(e)
     }
