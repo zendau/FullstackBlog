@@ -1,20 +1,23 @@
 import crypto from "crypto"
 
+import { ERROR_CONFIRM_CODE } from "../constants/error.messages.js"
 import ApiError from "../exceptions/api.error.js"
-import confirmCodeModel from "../models/confirmCode.model.js"
+import ConfirmCodeRepository from "../repositories/confirmCode.repository.js"
 import NodeMailerService from "./nodemailer.service.js"
 
 class ConfirmCodeService {
   async createCode(userData) {
     try {
       const confirmCode = crypto.randomInt(1000000).toString()
-      const codeData = await confirmCodeModel.findOne({ user: userData.id })
+      const codeData = await ConfirmCodeRepository.findOne({
+        user: userData.id,
+      })
 
       if (codeData) {
         codeData.code = confirmCode
         await codeData.save()
       } else {
-        await confirmCodeModel.create({
+        await ConfirmCodeRepository.create({
           user: userData.id,
           code: confirmCode,
         })
@@ -23,34 +26,32 @@ class ConfirmCodeService {
       NodeMailerService.sendConfirmСode(confirmCode, userData.email)
       return true
     } catch (e) {
-      throw ApiError.HttpException(
-        'Error generating confirmation token. Please check the entered data and try again."',
-      )
+      throw ApiError.HttpException(ERROR_CONFIRM_CODE.CREATE)
     }
   }
 
   async deleteCode(code) {
-    const codeData = await confirmCodeModel.deleteOne({ code })
+    const codeData = await ConfirmCodeRepository.deleteOne({ code })
     return codeData
   }
 
   async checkCode(code) {
-    const codeData = await confirmCodeModel.findOne({ code })
+    const codeData = await ConfirmCodeRepository.findOne({ code })
 
     const confirmCodeStatus = !!codeData
 
     if (confirmCodeStatus) {
       await this.deleteCode(code)
     } else {
-      throw ApiError.HttpException("Wrong confirm code")
+      throw ApiError.HttpException(ERROR_CONFIRM_CODE.WRONG)
     }
   }
 
   async repeatCode(id, email) {
-    const codeData = await confirmCodeModel.findOne({ user: id })
+    const codeData = await ConfirmCodeRepository.findOne({ user: id })
 
     if (!codeData) {
-      throw ApiError.HttpException("Confirm code was not found")
+      throw ApiError.HttpException(ERROR_CONFIRM_CODE.NOT_FOUND)
     }
 
     NodeMailerService.sendConfirmСode(codeData.code, email)
