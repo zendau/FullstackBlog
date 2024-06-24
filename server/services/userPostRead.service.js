@@ -1,4 +1,4 @@
-import UserPostReadModel from "../models/userPostRead.model.js"
+import FileRepository from "../repositories/file.repository.js"
 
 class UserPostReadService {
   async incCounter(postId, ip) {
@@ -14,14 +14,14 @@ class UserPostReadService {
   }
 
   async isPostRead(postId, ip) {
-    const res = await UserPostReadModel.findOne({
+    const res = await FileRepository.findOne({
       $and: [{ post: postId }, { ip }],
     })
     return res
   }
 
   async setIsReadStatus(postId, ip) {
-    const res = await UserPostReadModel.create({
+    const res = await FileRepository.create({
       post: postId,
       ip,
     })
