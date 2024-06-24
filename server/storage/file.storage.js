@@ -13,9 +13,9 @@ class FileStorage {
       fs.unlink(`${this.storagePath}/${fileName}`)
     } catch (err) {
       if (err.code === "ENOENT") {
-        throw new ApiError.PageNotFoundError(ERROR_FILE.NOT_FOUND(fileName))
+        throw ApiError.PageNotFoundError(ERROR_FILE.NOT_FOUND(fileName))
       } else {
-        throw new ApiError.ForbiddenError()
+        throw ApiError.ForbiddenError()
       }
     }
   }

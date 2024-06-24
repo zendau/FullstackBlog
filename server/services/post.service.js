@@ -31,7 +31,6 @@ class PostService {
       const fileId = fileData[0].id
 
       if (!fileId) {
-        // TODO: не конструктор. Исправить так же другие
         throw ApiError.InternalError(ERROR_POST.FILE_SAVE_ERROR)
       }
 
@@ -90,13 +89,13 @@ class PostService {
       } else if (type === "edit") {
         post = await PostRepository.findByIdAndUpdate(postId, preparePostData)
       } else {
-        throw new ApiError.InternalError(ERROR_POST.UNKNOWN_OPERATION_TYPE)
+        throw ApiError.InternalError(ERROR_POST.UNKNOWN_OPERATION_TYPE)
       }
 
       const createdPostData = await this.getOne(post._id, null)
 
       if (!createdPostData) {
-        throw new ApiError.InternalError(ERROR_POST.ARTICLE_NOT_FOUND(post._id))
+        throw ApiError.InternalError(ERROR_POST.ARTICLE_NOT_FOUND(post._id))
       }
 
       return createdPostData
@@ -172,7 +171,7 @@ class PostService {
           return tempBlock
         }
         default:
-          throw new ApiError.InternalError(
+          throw ApiError.InternalError(
             ERROR_POST.UNKNOWN_BLOCK_TYPE(blockData.type),
           )
       }
@@ -193,11 +192,11 @@ class PostService {
     if (e instanceof ApiError) {
       throw e
     } else if (type === "create") {
-      throw new ApiError.InternalError(ERROR_POST.POST_CREATION_ERROR)
+      throw ApiError.InternalError(ERROR_POST.POST_CREATION_ERROR)
     } else if (type === "edit") {
-      throw new ApiError.InternalError(ERROR_POST.POST_UPDATE_ERROR)
+      throw ApiError.InternalError(ERROR_POST.POST_UPDATE_ERROR)
     } else {
-      throw new ApiError.UnexpectedError()
+      throw ApiError.UnexpectedError()
     }
   }
 
@@ -205,7 +204,7 @@ class PostService {
     if (e instanceof ApiError) {
       throw e
     } else {
-      throw new ApiError.InternalError(defaultMessage)
+      throw ApiError.InternalError(defaultMessage)
     }
   }
 
@@ -218,7 +217,7 @@ class PostService {
       if (e instanceof ApiError) {
         throw e
       } else {
-        throw new ApiError.InternalError(ERROR_POST.POST_DELETE_ERROR)
+        throw ApiError.InternalError(ERROR_POST.POST_DELETE_ERROR)
       }
     }
 
