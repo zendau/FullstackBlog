@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 
-import { ERROR_FILE } from "../constants/error.messages"
-import ApiError from "../exceptions/api.error"
+import { ERROR_FILE } from "../constants/error.messages.js"
+import ApiError from "../exceptions/api.error.js"
 
 class FileStorage {
   constructor(storagePath) {
