@@ -3,9 +3,13 @@ import App from "./server.js"
 
 const PORT = process.env.PORT || 3000
 
-try {
-  const app = new App(PORT)
-  app.listen()
-} catch (e) {
-  Logger.error(e)
+async function startServer() {
+  try {
+    const app = new App(PORT)
+    await app.listen()
+  } catch (e) {
+    Logger.error(e)
+  }
 }
+
+startServer()

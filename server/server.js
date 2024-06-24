@@ -2,17 +2,11 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
 import mongoose from "mongoose"
-import swaggerJsDoc from "swagger-jsdoc"
-import swaggerUI from "swagger-ui-express"
 
 import Logger from "./libs/logger.js"
 import errorMiddleware from "./middlewares/error.middleware.js"
-import adminRoute from "./routes/admin.route.js"
-import commentRoute from "./routes/comment.route.js"
-import fileRoute from "./routes/file.route.js"
-import postRoute from "./routes/post.route.js"
-import reactionRoute from "./routes/reaction.route.js"
-import userRoute from "./routes/user.route.js"
+import routes from "./routes/index.js"
+import { initializeSwagger } from "./utils/swagger.js"
 import validateEnv from "./utils/validateEnv.js"
 
 class App {
@@ -22,27 +16,11 @@ class App {
 
     validateEnv()
 
-    this.initializeSwagger()
     this.initializeMiddlewares()
     this.initializeRoutes()
     this.initializeErrorHandling()
-  }
 
-  initializeSwagger() {
-    const options = {
-      definition: {
-        openapi: "3.0.0",
-        info: {
-          title: "Blog API",
-          version: "1.0.0",
-          description: "A simple Express Blog API",
-        },
-      },
-      apis: ["./routes/*.js", "./models/*.js", "./dtos/*.js"],
-    }
-
-    const specs = swaggerJsDoc(options)
-    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
+    initializeSwagger(this.app)
   }
 
   initializeMiddlewares() {
@@ -62,12 +40,7 @@ class App {
   }
 
   initializeRoutes() {
-    this.app.use("/user", userRoute)
-    this.app.use("/post", postRoute)
-    this.app.use("/file", fileRoute)
-    this.app.use("/comment", commentRoute)
-    this.app.use("/admin", adminRoute)
-    this.app.use("/reaction", reactionRoute)
+    this.app.use(routes)
   }
 
   initializeErrorHandling() {
@@ -81,8 +54,8 @@ class App {
         Logger.info(`App listening on the port http://localhost:${this.port}`)
       })
     } catch (e) {
-      Logger.error(e)
-      throw new Error(e)
+      Logger.error("Failed to start server:", e)
+      throw e
     }
     return this.app
   }
@@ -94,9 +67,10 @@ class App {
         useCreateIndex: true,
         useUnifiedTopology: true,
       })
+      Logger.info("Connected to the database")
     } catch (e) {
-      Logger.error(e)
-      throw new Error(e)
+      Logger.error("Failed to connect to the database:", e)
+      throw e
     }
   }
 
