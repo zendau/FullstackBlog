@@ -1,15 +1,20 @@
-import mongoose from "mongoose"
-
+import {
+  byUser,
+  extendedData,
+  facetData,
+  matchFilter,
+} from "../aggregation/comment.builder.js"
+import { ERROR_COMMENT } from "../constants/error.messages.js"
 import CommentDTO from "../dtos/comment.dto.js"
 import ApiError from "../exceptions/api.error.js"
-import commentModel from "../models/comment.model.js"
+import CommentRepository from "../repositories/comment.repository.js"
 import PostService from "./post.service.js"
 
 class CommentService {
   async create(user, post, message) {
     await PostService.postExist(post)
 
-    const inseredComment = await commentModel.create({
+    const inseredComment = await CommentRepository.create({
       user,
       post,
       message,
@@ -25,7 +30,7 @@ class CommentService {
   }
 
   async edit(commentId, userId, newMessage) {
-    const res = await commentModel.findOneAndUpdate(
+    const res = await CommentRepository.findOneAndUpdate(
       {
         $and: [{ _id: commentId }, { user: userId }],
       },
@@ -36,9 +41,7 @@ class CommentService {
     )
 
     if (res === null) {
-      throw ApiError.HttpException(
-        `Comment id ${commentId} is not found. Or User with id ${userId} is not author of this post`,
-      )
+      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND)
     }
 
     const commentPopulate = await res.populate("user").execPopulate()
@@ -48,210 +51,29 @@ class CommentService {
   }
 
   async delete(commentId, userId) {
-    const deleteStatus = await commentModel.findOneAndDelete({
+    const deleteStatus = await CommentRepository.findOneAndDelete({
       $and: [{ _id: commentId }, { user: userId }],
     })
     if (deleteStatus === null) {
-      throw ApiError.HttpException(
-        `Comment id ${commentId} is not found. Or User with id ${userId} is not author of this post`,
-      )
+      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND)
     }
     const commentDTO = new CommentDTO(deleteStatus)
     return commentDTO
   }
 
   async usersComments(userId) {
-    const commentList = await commentModel.aggregate([
-      {
-        $match: {
-          user: mongoose.Types.ObjectId(userId),
-        },
-      },
-      {
-        $lookup: {
-          from: "posts",
-          localField: "post",
-          foreignField: "_id",
-          as: "post",
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id",
-          postTitle: "$post.title",
-          postId: "$post._id",
-          message: 1,
-        },
-      },
-    ])
+    const commentList = await CommentRepository.aggregate(byUser(userId))
     return commentList
   }
 
-  async getList(postId) {
-    const commentList = await commentModel
-      .find({ post: postId })
-      .populate("user")
-
-    const commentListDTO = commentList.map((comment) => new CommentDTO(comment))
-    return commentListDTO
-  }
-
-  commentsMatchFilter(idList, filter) {
-    const matchData = {}
-
-    const objectIdList = Array.isArray(idList)
-      ? idList.map((id) => mongoose.Types.ObjectId(id))
-      : []
-
-    // Выборка комментариев пользователя
-    if (filter?.authorId) {
-      matchData.user = {
-        $eq: mongoose.Types.ObjectId(filter.authorId),
-      }
-    }
-
-    // Выборка комментариев поста
-    if (filter?.postId) {
-      matchData.post = {
-        $eq: mongoose.Types.ObjectId(filter.postId),
-      }
-    }
-
-    // Исключения постов которые уже были получины
-    matchData._id = {
-      $nin: objectIdList,
-    }
-
-    return [
-      {
-        $match: {
-          ...matchData,
-        },
-      },
-    ]
-  }
-
-  commentssExtendedData() {
-    return [
-      {
-        $lookup: {
-          from: "users",
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-      {
-        $lookup: {
-          from: "posts",
-          localField: "post",
-          foreignField: "_id",
-          as: "post",
-        },
-      },
-      {
-        $unwind: "$post",
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id",
-          edited: 1,
-          user: {
-            id: "$user._id",
-            email: "$user.email",
-            isActivated: "$user.isActivated",
-            isBlocked: "$user.isBlocked",
-          },
-          post: {
-            id: "$post._id",
-            title: "$post.title",
-          },
-          message: 1,
-          createdDate: 1,
-        },
-      },
-    ]
-  }
-
-  commentsSort(filter) {
-    const sort = {}
-
-    switch (filter) {
-      case "createdDate":
-      default:
-        sort.createdDate = -1
-        break
-    }
-
-    return [
-      {
-        $sort: sort,
-      },
-    ]
-  }
-
-  postFacet(skip, limit) {
-    const postsLimit = { $limit: limit }
-    const postsSkip = { $skip: skip }
-
-    const facetPosts = []
-
-    if (skip) {
-      facetPosts.push(postsSkip)
-    }
-    if (limit >= 0) {
-      facetPosts.push(postsLimit)
-    }
-
-    const facet = [
-      {
-        $facet: {
-          list: [{ $sort: { createdDate: -1 } }, ...facetPosts],
-          total: [
-            {
-              $group: {
-                _id: null,
-                count: {
-                  $sum: 1,
-                },
-              },
-            },
-            {
-              $project: {
-                _id: 0,
-                count: 1,
-              },
-            },
-          ],
-        },
-      },
-      {
-        $unwind: "$total",
-      },
-      {
-        $project: {
-          list: 1,
-          total: "$total.count",
-        },
-      },
-    ]
-
-    return facet
-  }
-
   async getCommentsPagination(idList, limit, skip, filterType) {
-    const filter = this.commentsMatchFilter(idList, filterType)
-    const extended = this.commentssExtendedData()
-    const facet = this.postFacet(skip, limit)
+    const filter = matchFilter(idList, filterType)
+    const extended = extendedData()
+    const facet = facetData(skip, limit)
 
     const combineAggregate = [...filter, ...extended, ...facet]
 
-    const commens = await commentModel.aggregate(combineAggregate)
+    const commens = await CommentRepository.aggregate(combineAggregate)
 
     if (!commens[0]) return [{ list: [], hasMore: false, total: 0 }]
 
