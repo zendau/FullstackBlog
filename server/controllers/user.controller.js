@@ -65,16 +65,6 @@ class UserController {
     }
   }
 
-  // TODO: check
-  async userList(req, res, next) {
-    try {
-      const users = await UserService.getUsersList()
-      return res.json(users)
-    } catch (e) {
-      next(e)
-    }
-  }
-
   async logoutUser(req, res, next) {
     try {
       const { JWTRefreshToken } = req.cookies

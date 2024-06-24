@@ -1,14 +1,15 @@
 import bcrypt from "bcrypt"
-import mongoose from "mongoose"
 import { v4 as uuid } from "uuid"
 
+import { combine } from "../aggregation/user.builder.js"
+import { ERROR_USER } from "../constants/error.messages.js"
+import { RESPONSE_MESSAGE } from "../constants/mail.messages.js"
 import UserDTO from "../dtos/user.dto.js"
 import ApiError from "../exceptions/api.error.js"
 import Logger from "../libs/logger.js"
-import userModel from "../models/user.model.js"
+import UserRepository from "../repositories/user.repository.js"
 import ConfirmCodeService from "./confirmCode.service.js"
 import nodemailerService from "./nodemailer.service.js"
-import PostService from "./post.service.js"
 import TokenService from "./token.service.js"
 
 class UserService {
@@ -16,7 +17,7 @@ class UserService {
     await this.checkEmail(email)
     const hashPass = await this.getHashPassword(password)
 
-    const user = await userModel.create({
+    const user = await UserRepository.create({
       email,
       password: hashPass,
     })
@@ -34,13 +35,13 @@ class UserService {
     const user = await this.getByEmail(email)
 
     if (!user) {
-      throw ApiError.HttpException("bad credentials")
+      throw ApiError.HttpException(ERROR_USER.BAD_CREDENTIALS)
     }
 
     const passwordEquals = await bcrypt.compare(password, user.password)
 
     if (!passwordEquals) {
-      throw ApiError.HttpException("bad credentials")
+      throw ApiError.HttpException(ERROR_USER.BAD_CREDENTIALS)
     }
 
     const userDTO = new UserDTO(user)
@@ -61,7 +62,7 @@ class UserService {
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError()
     }
-    const user = await userModel.findById(userData.id)
+    const user = await UserRepository.findById(userData.id)
     const userDTO = new UserDTO(user)
     const tokens = TokenService.generateTokens({ ...userDTO })
     Logger.info(`Update token to ${userDTO.email}`)
@@ -70,18 +71,11 @@ class UserService {
     return tokens
   }
 
-  async getUsersList() {
-    const users = await userModel.find()
-
-    const userDTO = users.map((user) => new UserDTO(user))
-    return userDTO
-  }
-
   async getById(id) {
-    const user = await userModel.findById(id)
+    const user = await UserRepository.findById(id)
 
     if (user === null) {
-      throw ApiError.HttpException(`User id ${id} is not found`)
+      throw ApiError.HttpException(ERROR_USER.NOT_FOUND_BY_ID)
     }
 
     const userDTO = new UserDTO(user)
@@ -89,147 +83,10 @@ class UserService {
     return userDTO
   }
 
-  userLookup() {
-    return [
-      {
-        $lookup: {
-          from: "posts",
-          localField: "_id",
-          foreignField: "author",
-          as: "posts",
-        },
-      },
-      {
-        $lookup: {
-          from: "comments",
-          localField: "posts._id",
-          foreignField: "post",
-          as: "comments",
-        },
-      },
-      {
-        $lookup: {
-          from: "userpostreads",
-          localField: "posts._id",
-          foreignField: "post",
-          as: "postreads",
-        },
-      },
-      {
-        $lookup: {
-          from: "reactions",
-          localField: "posts._id",
-          foreignField: "post",
-          as: "react",
-        },
-      },
-    ]
-  }
-
   async getUserData(id) {
-    const postsRating = await PostService.postsRating(true)
-    const combineAggregate = [
-      {
-        $match: {
-          _id: {
-            $eq: mongoose.Types.ObjectId(id),
-          },
-        },
-      },
-      ...this.userLookup(),
-      ...postsRating,
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: {
-          path: "$user",
-        },
-      },
-      {
-        $lookup: {
-          from: "reactions",
-          localField: "_id",
-          foreignField: "user",
-          as: "react",
-        },
-      },
-      {
-        $unwind: {
-          path: "$react",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          counterLikes: {
-            $sum: {
-              $cond: {
-                if: {
-                  $eq: ["$react.isLiked", true],
-                },
-                then: 1,
-                else: 0,
-              },
-            },
-          },
-          counterDislikes: {
-            $sum: {
-              $cond: {
-                if: {
-                  $eq: ["$react.isLiked", false],
-                },
-                then: 1,
-                else: 0,
-              },
-            },
-          },
-          rating: {
-            $first: "$rating",
-          },
-          user: {
-            $first: "$user",
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "comments",
-          localField: "_id",
-          foreignField: "user",
-          as: "comments",
-        },
-      },
-      {
-        $lookup: {
-          from: "posts",
-          localField: "_id",
-          foreignField: "author",
-          as: "posts",
-        },
-      },
-      {
-        $project: {
-          rating: 1,
-          id: "$user._id",
-          _id: 0,
-          isBlocked: "$user.isBlocked",
-          email: "$user.email",
-          counterLikes: 1,
-          counterDislikes: 1,
-          counterPosts: { $size: "$posts" },
-          counterComments: { $size: "$comments" },
-        },
-      },
-    ]
+    const combineAggregate = combine(id)
 
-    const userData = await userModel.aggregate(combineAggregate)
+    const userData = await UserRepository.aggregate(combineAggregate)
     return userData
   }
 
@@ -243,10 +100,10 @@ class UserService {
   }
 
   async setConfirmCode(email) {
-    const user = await userModel.findOne({ email })
+    const user = await UserRepository.findOne({ email })
 
     if (!user) {
-      throw ApiError.HttpException(`Not found user with email - ${email}`)
+      throw ApiError.HttpException(ERROR_USER.NOT_FOUND_BY_EMAIL)
     }
 
     const res = await ConfirmCodeService.createCode(user)
@@ -256,10 +113,10 @@ class UserService {
   async saveNewUserData(userId, code, newEmail, newPassword) {
     await ConfirmCodeService.checkCode(code)
 
-    const user = await userModel.findById(userId)
+    const user = await UserRepository.findById(userId)
 
     if (!user) {
-      throw ApiError.HttpException(`Not found user with id - ${userId}`)
+      throw ApiError.HttpException(ERROR_USER.NOT_FOUND_BY_ID)
     }
 
     if (newEmail) {
@@ -291,7 +148,7 @@ class UserService {
 
     await ConfirmCodeService.checkCode(confirmCode)
 
-    await userModel.findByIdAndUpdate(userData.id, {
+    await UserRepository.findByIdAndUpdate(userData.id, {
       isActivated: true,
     })
     await ConfirmCodeService.deleteCode(confirmCode)
@@ -303,11 +160,11 @@ class UserService {
     const userData = await this.getById(id)
 
     await ConfirmCodeService.repeatCode(id, userData.email)
-    return { message: `Confirm code was resend is your email` }
+    return { message: RESPONSE_MESSAGE.CONFIRM_CODE }
   }
 
   async getByEmail(email) {
-    const userData = await userModel.findOne({ email })
+    const userData = await UserRepository.findOne({ email })
     return userData
   }
 
@@ -315,9 +172,7 @@ class UserService {
     const candidate = await this.getByEmail(email)
 
     if (candidate) {
-      throw ApiError.HttpException(
-        `user with email - ${email} is already registered`,
-      )
+      throw ApiError.HttpException(ERROR_USER.EMAIL_EXISTS)
     }
 
     return candidate
@@ -343,7 +198,7 @@ class UserService {
 
     nodemailerService.sendNewPassword(newPaswword, email)
 
-    return { message: `New password was send to ${email}` }
+    return { message: RESPONSE_MESSAGE.RESET_PASSWORD(email) }
   }
 }
 
