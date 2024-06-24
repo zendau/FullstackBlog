@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-import { postsRating } from "./pagination.builder.js"
+import { rating } from "./post.builder.js"
 
 export function lookup() {
   return [
@@ -49,7 +49,7 @@ export function combine(id) {
       },
     },
     ...lookup(),
-    ...postsRating(true),
+    ...rating(true),
     {
       $lookup: {
         from: "users",

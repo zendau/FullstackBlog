@@ -13,6 +13,10 @@ class PostRepository {
     return PostModel.findById(postId)
   }
 
+  async findByIdAndUpdate(postId, data) {
+    return PostModel.findByIdAndUpdate(postId, data)
+  }
+
   async aggregate(pipeline) {
     return PostModel.aggregate(pipeline)
   }

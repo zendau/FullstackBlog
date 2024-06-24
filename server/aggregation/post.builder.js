@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-export function postLookup() {
+export function lookup() {
   return [
     {
       $lookup: {
@@ -29,7 +29,7 @@ export function postLookup() {
   ]
 }
 
-export function postsRating(withCounters) {
+export function rating(withCounters) {
   return [
     {
       $project: {
@@ -111,7 +111,7 @@ export function postsRating(withCounters) {
   ]
 }
 
-export function postsMatchFilter(idList, filter) {
+export function matchFilter(idList, filter) {
   const matchData = {}
 
   const objectIdList = Array.isArray(idList)
@@ -164,7 +164,7 @@ export function postsMatchFilter(idList, filter) {
   ]
 }
 
-export function postsExtendedData() {
+export function extendedData() {
   return [
     {
       $lookup: {
@@ -245,7 +245,7 @@ export function postsExtendedData() {
   ]
 }
 
-export function postsSort(filter) {
+export function sortData(filter) {
   const sort = {}
 
   switch (filter) {
@@ -381,7 +381,7 @@ export function blockExtended() {
   ]
 }
 
-export function postFacet(skip, limit, sort) {
+export function facetData(skip, limit, sort) {
   const postsLimit = { $limit: limit }
   const postsSkip = { $skip: skip }
 

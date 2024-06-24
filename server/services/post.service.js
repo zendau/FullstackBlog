@@ -1,12 +1,12 @@
 import {
   blockExtended,
-  postFacet,
-  postLookup,
-  postsExtendedData,
-  postsMatchFilter,
-  postsRating,
-  postsSort,
-} from "../aggregation/pagination.builder.js"
+  extendedData,
+  facetData,
+  lookup,
+  matchFilter,
+  rating,
+  sortData,
+} from "../aggregation/post.builder.js"
 import { ERROR_POST } from "../constants/error.messages.js"
 import ApiError from "../exceptions/api.error.js"
 import {
@@ -31,7 +31,8 @@ class PostService {
       const fileId = fileData[0].id
 
       if (!fileId) {
-        throw new ApiError.InternalError(ERROR_POST.FILE_SAVE_ERROR)
+        // TODO: не конструктор. Исправить так же другие
+        throw ApiError.InternalError(ERROR_POST.FILE_SAVE_ERROR)
       }
 
       const createdPostData = await this.insert("create", author, {
@@ -235,16 +236,16 @@ class PostService {
   }
 
   async getOne(postId, ip) {
-    const filter = postsMatchFilter(null, { postId })
-    const postLookupData = postLookup()
-    const rating = postsRating(true)
-    const postExtended = postsExtendedData()
+    const filter = matchFilter(null, { postId })
+    const postLookupData = lookup()
+    const ratingData = rating(true)
+    const postExtended = extendedData()
     const blocksExntended = blockExtended()
 
     const combineAggregate = [
       ...filter,
       ...postLookupData,
-      ...rating,
+      ...ratingData,
       ...postExtended,
       ...blocksExntended,
     ]
@@ -269,18 +270,18 @@ class PostService {
   }
 
   async getPostsPagination(idList, limit, skip, sortType, filterType) {
-    const filter = postsMatchFilter(idList, filterType)
-    const postLookupData = postLookup()
-    const rating = postsRating(true)
-    const extended = postsExtendedData()
-    const sort = postsSort(sortType)
+    const filter = matchFilter(idList, filterType)
+    const postLookupData = lookup()
+    const ratingData = rating(true)
+    const extended = extendedData()
+    const sort = sortData(sortType)
 
-    const facet = postFacet(skip, limit, sort)
+    const facet = facetData(skip, limit, sort)
 
     const combineAggregate = [
       ...filter,
       ...postLookupData,
-      ...rating,
+      ...ratingData,
       ...extended,
       ...facet,
     ]
