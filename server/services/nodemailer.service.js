@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer"
 
+import { ERROR_NODEMAILER } from "../constants/error.messages.js"
+import { CONFIRM_CODE, NEW_PASSWORD } from "../constants/mail.messages.js"
 import ApiError from "../exceptions/api.error.js"
 
 class NodeMailerService {
@@ -20,11 +22,11 @@ class NodeMailerService {
       await this.transporter.sendMail({
         to: email,
         from: process.env.MAILER_FROM,
-        subject: "Confirm code",
-        html: `<p>Your confirm code - ${code}</p>`,
+        subject: CONFIRM_CODE.SUBJECT,
+        html: CONFIRM_CODE.HTML(code),
       })
     } catch (e) {
-      throw ApiError.InternalError("An error occurred while sending the email")
+      throw ApiError.InternalError(ERROR_NODEMAILER.SEND)
     }
   }
 
@@ -33,11 +35,11 @@ class NodeMailerService {
       await this.transporter.sendMail({
         to: email,
         from: process.env.MAILER_FROM,
-        subject: "Reseted password",
-        html: `<p>Your new password - ${password}</p>`,
+        subject: NEW_PASSWORD.SUBJECT,
+        html: NEW_PASSWORD.HTML(password),
       })
     } catch (e) {
-      throw ApiError.InternalError("An error occurred while sending the email")
+      throw ApiError.InternalError(ERROR_NODEMAILER.SEND)
     }
   }
 }
