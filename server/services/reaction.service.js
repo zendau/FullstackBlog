@@ -1,8 +1,8 @@
-import reactionModel from "../models/reaction.model.js"
+import ReactionRepository from "../repositories/reaction.repository.js"
 
 class ReactionService {
   async add(postId, userId, isLiked) {
-    await reactionModel.create({
+    await ReactionRepository.create({
       post: postId,
       user: userId,
       isLiked,
@@ -15,7 +15,7 @@ class ReactionService {
       return deletedReactionStatus
     }
 
-    const res = await reactionModel.findOneAndUpdate(
+    const res = await ReactionRepository.findOneAndUpdate(
       {
         $and: [{ post: postId }, { user: userId }],
       },
@@ -33,7 +33,7 @@ class ReactionService {
   }
 
   async deleteReaction(postId, userId) {
-    const res = await reactionModel.findOneAndDelete({
+    const res = await ReactionRepository.findOneAndDelete({
       $and: [{ post: postId }, { user: userId }],
     })
 
@@ -44,12 +44,15 @@ class ReactionService {
   }
 
   async deletePostReactions(postId) {
-    await reactionModel.deleteMany({ post: postId })
+    await ReactionRepository.deleteMany({ post: postId })
   }
 
   async reactionStatus(userId, postId) {
     try {
-      const res = await reactionModel.findOne({ post: postId, user: userId })
+      const res = await ReactionRepository.findOne({
+        post: postId,
+        user: userId,
+      })
       return res.isLiked
     } catch {
       return null
