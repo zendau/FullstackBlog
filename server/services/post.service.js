@@ -20,6 +20,7 @@ import {
   TextBlock,
 } from "../models/post.model.js"
 import PostRepository from "../repositories/post.repository.js"
+import CommentService from "./comment.service.js"
 import FileService from "./file.service.js"
 import ReactionService from "./reaction.service.js"
 import UserPostReadService from "./userPostRead.service.js"
@@ -212,7 +213,11 @@ class PostService {
     try {
       const post = await this.isPostAuthor(userId, postId)
       post.deleteOne()
-      await ReactionService.deletePostReactions(postId)
+
+      FileService.delete(post.file)
+      ReactionService.deletePostReactions(postId)
+      UserPostReadService.deleteManyByPost(postId)
+      CommentService.deleteManyByPost(postId)
     } catch (e) {
       if (e instanceof ApiError) {
         throw e

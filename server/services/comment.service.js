@@ -8,12 +8,9 @@ import { ERROR_COMMENT } from "../constants/error.messages.js"
 import CommentDTO from "../dtos/comment.dto.js"
 import ApiError from "../exceptions/api.error.js"
 import CommentRepository from "../repositories/comment.repository.js"
-import PostService from "./post.service.js"
 
 class CommentService {
   async create(user, post, message) {
-    await PostService.postExist(post)
-
     const inseredComment = await CommentRepository.create({
       user,
       post,
@@ -59,6 +56,10 @@ class CommentService {
     }
     const commentDTO = new CommentDTO(deleteStatus)
     return commentDTO
+  }
+
+  async deleteManyByPost(postId) {
+    await CommentRepository.deleteMany({ post: postId })
   }
 
   async usersComments(userId) {

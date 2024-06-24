@@ -1,6 +1,6 @@
 import confirmCodeModel from "../models/confirmCode.model.js"
 
-class FileRepository {
+class ConfirmCodeRepository {
   async create(data) {
     return confirmCodeModel.create(data)
   }
@@ -14,4 +14,4 @@ class FileRepository {
   }
 }
 
-export default new FileRepository()
+export default new ConfirmCodeRepository()

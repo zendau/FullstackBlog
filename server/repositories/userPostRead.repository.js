@@ -8,6 +8,10 @@ class UserPostReadRepository {
   async findOne(condition) {
     return UserPostReadModel.findOne(condition)
   }
+
+  async deleteMany(condition) {
+    return UserPostReadModel.deleteMany(condition)
+  }
 }
 
 export default new UserPostReadRepository()

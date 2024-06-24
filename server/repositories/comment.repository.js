@@ -13,6 +13,10 @@ class CommentRepository {
     return commentModel.findOneAndDelete(condition)
   }
 
+  async deleteMany(condition) {
+    return commentModel.deleteMany(condition)
+  }
+
   async aggregate(condition) {
     return commentModel.aggregate(condition)
   }

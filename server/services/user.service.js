@@ -14,7 +14,7 @@ import TokenService from "./token.service.js"
 
 class UserService {
   async registration(email, password) {
-    await this.checkEmail(email)
+    await this.checkEmailExists(email)
     const hashPass = await this.getHashPassword(password)
 
     const user = await UserRepository.create({
@@ -120,16 +120,15 @@ class UserService {
     }
 
     if (newEmail) {
-      await this.checkEmail(newEmail)
+      await this.checkEmailExists(newEmail)
       user.email = newEmail
     }
 
     if (newPassword) {
-      const hashNewPass = await bcrypt.hash(
+      user.password = await bcrypt.hash(
         newPassword,
         parseInt(process.env.BCRYPT_SALT),
       )
-      user.password = hashNewPass
     }
 
     const updatedUserModel = await user.save()
@@ -168,7 +167,7 @@ class UserService {
     return userData
   }
 
-  async checkEmail(email) {
+  async checkEmailExists(email) {
     const candidate = await this.getByEmail(email)
 
     if (candidate) {
