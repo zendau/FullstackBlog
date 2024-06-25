@@ -119,8 +119,8 @@ router.get(
 router.put(
   "/update/:id",
   userGuard,
-  validate(updateSchema, "params"),
   fileUpload,
+  validate(updateSchema, "params"),
   FileController.update,
 )
 

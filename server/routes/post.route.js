@@ -60,8 +60,8 @@ const router = new Router()
 router.post(
   "/create",
   userGuard,
-  validate(createSchema),
   fileUpload,
+  validate(createSchema),
   PostController.create,
 )
 
@@ -104,8 +104,8 @@ router.post(
 router.patch(
   "/edit",
   userGuard,
-  validate(editSchema),
   fileUpload,
+  validate(editSchema),
   PostController.edit,
 )
 

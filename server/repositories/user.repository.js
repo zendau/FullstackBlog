@@ -7,27 +7,27 @@ class UserRepository {
   }
 
   async create(data) {
-    return UserRepository.create(data)
+    return UserModel.create(data)
   }
 
   async findById(userId) {
-    return UserRepository.findById(userId)
+    return UserModel.findById(userId)
   }
 
   async findOne(condition) {
-    return UserRepository.findOne(condition)
+    return UserModel.findOne(condition)
   }
 
   async aggregate(data) {
-    return UserRepository.aggregate(data)
+    return UserModel.aggregate(data)
   }
 
   async findOneAndUpdate(condition, data, isNew) {
-    return UserRepository.findOneAndUpdate(condition, data, isNew)
+    return UserModel.findOneAndUpdate(condition, data, isNew)
   }
 
   async findByIdAndUpdate(condition, data) {
-    return UserRepository.findByIdAndUpdate(condition, data)
+    return UserModel.findByIdAndUpdate(condition, data)
   }
 }
 

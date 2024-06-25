@@ -51,7 +51,7 @@ class FileService {
     const updatedData = await file.save()
     const fileDTO = new FileDTO(updatedData)
 
-    this.removeFromStorage(oldFileName)
+    this.fileStorage.removeFile(oldFileName)
 
     return fileDTO
   }

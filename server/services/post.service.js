@@ -68,7 +68,7 @@ class PostService {
 
   async insert(type, author, { postData, fileId, postId }) {
     try {
-      const tagsList = postData.tags.split(",")
+      const tagsList = postData.tags ? postData.tags.split(",") : null
 
       const blocksData = postData.blocks ? JSON.parse(postData.blocks) : []
 
@@ -183,7 +183,7 @@ class PostService {
     return {
       title: postData.title,
       preview: postData.preview,
-      tags: tagsList,
+      ...(tagsList && { tags: tagsList }),
       timeRead: postData.timeRead,
       blocks: postBlocks,
     }
