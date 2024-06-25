@@ -4,8 +4,9 @@ const { isAuth } = storeToRefs(useAuthStore())
 const articleId = inject("articleId", "")
 
 const commnentStore = useCommentStore()
-commnentStore.$reset()
 commnentStore.postId = articleId
+
+onUnmounted(() => commnentStore.$reset())
 </script>
 
 <template>

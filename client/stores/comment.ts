@@ -27,7 +27,7 @@ export const useCommentStore = defineStore("comment", () => {
 
   const page = ref(1)
   const count = ref(5)
-  const total = ref()
+  const total = ref(0)
 
   const postId = ref("")
   const authorId = ref("")
@@ -39,7 +39,7 @@ export const useCommentStore = defineStore("comment", () => {
     error.value = ""
     data.length = 0
     hasMore.value = true
-    total.value = undefined
+    total.value = 0
 
     postId.value = ""
     authorId.value = ""
