@@ -1,22 +1,9 @@
-import Joi from "joi"
-import objectId from "joi-objectid"
-
-import ApiError from "../exceptions/api.error.js"
 import Logger from "../libs/logger.js"
 import UserService from "../services/user.service.js"
-
-Joi.objectId = objectId(Joi)
 
 class UserController {
   async registration(req, res, next) {
     try {
-      const schema = Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).max(20).required(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { email, password } = req.body
       const data = await UserService.registration(email, password)
       res.cookie("JWTRefreshToken", data.refreshToken, {
@@ -32,13 +19,6 @@ class UserController {
 
   async login(req, res, next) {
     try {
-      const schema = Joi.object({
-        email: Joi.string().email(),
-        password: Joi.string().min(6).max(40),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { email, password } = req.body
       const userData = await UserService.login(email, password)
       res.cookie("JWTRefreshToken", userData.refreshToken, {
@@ -79,12 +59,6 @@ class UserController {
 
   async sendConfirmCode(req, res, next) {
     try {
-      const schema = Joi.object({
-        email: Joi.string().email(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { email } = req.body
       await UserService.setConfirmCode(email)
       return res.send(true)
@@ -95,14 +69,6 @@ class UserController {
 
   async saveNewUserData(req, res, next) {
     try {
-      const schema = Joi.object({
-        code: Joi.string().required(),
-        newEmail: Joi.string().email(),
-        newPassword: Joi.string().min(6).max(20),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { code, newEmail, newPassword } = req.body
       const userId = req.user.payload.id
       const newUserData = await UserService.saveNewUserData(
@@ -123,12 +89,6 @@ class UserController {
 
   async activateAccount(req, res, next) {
     try {
-      const schema = Joi.object({
-        confirmCode: Joi.number().required(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { confirmCode } = req.body
       const { id } = req.user.payload
       const activateStatus = await UserService.activateAccount(id, confirmCode)
@@ -152,12 +112,6 @@ class UserController {
 
   async getUserById(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const userId = req.params.id
       const status = await UserService.getUserData(userId)
 

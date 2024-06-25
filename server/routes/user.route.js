@@ -2,6 +2,15 @@ import { Router } from "express"
 
 import UserController from "../controllers/user.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
+import validate from "../middlewares/validate.middleware.js"
+import {
+  activateAccountScheme,
+  getUserByIdScheme,
+  loginSchema,
+  registrationSchema,
+  saveNewUserDataSchema,
+  sendConfirmCodeSchema,
+} from "../validations/user.validation.js"
 
 const router = new Router()
 
@@ -42,7 +51,11 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/register", UserController.registration)
+router.post(
+  "/register",
+  validate(registrationSchema),
+  UserController.registration,
+)
 
 /**
  * @swagger
@@ -74,7 +87,7 @@ router.post("/register", UserController.registration)
  *         description: Unexpected error
  */
 
-router.post("/login", UserController.login)
+router.post("/login", validate(loginSchema), UserController.login)
 
 /**
  * @swagger
@@ -139,7 +152,11 @@ router.get("/logout", UserController.logoutUser)
  *         description: Unexpected error
  */
 
-router.post("/sendConfirmCode", UserController.sendConfirmCode)
+router.post(
+  "/sendConfirmCode",
+  validate(sendConfirmCodeSchema),
+  UserController.sendConfirmCode,
+)
 
 /**
  * @swagger
@@ -181,7 +198,12 @@ router.post("/sendConfirmCode", UserController.sendConfirmCode)
  *         description: Unexpected error
  */
 
-router.put("/saveNewData", userGuard, UserController.saveNewUserData)
+router.put(
+  "/saveNewData",
+  validate(saveNewUserDataSchema),
+  userGuard,
+  UserController.saveNewUserData,
+)
 
 /**
  * @swagger
@@ -207,7 +229,12 @@ router.put("/saveNewData", userGuard, UserController.saveNewUserData)
  *         description: Unexpected error
  */
 
-router.post("/activate", userGuard, UserController.activateAccount)
+router.post(
+  "/activate",
+  userGuard,
+  validate(activateAccountScheme),
+  UserController.activateAccount,
+)
 
 /**
  * @swagger
@@ -265,6 +292,10 @@ router.post("/resetPassword", UserController.resetPassword)
  *         description: Unexpected error
  */
 
-router.get("/data/:id", UserController.getUserById)
+router.get(
+  "/data/:id",
+  validate(getUserByIdScheme, "params"),
+  UserController.getUserById,
+)
 
 export default router
