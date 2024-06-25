@@ -3,7 +3,7 @@ import { vIntersectionObserver } from "@vueuse/components"
 
 const commentStore = useCommentStore()
 
-const { pending } = await useAsyncData(
+const { pending } = useLazyAsyncData(
   "comment",
   async () => await commentStore.fetch(),
   {

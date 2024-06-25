@@ -19,7 +19,7 @@ watch(
   },
 )
 
-await useAsyncData(
+useLazyAsyncData(
   "posts",
   async () => await articleParams.fetchFilterData(true),
   {

@@ -46,7 +46,7 @@ function onKeyUp(event: any) {
     :placeholder="isEdit ? 'Press text' : undefined"
     :contenteditable="isEdit || undefined"
     @keydown="onKeyDown"
-    @keyup="onKeyUp"
+    @input="onKeyUp"
     v-html="content"
   ></p>
 </template>

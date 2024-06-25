@@ -25,8 +25,6 @@ const { initBlocks } = defineProps<{
   initBlocks?: IBlock[]
 }>()
 
-const errorMessage = ref("")
-
 const blocks = new Map<string, any>([])
 blocks.set("header", PostBlockHeader)
 blocks.set("text", PostBlockText)
@@ -68,12 +66,6 @@ const setBlockRef = (el: any, key: string) => {
 
 function getBlocksContent() {
   if (!createdBlocks.size) {
-    errorMessage.value = "At least 1 block must be selected"
-
-    setTimeout(() => {
-      errorMessage.value = ""
-    }, 5000)
-
     return
   }
 
@@ -91,7 +83,6 @@ function getBlocksContent() {
 <template>
   <div class="editor">
     <h2>Article body conscructor</h2>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
     <AdminPostConstructorToolbar />
     <AdminPostBlockComponent
       v-for="postBlock in createdBlocks.entries()"

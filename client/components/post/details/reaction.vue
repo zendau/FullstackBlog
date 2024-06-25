@@ -9,7 +9,7 @@ const reactingStatus = ref<boolean | "null">()
 onMounted(async () => {
   if (!isAuth.value) return
 
-  const status = await useApiFetch<boolean | "null">("post/reaction", {
+  const status = await useApiFetch<boolean | "null">("reaction/status", {
     method: "get",
     query: {
       postId: articleId,
@@ -33,7 +33,7 @@ function setLike() {
 
   reactingStatus.value = reactingStatus.value === true ? "null" : true
 
-  useApiFetch("post/reacting", {
+  useApiFetch("reaction/set", {
     method: "patch",
     query: {
       postId: articleId,
@@ -47,7 +47,7 @@ function setDislike() {
 
   reactingStatus.value = reactingStatus.value === false ? "null" : false
 
-  useApiFetch("post/reacting", {
+  useApiFetch("reaction/set", {
     method: "patch",
     query: {
       postId: articleId,

@@ -24,8 +24,8 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <h1 v-if="authStore.isLoading">is loading...</h1>
-  <p v-if="authStore.error" class="text-red-600">{{ authStore.error }}</p>
+  <UiLoader v-if="authStore.isLoading" />
+  <UiErrorMessage class="text-red-600" :message="authStore.error" />
   <div class="w-4/5 mx-auto">
     <UForm
       :schema="schema"
