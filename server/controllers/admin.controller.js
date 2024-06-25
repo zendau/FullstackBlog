@@ -1,10 +1,4 @@
-import Joi from "joi"
-import objectId from "joi-objectid"
-
-import ApiError from "../exceptions/api.error.js"
 import AdminService from "../services/admin.service.js"
-
-Joi.objectId = objectId(Joi)
 
 class AdminController {
   getRoles(req, res) {
@@ -15,13 +9,6 @@ class AdminController {
 
   async setUserRole(req, res, next) {
     try {
-      const schema = Joi.object({
-        userId: Joi.objectId().required(),
-        role: Joi.string(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { userId, role } = req.body
 
       const data = await AdminService.setUserRole(userId, role)
@@ -33,13 +20,6 @@ class AdminController {
 
   async unSetUserRole(req, res, next) {
     try {
-      const schema = Joi.object({
-        userId: Joi.objectId().required(),
-        role: Joi.string(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { userId, role } = req.body
 
       const data = await AdminService.unSetUserRole(userId, role)
@@ -51,12 +31,6 @@ class AdminController {
 
   async blockUser(req, res, next) {
     try {
-      const schema = Joi.object({
-        userId: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { userId } = req.body
 
       const data = await AdminService.blockUser(userId)
@@ -68,12 +42,6 @@ class AdminController {
 
   async unBlockUser(req, res, next) {
     try {
-      const schema = Joi.object({
-        userId: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.body)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { userId } = req.body
 
       const data = await AdminService.unBlockUser(userId)
