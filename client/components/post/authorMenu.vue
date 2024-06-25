@@ -1,30 +1,27 @@
 <script setup lang="ts">
-const { authorId } = defineProps<{
-  authorId: string
-}>()
-
-const userStore = useUserStore()
 const articleStore = useArticleStore()
+const router = useRouter()
 
 const articleId = inject("articleId", "")
 
-function onDeleteProduct() {
+async function onDeleteProduct() {
   if (!articleId) return
 
-  articleStore.remove(articleId)
+  const res = await articleStore.remove(articleId)
+
+  if (!res) return
+  router.push("/")
 }
 </script>
 
 <template>
   <NuxtLink :to="`/admin/edit/article/${articleId}`">Change</NuxtLink>
 
-  <div v-if="userStore.data?.id === authorId">
-    <UiModalConfirm
-      button-text="Delete"
-      message="Do you really want to delete this article?"
-      @confirm="onDeleteProduct"
-    />
-  </div>
+  <UiModalConfirm
+    button-text="Delete"
+    message="Do you really want to delete this article?"
+    @confirm="onDeleteProduct"
+  />
 </template>
 
 <style lang="scss" scoped></style>
