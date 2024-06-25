@@ -1,5 +1,3 @@
-import Joi from "joi"
-
 import ApiError from "../exceptions/api.error.js"
 import FileService from "../services/file.service.js"
 
@@ -38,12 +36,6 @@ class FileController {
         )
       }
 
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { file } = req
       if (file === undefined) {
         throw ApiError.HttpException(
@@ -62,12 +54,6 @@ class FileController {
 
   async delete(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { id } = req.params
       const fileDeleted = await FileService.delete(id)
 
@@ -79,12 +65,6 @@ class FileController {
 
   async getOne(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.objectId().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { id } = req.params
       const fileData = await FileService.getById(id)
 
@@ -96,12 +76,6 @@ class FileController {
 
   async download(req, res, next) {
     try {
-      const schema = Joi.object({
-        id: Joi.string().required(),
-      })
-      const { error } = schema.validate(req.params)
-      if (error) throw ApiError.HttpException(error.details[0].message)
-
       const { id } = req.params
       res.download(`${process.env.FILE_FOULDER}/${id}`)
     } catch (e) {

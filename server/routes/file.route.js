@@ -6,6 +6,13 @@ import {
   fileUpload,
   muiltipleUpload,
 } from "../middlewares/multer.middleware.js"
+import validate from "../middlewares/validate.middleware.js"
+import {
+  deleteSchema,
+  downloadSchema,
+  getOneSchema,
+  updateSchema,
+} from "../validations/file.validation.js"
 
 const router = new Router()
 
@@ -76,7 +83,12 @@ router.post("/upload", userGuard, muiltipleUpload, FileController.upload)
  *       500:
  *         description: Unexpected error
  */
-router.get("/get/:id", userGuard, FileController.getOne)
+router.get(
+  "/get/:id",
+  userGuard,
+  validate(getOneSchema, "params"),
+  FileController.getOne,
+)
 
 /**
  * @swagger
@@ -104,7 +116,13 @@ router.get("/get/:id", userGuard, FileController.getOne)
  *         description: Unexpected error
  */
 
-router.put("/update/:id", userGuard, fileUpload, FileController.update)
+router.put(
+  "/update/:id",
+  userGuard,
+  validate(updateSchema, "params"),
+  fileUpload,
+  FileController.update,
+)
 
 /**
  * @swagger
@@ -132,7 +150,12 @@ router.put("/update/:id", userGuard, fileUpload, FileController.update)
  *         description: Unexpected error
  */
 
-router.delete("/delete/:id", userGuard, FileController.delete)
+router.delete(
+  "/delete/:id",
+  userGuard,
+  validate(deleteSchema, "params"),
+  FileController.delete,
+)
 
 /**
  * @swagger
@@ -151,6 +174,10 @@ router.delete("/delete/:id", userGuard, FileController.delete)
  *         description: Unexpected error
  */
 
-router.get("/download/:id", FileController.download)
+router.get(
+  "/download/:id",
+  validate(downloadSchema, "params"),
+  FileController.download,
+)
 
 export default router
