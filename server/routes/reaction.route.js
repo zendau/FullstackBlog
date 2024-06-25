@@ -6,7 +6,7 @@ import validate from "../middlewares/validate.middleware.js"
 import {
   reactSchema,
   reactStatusSchema,
-} from "../validations/post.validation.js"
+} from "../validations/reaction.validation.js"
 
 const router = new Router()
 

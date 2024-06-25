@@ -38,12 +38,3 @@ export const paginationScheme = Joi.object({
   postId: Joi.string(),
   substring: Joi.string(),
 })
-
-export const reactSchema = Joi.object({
-  postId: Joi.objectId().required(),
-  isLiked: [Joi.bool().required(), Joi.allow(null)],
-})
-
-export const reactStatusSchema = Joi.object({
-  postId: Joi.objectId().required(),
-})

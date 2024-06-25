@@ -1,4 +1,4 @@
-import UserPostReadRepository from "../repositories/userPostRead.repository"
+import UserPostReadRepository from "../repositories/userPostRead.repository.js"
 
 class UserPostReadService {
   async incCounter(postId, ip) {
