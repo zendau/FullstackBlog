@@ -2,6 +2,13 @@ import { Router } from "express"
 
 import CommentController from "../controllers/comment.controller.js"
 import { userGuard } from "../middlewares/auth.middleware.js"
+import validate from "../middlewares/validate.middleware.js"
+import {
+  createSchema,
+  deleteSchema,
+  editSchema,
+  listSchema,
+} from "../validations/comment.validation.js"
 
 const router = new Router()
 
@@ -48,7 +55,7 @@ const router = new Router()
  *         description: Unexpected error
  */
 
-router.post("/add", userGuard, CommentController.create)
+router.post("/add", userGuard, validate(createSchema), CommentController.create)
 
 /**
  * @swagger
@@ -86,7 +93,7 @@ router.post("/add", userGuard, CommentController.create)
  *         description: Unexpected error
  */
 
-router.put("/edit", userGuard, CommentController.edit)
+router.put("/edit", userGuard, validate(editSchema), CommentController.edit)
 
 /**
  * @swagger
@@ -117,8 +124,13 @@ router.put("/edit", userGuard, CommentController.edit)
  *         description: Unexpected error
  */
 
-router.delete("/delete", userGuard, CommentController.delete)
+router.delete(
+  "/delete",
+  userGuard,
+  validate(deleteSchema),
+  CommentController.delete,
+)
 
-router.get("/list", CommentController.list)
+router.get("/list", validate(listSchema, "query"), CommentController.list)
 
 export default router
