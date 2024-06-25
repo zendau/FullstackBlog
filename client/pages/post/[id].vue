@@ -2,15 +2,12 @@
 import type { IArticle } from "../../stores/article"
 
 const { params } = useRoute()
+const userStore = useUserStore()
 const articleId = params.id as string
 
 provide("articleId", articleId)
 
-const {
-  pending,
-  error,
-  data: article,
-} = await useAsyncData<IArticle>(
+const { data: article, pending } = useLazyAsyncData<IArticle>(
   `post/${articleId}`,
   async () => await useApiFetch(`post/get/${articleId}`),
   {
@@ -20,18 +17,18 @@ const {
 </script>
 
 <template>
-  {{ pending }}
-
-  {{ error }}
-  <PostNotFount v-if="!article" :id="articleId" />
+  <PostSkeletonBody v-if="pending" />
   <template v-else>
-    <PostAuthorMenu :author-id="article.author.id" />
-    <PostDetailsHeader :post="article" />
-    <NuxtImg :src="getApiFile(article.file.fileName)" />
-    <h1>{{ article.title }}</h1>
-    <p>{{ article.preview }}</p>
-    <PostBlocks :blocks="article.blocks" />
-    <PostDetailsFouter />
+    <PostNotFount v-if="!article" :id="articleId" />
+    <template v-else>
+      <PostAuthorMenu v-if="userStore.data?.id === article.author.id" />
+      <PostDetailsHeader :post="article" />
+      <NuxtImg :src="getApiFile(article.file.fileName)" loading="lazy" />
+      <h1>{{ article.title }}</h1>
+      <p>{{ article.preview }}</p>
+      <PostBlocks :blocks="article.blocks" />
+      <PostDetailsFouter />
+    </template>
   </template>
 </template>
 
