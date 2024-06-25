@@ -8,7 +8,15 @@ const { message } = defineProps({
 </script>
 
 <template>
-  <p class="text-red-600">{{ message }}</p>
+  <UAlert
+    v-if="message"
+    icon="i-heroicons-command-line"
+    color="red"
+    variant="solid"
+    title="Errpr"
+    :description="message"
+  />
+  <p class="text-red-600"></p>
 </template>
 
 <style lang="scss" scoped></style>
