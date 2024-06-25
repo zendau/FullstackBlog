@@ -27,7 +27,7 @@ const state = reactive({
   title: articleData?.title ?? "",
   preview: articleData?.preview ?? "",
   file: files,
-  timeRead: articleData?.timeRead ?? "",
+  timeRead: articleData?.timeRead ?? 0,
   tags,
 })
 
@@ -35,14 +35,14 @@ function imageFilter() {
   let filter: any = mixed()
     .test(
       "notMultiply",
-      "Для лого товара необходима только 1 фотограция",
+      "Only one picture is needed for the article",
       (value: any) => {
         if (value.length > 1) return false
 
         return true
       },
     )
-    .test("fileFormat", "Недопустимый тип файла для лого", (value: any) => {
+    .test("fileFormat", "Invalid file type for the logo", (value: any) => {
       if (value.length === 0) return true
 
       return (
@@ -51,7 +51,7 @@ function imageFilter() {
     })
     .test(
       "fileSize",
-      "Размер файла для лого превышает допустимый",
+      "The file size for the logo exceeds the allowed size",
       (value: any) => {
         if (value.length === 0) return true
         return value && value[0] && value[0].size <= 5242880
@@ -67,21 +67,28 @@ function imageFilter() {
 }
 
 const schema = object().shape({
-  title: string().required("Required").min(6),
+  title: string().required("Required").min(6).max(30),
   preview: string()
     .min(8, "Must be at least 8 characters")
     .required("Required"),
   file: imageFilter(),
-  timeRead: number().required().min(1),
+  timeRead: number().required().min(1).max(10000),
   tags: array(),
 })
 
 export type ArticleSchema = InferType<typeof schema>
 
 function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
+  const blocksData = blockConstructor.value.getBlocksContent()
+
+  if (!blocksData) {
+    articleStore.error = "At least one block must be created"
+    return
+  }
+
   if (type === "create") onSubmitCreate(event)
   else if (type === "edit") onSubmitEdit(event)
-  else console.error("unknown product type form")
+  else console.error("Unknown product type form")
 }
 
 async function onSubmitCreate(event: FormSubmitEvent<ArticleSchema>) {
@@ -107,6 +114,14 @@ async function onSubmitEdit(event: FormSubmitEvent<ArticleSchema>) {
 
   if (!articleId) return
   router.push(`/post/${articleId}`)
+}
+
+function submitButtonText() {
+  if (type === "edit") {
+    return "Edit"
+  } else if (type === "create") {
+    return "Create"
+  }
 }
 </script>
 
@@ -144,8 +159,8 @@ async function onSubmitEdit(event: FormSubmitEvent<ArticleSchema>) {
           :init-blocks="articleData?.blocks"
         />
       </ClientOnly>
-
-      <UButton type="submit"> Create </UButton>
+      <UiErrorMessage :message="articleStore.error" />
+      <UButton type="submit"> {{ submitButtonText() }} </UButton>
     </UForm>
   </div>
 </template>
