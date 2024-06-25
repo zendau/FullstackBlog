@@ -39,6 +39,10 @@ export const useUserStore = defineStore("user", () => {
   const isLoading = ref(false)
   const error = ref("")
 
+  watch(error, () => {
+    setTimeout(() => (error.value = ""), 5000)
+  })
+
   function decodeToken(token: string) {
     if (!token) return false
 
@@ -86,7 +90,6 @@ export const useUserStore = defineStore("user", () => {
       error.value =
         "An error occurred when sending the confirmation code. Repeat later."
 
-      setTimeout(() => (error.value = ""), 5000)
       return false
     } finally {
       isLoading.value = false
@@ -111,8 +114,6 @@ export const useUserStore = defineStore("user", () => {
       error.value =
         e.message ??
         "An error occurred when receiving a new confirmation code. Repeat later."
-
-      setTimeout(() => (error.value = ""), 5000)
     }
   }
 
@@ -144,7 +145,6 @@ export const useUserStore = defineStore("user", () => {
       error.value =
         "An error occurred when sending the confirmation code. Repeat later."
 
-      setTimeout(() => (error.value = ""), 5000)
       return false
     } finally {
       isLoading.value = false
@@ -180,7 +180,6 @@ export const useUserStore = defineStore("user", () => {
         e.data.message ??
         "An error occurred when sending the confirmation code. Repeat later."
 
-      setTimeout(() => (error.value = ""), 5000)
       return false
     } finally {
       isLoading.value = false

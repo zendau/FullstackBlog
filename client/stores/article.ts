@@ -71,6 +71,10 @@ export const useArticleStore = defineStore("article", () => {
 
   const hasMore = ref(true)
 
+  watch(error, () => {
+    setTimeout(() => (error.value = ""), 5000)
+  })
+
   async function fetch({ isRewrite, params }: IFetch = {}) {
     isLoading.value = true
 
@@ -194,8 +198,6 @@ export const useArticleStore = defineStore("article", () => {
           "Error occurred when deleting the article. Repeat later",
         )
       }
-
-      data.value = data.value.filter((article) => article.id !== articleId)
 
       return true
     } catch (e: any) {

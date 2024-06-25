@@ -21,6 +21,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuth = ref(false)
 
+  watch(error, () => {
+    setTimeout(() => (error.value = ""), 5000)
+  })
+
   async function login(userData: IAuthUser) {
     try {
       error.value = ""
@@ -51,8 +55,6 @@ export const useAuthStore = defineStore("auth", () => {
         error.value =
           "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
       }
-
-      setTimeout(() => (error.value = ""), 5000)
     } finally {
       loadingIndicator.finish()
       isLoading.value = false
@@ -90,8 +92,6 @@ export const useAuthStore = defineStore("auth", () => {
         error.value =
           "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
       }
-
-      setTimeout(() => (error.value = ""), 5000)
     } finally {
       loadingIndicator.finish()
       isLoading.value = false
@@ -162,8 +162,6 @@ export const useAuthStore = defineStore("auth", () => {
         error.value =
           "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
       }
-
-      setTimeout(() => (error.value = ""), 5000)
     } finally {
       loadingIndicator.finish()
       isLoading.value = false
