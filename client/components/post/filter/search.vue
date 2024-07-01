@@ -14,11 +14,12 @@ watch(() => articleParams.search, useDebounceFn(onInpitTitle, 500))
 </script>
 
 <template>
-  <div>
-    <UFormGroup label="Title">
-      <UInput v-model="articleParams.search" placeholder="Search post..." />
-    </UFormGroup>
-  </div>
+  <UInput
+    v-model="articleParams.search"
+    icon="i-heroicons-magnifying-glass-20-solid"
+    placeholder="Search post..."
+    class="col-start-1 col-end-4 w-full mb-1"
+  />
 </template>
 
 <style scoped></style>

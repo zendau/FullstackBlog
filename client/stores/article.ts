@@ -15,6 +15,7 @@ export interface IFile {
 export type BlockContent = string | IQuoute | IFile
 
 export interface IBlock {
+  id?: string
   type: string
   content: BlockContent
 }

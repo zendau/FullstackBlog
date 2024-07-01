@@ -12,7 +12,7 @@ const options = [
 
 const articleParams = useArticleParamsStore()
 
-function test() {
+function onAddQuery() {
   articleParams.addQuery("sort")
 }
 </script>
@@ -20,9 +20,10 @@ function test() {
 <template>
   <URadioGroup
     v-model="articleParams.sort"
-    legend="Choose sorting type"
+    legend="Sorting type"
     :options="options"
-    @change="test"
+    class="row-start-2 row-end-4 self-start h-full mt-2"
+    @change="onAddQuery"
   />
 </template>
 

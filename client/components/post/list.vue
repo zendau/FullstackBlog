@@ -24,22 +24,9 @@ onUnmounted(() => {
 <template>
   <component :is="postLayout">
     <template v-for="post of articles" :key="post.id">
-      <PostCard v-if="postId !== post.id" :post="post" is-extended />
+      <PostCard v-if="postId !== post.id" :post="post" />
     </template>
   </component>
   <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
   <PostSkeletonList v-if="articleStore.isLoading" />
 </template>
-
-<style lang="scss">
-.cart {
-  background-color: red;
-  &__container {
-    width: 80%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px 15px;
-  }
-}
-</style>

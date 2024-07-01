@@ -1,11 +1,23 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1 class="text-center text-4xl m-4">Catalog</h1>
-
-  <PostFilter />
-  <PostSetting />
+  <div class="container">
+    <PostFilter />
+    <PostSetting />
+  </div>
   <PostView />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  background-color: #fff;
+  margin: 30px auto;
+  box-shadow: 1px 1px 4px -1px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+}
+</style>
