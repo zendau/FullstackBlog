@@ -8,7 +8,11 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
   ],
   devtools: { enabled: true },
+  css: ["~/assets/css/main.css"],
   colorMode: {
     preference: "light",
+  },
+  ui: {
+    icons: ["iconamoon", "heroicons"],
   },
 })
