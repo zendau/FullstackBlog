@@ -20,14 +20,17 @@ const { data: article, pending } = useLazyAsyncData<IArticle>(
   <PostSkeletonBody v-if="pending" />
   <template v-else>
     <PostNotFount v-if="!article" :id="articleId" />
+
     <template v-else>
       <PostAuthorMenu v-if="userStore.data?.id === article.author.id" />
       <PostDetailsHeader :post="article" />
-      <NuxtImg :src="getApiFile(article.file.fileName)" loading="lazy" />
-      <h1>{{ article.title }}</h1>
-      <p>{{ article.preview }}</p>
+      <NuxtImg
+        :src="getApiFile(article.file.fileName)"
+        loading="lazy"
+        class="mb-6"
+      />
       <PostBlocks :blocks="article.blocks" />
-      <PostDetailsFouter />
+      <PostDetailsFooter />
     </template>
   </template>
 </template>

@@ -22,10 +22,8 @@ const isShowMoreComments = ref(false)
 </script>
 
 <template>
-  <br />
   <CommentEmpty v-if="commentStore.data.length === 0" />
   <template v-else>
-    <p>{{ commentStore.total }} comments</p>
     <CommentCard
       v-for="comment in commentStore.data"
       :key="comment.id"
@@ -40,8 +38,12 @@ const isShowMoreComments = ref(false)
       v-intersection-observer="onIntersectionObserver"
       class="observer"
     ></div>
-    <UButton v-else @click="isShowMoreComments = !isShowMoreComments">
-      Раскрыть
+    <UButton
+      v-else
+      class="mx-auto mt-3 block"
+      @click="isShowMoreComments = !isShowMoreComments"
+    >
+      More
     </UButton>
   </template>
 </template>

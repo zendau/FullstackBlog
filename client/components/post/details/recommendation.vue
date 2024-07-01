@@ -7,8 +7,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <hr />
-  <PostInfinityList v-if="isShowList" />
+  <div class="mt-10">
+    <PostInfinityList v-if="isShowList" />
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

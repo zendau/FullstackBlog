@@ -15,13 +15,20 @@ async function onDeleteProduct() {
 </script>
 
 <template>
-  <NuxtLink :to="`/admin/edit/article/${articleId}`">Change</NuxtLink>
+  <div class="flex justify-end mt-3 items-center">
+    <NuxtLink
+      :to="`/edit/${articleId}`"
+      class="mr-3 hover:text-primary transition-colors"
+    >
+      Change
+    </NuxtLink>
 
-  <UiModalConfirm
-    button-text="Delete"
-    message="Do you really want to delete this article?"
-    @confirm="onDeleteProduct"
-  />
+    <UiModalConfirm
+      button-text="Delete"
+      message="Do you really want to delete this article?"
+      @confirm="onDeleteProduct"
+    />
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

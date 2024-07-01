@@ -17,50 +17,44 @@ function onSendMessage() {
 </script>
 
 <template>
-  <form>
-    <UTextarea
-      v-model="commentText"
-      color="primary"
-      variant="outline"
-      placeholder="Comment..."
-    />
-    <UButton v-if="commentText.length > 0" @click="onSendMessage">
-      Send
-    </UButton>
+  <form class="flex flex-col mx-5">
+    <p class="text-lg font-medium px-6 py-3">
+      {{ commentStore.total }} comments
+    </p>
+    <span class="form" contenteditable placeholder="Press comment..."></span>
+    <UButton class="mt-3 self-end px-5" @click="onSendMessage"> Send </UButton>
   </form>
 </template>
 
 <style lang="scss" scoped>
-.fileUpload {
-  label {
-    cursor: pointer;
-    display: block;
-    height: 50px;
-    width: 50px;
-    font-size: 60px;
-  }
+.form {
+  white-space: pre-wrap;
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  height: 100px;
+  max-height: 300px;
+  overflow: auto;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 11px;
+  border: 1px solid #bebebe;
 
-  input {
-    display: none;
-  }
-}
-
-.preview {
-  &-container {
-    width: 250px;
-    height: auto;
-    position: relative;
-  }
-
-  &-img {
-    height: 100%;
+  span {
     width: 100%;
   }
 
-  &-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
+  &:focus {
+    outline-color: var(--color-secondary-btn);
   }
+}
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  color: #555;
+}
+
+[placeholder]:empty:focus::before {
+  content: "";
 }
 </style>

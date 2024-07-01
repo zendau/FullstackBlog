@@ -77,18 +77,20 @@ function closeErrorAlert() {
     }"
     @close="closeErrorAlert"
   />
-  <UButton
-    :color="reactingStatus === true ? 'red' : 'primary'"
-    @click="setLike"
-  >
-    Like
-  </UButton>
-  <UButton
-    :color="reactingStatus === false ? 'red' : 'primary'"
-    @click="setDislike"
-  >
-    Dislike
-  </UButton>
+  <div class="flex justify-center my-7">
+    <UIcon
+      name="i-iconamoon-like"
+      class="text-3xl cursor-pointer mx-2"
+      :class="{ 'bg-primary-500': reactingStatus === true }"
+      @click="setLike"
+    />
+    <UIcon
+      name="i-iconamoon-dislike"
+      class="text-3xl cursor-pointer mx-2"
+      :class="{ 'bg-primary-500': reactingStatus === false }"
+      @click="setDislike"
+    />
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

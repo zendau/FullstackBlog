@@ -38,9 +38,9 @@ function getComponent(type: string) {
 </script>
 
 <template>
-  <template v-for="block in blocks" :key="block.id">
+  <div v-for="block in blocks" :key="block.id" class="my-3">
     <component :is="getComponent(block.type)" :content="block.content" />
-  </template>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>
