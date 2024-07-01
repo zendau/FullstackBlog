@@ -28,13 +28,24 @@ function onReset(emailData: string) {
 </script>
 
 <template>
-  <p v-if="message">{{ message }}</p>
-  <UserConfirmCode
-    v-if="isShowConfirmCode"
-    :on-send="onSubmit"
-    :email="email"
-  />
-  <AuthReset v-else @on-reset="onReset" />
+  <UiViewFormLayout>
+    <UAlert
+      v-if="message"
+      icon="i-heroicons-command-line"
+      color="green"
+      variant="solid"
+      title="Error"
+      :description="message"
+      class="mb-3"
+    />
+
+    <UserConfirmCode
+      v-if="isShowConfirmCode"
+      :on-send="onSubmit"
+      :email="email"
+    />
+    <AuthReset v-else @on-reset="onReset" />
+  </UiViewFormLayout>
 </template>
 
 <style lang="scss" scoped></style>

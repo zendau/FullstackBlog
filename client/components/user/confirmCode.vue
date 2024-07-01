@@ -33,28 +33,39 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <h1 v-if="userStore.isLoading">is loading...</h1>
-  <p v-if="userStore.error" class="text-red-600">{{ userStore.error }}</p>
-  <div class="w-4/5 mx-auto">
-    <UForm
-      :schema="schema"
-      :state="state"
-      class="space-y-4 form p-7"
-      @submit="onSubmit"
-    >
-      <UFormGroup label="Confirm code" name="confirmCode">
-        <UInput
-          v-model="state.confirmCode"
-          color="white"
-          placeholder="Confirm code"
-        />
-      </UFormGroup>
+  <UiLoader v-if="userStore.isLoading" />
+  <UiErrorMessage :message="userStore.error" />
 
-      <UButton type="submit"> Send confirm code </UButton>
-    </UForm>
-    <UButton @click="resendConfirmCode">Resend confirm code</UButton>
-    <UButton @click="$emit('onReset')">Reset</UButton>
+  <UForm :schema="schema" :state="state" class="mb-2" @submit="onSubmit">
+    <UFormGroup label="Confirm code" name="confirmCode">
+      <UInput
+        v-model="state.confirmCode"
+        color="white"
+        placeholder="Confirm code"
+      />
+    </UFormGroup>
+
+    <UButton type="submit" class="w-full mt-4 justify-center py-3">
+      Send confirm code
+    </UButton>
+  </UForm>
+  <div class="btn-container">
+    <UButton color="amber" @click="resendConfirmCode">
+      Resend confirm code
+    </UButton>
+    <UButton color="red" @click="$emit('onReset')"> Reset </UButton>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.btn-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 20px;
+
+  button {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>
