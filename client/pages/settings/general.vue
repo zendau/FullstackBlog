@@ -7,8 +7,10 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <SettingsUpdateData v-if="userStore.data?.isActivated" />
-  <SettingsStatus v-else />
+  <UiViewFormLayout>
+    <SettingsUpdateData v-if="userStore.data?.isActivated" />
+    <SettingsStatus v-else />
+  </UiViewFormLayout>
 </template>
 
 <style lang="scss" scoped></style>

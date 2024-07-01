@@ -29,10 +29,10 @@ function onReset() {
     @on-reset="onReset"
   />
   <div v-else>
-    <p>Статус</p>
-    <p v-if="userStore.data?.isBlocked">Блокировка акканута</p>
+    <p>Status</p>
+    <p v-if="userStore.data?.isBlocked">Account is blocked</p>
     <div>
-      <p>Аккаунт не активирован</p>
+      <p>Confirm email to activate account</p>
       <UButton @click="onSendConfirmCode">Активировать</UButton>
     </div>
   </div>
