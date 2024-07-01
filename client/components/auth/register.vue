@@ -36,38 +36,39 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <h1 v-if="authStore.isLoading">is loading...</h1>
   <p v-if="authStore.error" class="text-red-600">{{ authStore.error }}</p>
-  <div class="w-4/5 mx-auto">
-    <UForm
-      :schema="schema"
-      :state="state"
-      class="space-y-4 form p-7"
-      @submit="onSubmit"
-    >
-      <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email" color="white" placeholder="Email" />
-      </UFormGroup>
 
-      <UFormGroup label="Password" name="password">
-        <UInput
-          v-model="state.password"
-          type="password"
-          class="input"
-          placeholder="Password"
-        />
-      </UFormGroup>
+  <UForm :schema="schema" :state="state" class="mb-2" @submit="onSubmit">
+    <UFormGroup label="Email" name="email">
+      <UInput
+        v-model="state.email"
+        class="mt-2"
+        color="white"
+        placeholder="Email"
+      />
+    </UFormGroup>
 
-      <UFormGroup label="Confirm password" name="confirmPassword">
-        <UInput
-          v-model="state.confirmPassword"
-          type="password"
-          class="input"
-          placeholder="Confirm password"
-        />
-      </UFormGroup>
+    <UFormGroup label="Password" name="password" class="mt-7">
+      <UInput
+        v-model="state.password"
+        type="password"
+        class="mt-2"
+        placeholder="Password"
+      />
+    </UFormGroup>
 
-      <UButton type="submit"> Register </UButton>
-    </UForm>
-  </div>
+    <UFormGroup label="Confirm password" name="confirmPassword" class="mt-7">
+      <UInput
+        v-model="state.confirmPassword"
+        type="password"
+        class="mt-2"
+        placeholder="Confirm password"
+      />
+    </UFormGroup>
+
+    <UButton type="submit" class="block mx-auto mt-4 py-2 px-4">
+      Register
+    </UButton>
+  </UForm>
 </template>
 
 <style lang="scss" scoped></style>

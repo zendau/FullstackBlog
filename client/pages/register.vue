@@ -22,8 +22,10 @@ function onSubmit() {
 }
 </script>
 <template>
-  <UserConfirmCode v-if="isShowConfirmCode" :on-send="onActiveAccount" />
-  <AuthRegister v-else @on-sumbit="onSubmit" />
+  <UiViewFormLayout>
+    <UserConfirmCode v-if="isShowConfirmCode" :on-send="onActiveAccount" />
+    <AuthRegister v-else @on-sumbit="onSubmit" />
+  </UiViewFormLayout>
 </template>
 
 <style scoped lang="scss"></style>
