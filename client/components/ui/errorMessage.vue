@@ -13,10 +13,10 @@ const { message } = defineProps({
     icon="i-heroicons-command-line"
     color="red"
     variant="solid"
-    title="Errpr"
+    title="Error"
     :description="message"
+    class="mb-3"
   />
-  <p class="text-red-600"></p>
 </template>
 
 <style lang="scss" scoped></style>

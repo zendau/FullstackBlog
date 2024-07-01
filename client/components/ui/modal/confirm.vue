@@ -34,12 +34,16 @@ function onCancel() {
         }"
       >
         <template #header>
-          <h1>{{ message }}</h1>
+          <h1 class="text-center">{{ message }}</h1>
         </template>
 
-        <div>
-          <UButton @click="onConfirm">Confirm</UButton>
-          <UButton @click="onCancel">Cancel</UButton>
+        <div class="flex justify-evenly">
+          <UButton class="py-2 w-20 flex justify-center" @click="onConfirm">
+            Confirm
+          </UButton>
+          <UButton class="py-2 w-20 flex justify-center" @click="onCancel">
+            Cancel
+          </UButton>
         </div>
       </UCard>
     </UModal>
