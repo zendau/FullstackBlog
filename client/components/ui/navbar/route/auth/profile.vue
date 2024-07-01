@@ -5,12 +5,12 @@ const authStore = useAuthStore()
 
 <template>
   <ul class="navbar__list">
-    <UiNavbarAdmin v-if="userStore.isAdmin" />
+    <UiNavbarRouteAdmin v-if="userStore.isAdmin" />
     <li class="navbar__item">
       <NuxtLink to="/settings"> Settings </NuxtLink>
     </li>
     <li class="navbar__item">
-      <NuxtLink to="/" @click="authStore.logout"> Logout </NuxtLink>
+      <button @click="authStore.logout">Logout</button>
     </li>
   </ul>
 </template>

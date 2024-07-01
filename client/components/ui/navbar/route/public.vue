@@ -1,9 +1,7 @@
-<script setup lang="ts">
-const authStore = useAuthStore()
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <ul v-if="!authStore.isAuth" class="navbar__list">
+  <ul class="navbar__list">
     <li class="navbar__item">
       <NuxtLink to="/register"> Register </NuxtLink>
     </li>
