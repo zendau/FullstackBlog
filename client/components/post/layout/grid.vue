@@ -8,13 +8,19 @@
 
 <style lang="scss" scoped>
 .cart {
-  background-color: red;
   &__container {
-    width: 80%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px 15px;
+    gap: 20px 15px;
+  }
+}
+
+@media (max-width: 820px) {
+  .cart {
+    &__container {
+      grid-template-columns: 1fr;
+    }
   }
 }
 </style>

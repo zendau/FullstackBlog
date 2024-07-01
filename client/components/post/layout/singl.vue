@@ -1,18 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="cart__container">
-    <slot />
-  </div>
+  <slot />
 </template>
 
-<style lang="scss" scoped>
-.cart {
-  background-color: red;
-  &__container {
-    width: 80%;
-    margin: 0 auto;
-    display: block;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
