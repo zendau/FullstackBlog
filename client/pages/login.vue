@@ -4,7 +4,7 @@ definePageMeta({
 })
 </script>
 <template>
-  <AuthLogin />
+  <UiViewFormLayout>
+    <AuthLogin />
+  </UiViewFormLayout>
 </template>
-
-<style scoped lang="scss"></style>

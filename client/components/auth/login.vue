@@ -25,30 +25,33 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <UiLoader v-if="authStore.isLoading" />
-  <UiErrorMessage class="text-red-600" :message="authStore.error" />
-  <div class="w-4/5 mx-auto">
-    <UForm
-      :schema="schema"
-      :state="state"
-      class="space-y-4 form p-7"
-      @submit="onSubmit"
-    >
-      <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email" color="white" placeholder="Email" />
-      </UFormGroup>
+  <UiErrorMessage :message="authStore.error" />
+  <UForm :schema="schema" :state="state" class="mb-2" @submit="onSubmit">
+    <UFormGroup label="E-mail" name="email">
+      <UInput
+        v-model="state.email"
+        color="white"
+        class="mt-2"
+        placeholder="Email"
+      />
+    </UFormGroup>
 
-      <UFormGroup label="Password" name="password">
-        <UInput
-          v-model="state.password"
-          type="password"
-          class="input"
-          placeholder="Password"
-        />
-      </UFormGroup>
+    <UFormGroup label="Password" name="password" class="mt-7">
+      <UInput
+        v-model="state.password"
+        type="password"
+        class="mt-2"
+        placeholder="Password"
+      />
+    </UFormGroup>
 
-      <UButton type="submit"> Login </UButton>
-    </UForm>
-  </div>
+    <UButton type="submit" class="block mx-auto mt-4 py-2 px-4">
+      Login
+    </UButton>
+  </UForm>
+  <NuxtLink to="/forgot" class="text-cyan-700 text-sm">
+    Forgot your password?
+  </NuxtLink>
 </template>
 
 <style lang="scss" scoped></style>
