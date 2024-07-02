@@ -146,15 +146,15 @@ function submitButtonText() {
       </UFormGroup>
 
       <UFormGroup label="File" name="file">
-        <AdminPostFormImage :image="articleData?.file.fileName" />
+        <PostFormImage :image="articleData?.file.fileName" />
       </UFormGroup>
 
       <UFormGroup label="Tags" name="tags">
-        <AdminPostFormTag />
+        <PostFormTag />
       </UFormGroup>
 
       <ClientOnly>
-        <AdminPostConstructor
+        <PostConstructor
           ref="blockConstructor"
           :init-blocks="articleData?.blocks"
         />

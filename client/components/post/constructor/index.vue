@@ -85,8 +85,8 @@ function getBlocksContent() {
     <h2 class="text-center text-xl font-medium mb-4">
       Article body conscructor
     </h2>
-    <AdminPostConstructorToolbar />
-    <AdminPostBlockComponent
+    <PostConstructorToolbar />
+    <PostBlockComponent
       v-for="postBlock in createdBlocks.entries()"
       :key="postBlock[0]"
       :component="postBlock[1].component"
@@ -95,7 +95,7 @@ function getBlocksContent() {
       @remove-block="removeBlock"
       @set-block-ref="setBlockRef"
     />
-    <AdminPostConstructorMenu :list="blocksKeys" @select="selectBlock" />
+    <PostConstructorMenu :list="blocksKeys" @select="selectBlock" />
   </div>
 </template>
 

@@ -17,10 +17,10 @@ const {
 
 <template>
   <UiLoader v-if="pending" />
-  <AdminPostFormViewContainer v-else :error="error">
+  <PostFormViewContainer v-else :error="error">
     <template #header>Edit article</template>
     <template #body>
-      <AdminPostForm :article-data="article" />
+      <PostForm :article-data="article" />
     </template>
-  </AdminPostFormViewContainer>
+  </PostFormViewContainer>
 </template>

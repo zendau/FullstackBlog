@@ -7,7 +7,7 @@ function removeItem(index: number) {
 </script>
 
 <template>
-  <AdminPostFormTagItem
+  <PostFormTagItem
     v-for="(tag, index) in tags"
     :key="index"
     :tag="tag"

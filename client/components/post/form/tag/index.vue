@@ -1,8 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <AdminPostFormTagList />
-  <AdminPostFormTagInput />
+  <PostFormTagList />
+  <PostFormTagInput />
 </template>
 
 <style lang="scss" scoped></style>

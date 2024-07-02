@@ -1,10 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <AdminPostFormViewContainer>
+  <PostFormViewContainer>
     <template #header>Create article</template>
     <template #body>
-      <AdminPostForm />
+      <PostForm />
     </template>
-  </AdminPostFormViewContainer>
+  </PostFormViewContainer>
 </template>
