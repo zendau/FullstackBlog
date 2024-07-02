@@ -14,15 +14,15 @@ const { author, date, message } = defineProps<{
 </script>
 
 <template>
-  <div className="comment__item">
-    <div className="comment__header">
+  <div class="comment__item">
+    <div class="comment__header">
       <h3>
         <NuxtLink :to="`/user/${author.id}`">{{ author.email }}</NuxtLink>
       </h3>
       <p class="comment__created">{{ dateFormat(date) }}</p>
 
       <p class="isEdited">Edited</p>
-      <div className="comment__toolbar">
+      <div class="comment__toolbar">
         <button>
           <UIcon name="i-heroicons-pencil-square-16-solid" />
           <!-- <UIcon name="i-heroicons-document-check-16-solid" /> -->

@@ -87,7 +87,7 @@ class UserService {
     const combineAggregate = combine(id)
 
     const userData = await UserRepository.aggregate(combineAggregate)
-    return userData
+    return userData[0]
   }
 
   async logout(token) {
