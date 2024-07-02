@@ -9,8 +9,24 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div>{{ tag }}</div>
-  <button @click="emit('removeItem')">X</button>
+  <div>
+    <p>{{ tag }}</p>
+    <button @click="emit('removeItem')">X</button>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+div {
+  position: relative;
+  margin-bottom: 10px;
+  margin-left: 30px;
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -30px;
+  font-size: 22px;
+}
+</style>

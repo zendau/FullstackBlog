@@ -126,7 +126,7 @@ function submitButtonText() {
 </script>
 
 <template>
-  <div class="w-4/5 mx-auto">
+  <div>
     <UForm
       :schema="schema"
       :state="state"
@@ -145,7 +145,7 @@ function submitButtonText() {
         <UTextarea v-model="state.preview" />
       </UFormGroup>
 
-      <UFormGroup label="file" name="file">
+      <UFormGroup label="File" name="file">
         <AdminPostFormImage :image="articleData?.file.fileName" />
       </UFormGroup>
 
@@ -160,7 +160,9 @@ function submitButtonText() {
         />
       </ClientOnly>
       <UiErrorMessage :message="articleStore.error" />
-      <UButton type="submit"> {{ submitButtonText() }} </UButton>
+      <UButton class="block mx-auto my-3 px-3 py-2" type="submit">
+        {{ submitButtonText() }}
+      </UButton>
     </UForm>
   </div>
 </template>

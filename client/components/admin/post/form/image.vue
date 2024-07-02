@@ -15,4 +15,8 @@ const files = inject("files", [])
   <img v-else-if="image" :src="getApiFile(image)" alt="" />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+img {
+  margin-top: 10px;
+}
+</style>
