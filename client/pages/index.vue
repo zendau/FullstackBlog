@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="container">
+  <div class="page-container">
     <PostFilter />
     <PostSetting />
   </div>
@@ -9,7 +9,7 @@
 </template>
 
 <style lang="scss" scoped>
-.container {
+.page-container {
   background-color: #fff;
   margin: 30px auto;
   box-shadow: 1px 1px 4px -1px rgba(0, 0, 0, 0.1);
