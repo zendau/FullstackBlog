@@ -25,4 +25,17 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+div {
+  position: relative;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+button {
+  position: absolute;
+  top: 0;
+  left: -30px;
+  font-size: 22px;
+}
+</style>

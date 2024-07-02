@@ -19,7 +19,11 @@ function selectBlock(block: string) {
 
 <template>
   <UPopover v-model:open="open">
-    <UButton color="white" trailing-icon="i-heroicons-plus-circle-16-solid" />
+    <UButton
+      class="my-3 mx-auto"
+      color="white"
+      trailing-icon="i-heroicons-plus-circle-16-solid"
+    />
 
     <template #panel>
       <div class="p-4">
@@ -33,4 +37,13 @@ function selectBlock(block: string) {
   </UPopover>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+p {
+  cursor: pointer;
+  transition: 0.5s ease;
+
+  &:hover {
+    color: var(--color-secondary-btn);
+  }
+}
+</style>

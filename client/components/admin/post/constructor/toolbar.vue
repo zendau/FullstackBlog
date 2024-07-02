@@ -39,7 +39,7 @@ function applyLink() {
     <UButton @click="setBolt">B</UButton>
     <UButton @click="setItalic">I</UButton>
     <UPopover v-model:open="isOpenLinkForm">
-      <UButton color="white" label="A" @click="setLink" />
+      <UButton label="A" @click="setLink" />
 
       <template #panel>
         <div class="p-4 z-10">
@@ -53,7 +53,19 @@ function applyLink() {
 
 <style lang="scss" scoped>
 .toolbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 10px;
   position: fixed;
-  right: 0;
+  z-index: 10;
+  width: 120px;
+  right: 20px;
+  top: 100px;
+
+  button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>

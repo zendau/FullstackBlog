@@ -82,7 +82,9 @@ function getBlocksContent() {
 
 <template>
   <div class="editor">
-    <h2>Article body conscructor</h2>
+    <h2 class="text-center text-xl font-medium mb-4">
+      Article body conscructor
+    </h2>
     <AdminPostConstructorToolbar />
     <AdminPostBlockComponent
       v-for="postBlock in createdBlocks.entries()"
