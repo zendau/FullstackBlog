@@ -82,7 +82,7 @@ function onSubmit(event: FormSubmitEvent<ArticleSchema>) {
   const blocksData = blockConstructor.value.getBlocksContent()
 
   if (!blocksData) {
-    articleStore.error = "At least one block must be created"
+    articleStore.error.message = "At least one block must be created"
     return
   }
 
@@ -159,7 +159,7 @@ function submitButtonText() {
           :init-blocks="articleData?.blocks"
         />
       </ClientOnly>
-      <UiErrorMessage :message="articleStore.error" />
+      <UiErrorMessage :message="articleStore.error.message" />
       <UButton class="block mx-auto my-3 px-3 py-2" type="submit">
         {{ submitButtonText() }}
       </UButton>

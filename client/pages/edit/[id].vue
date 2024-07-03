@@ -6,17 +6,17 @@ const {
   pending,
   error,
   data: article,
-} = useLazyAsyncData<IArticle>(
+} = await useLazyAsyncData<IArticle>(
   `post/${articleId}`,
-  async () => await useApiFetch(`post/get/${articleId}`),
+  () => useApiFetch(`post/get/${articleId}`),
   {
-    server: true,
+    server: false,
   },
 )
 </script>
 
 <template>
-  <UiLoader v-if="pending" />
+  <UiLoader v-if="pending" full />
   <PostFormViewContainer v-else :error="error">
     <template #header>Edit article</template>
     <template #body>

@@ -1,4 +1,4 @@
-import type { ArticleSchema } from "~/components/admin/post/form/index.vue"
+import type { ArticleSchema } from "~/components/post/form/index.vue"
 
 interface IQuoute {
   text: string
@@ -59,11 +59,19 @@ interface IArticleFetch {
   hasMore: boolean
 }
 
+interface IError {
+  message: string
+  isClear: boolean
+}
+
 type ArticleFormData = ArticleSchema & { id?: string; blocks: IBlock[] }
 
 export const useArticleStore = defineStore("article", () => {
   const data = ref<IArticle[]>([])
-  const error = ref("")
+  const error = reactive<IError>({
+    isClear: true,
+    message: "",
+  })
   const isLoading = ref(false)
 
   const page = ref(1)
@@ -72,9 +80,19 @@ export const useArticleStore = defineStore("article", () => {
 
   const hasMore = ref(true)
 
-  watch(error, () => {
-    setTimeout(() => (error.value = ""), 5000)
-  })
+  watch(
+    () => error.message,
+    () => {
+      if (error.isClear) {
+        setTimeout(() => {
+          error.message = ""
+          error.isClear = false
+        }, 5000)
+      } else {
+        error.isClear = true
+      }
+    },
+  )
 
   async function fetch({ isRewrite, params }: IFetch = {}) {
     isLoading.value = true
@@ -93,7 +111,7 @@ export const useArticleStore = defineStore("article", () => {
       })
 
       if (!res) {
-        error.value = "Error receiving articles. Try later"
+        error.message = "Error receiving articles. Try later"
         return
       }
 
@@ -109,7 +127,8 @@ export const useArticleStore = defineStore("article", () => {
 
       return true
     } catch (e) {
-      error.value = "Unexpected error. Try later"
+      error.isClear = false
+      error.message = "Unexpected error. Try later"
       return false
     } finally {
       isLoading.value = false
@@ -148,7 +167,7 @@ export const useArticleStore = defineStore("article", () => {
 
       return articleRes.id
     } catch (e: any) {
-      error.value = e.message ?? "Unexpected error. Repeat later"
+      error.message = e.message ?? "Unexpected error. Repeat later"
       return false
     } finally {
       isLoading.value = false
@@ -176,7 +195,7 @@ export const useArticleStore = defineStore("article", () => {
 
       return productRes.id
     } catch (e: any) {
-      error.value = e.message ?? "Unexpected error. Repeat later"
+      error.message = e.message ?? "Unexpected error. Repeat later"
       return false
     } finally {
       isLoading.value = false
@@ -202,7 +221,7 @@ export const useArticleStore = defineStore("article", () => {
 
       return true
     } catch (e: any) {
-      error.value = e.message ?? "Unexpected error. Repeat later"
+      error.message = e.message ?? "Unexpected error. Repeat later"
       return false
     } finally {
       isLoading.value = false
