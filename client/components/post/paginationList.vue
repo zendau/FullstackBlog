@@ -19,13 +19,7 @@ watch(
   },
 )
 
-useLazyAsyncData(
-  "posts",
-  async () => await articleParams.fetchFilterData(true),
-  {
-    server: true,
-  },
-)
+useLazyAsyncData("posts", () => articleParams.fetchFilterData(true))
 </script>
 
 <template>

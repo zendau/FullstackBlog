@@ -127,7 +127,7 @@ const { addTag } = useArticleParamsStore()
 
   &__title {
     font-size: 20px;
-    padding: 5px;
+    padding: 5px 0;
   }
 }
 

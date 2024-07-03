@@ -5,12 +5,8 @@ const articleStore = useArticleStore()
 const articleParams = useArticleParamsStore()
 const isVisible = ref(false)
 
-const { pending } = useLazyAsyncData(
-  "posts",
-  async () => await articleParams.fetchFilterData(true),
-  {
-    server: true,
-  },
+const { pending } = await useLazyAsyncData("posts", () =>
+  articleParams.fetchFilterData(true),
 )
 
 async function onIntersectionObserver([

@@ -22,11 +22,18 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <component :is="postLayout">
-    <template v-for="post of articles" :key="post.id">
-      <PostCard v-if="postId !== post.id" :post="post" />
-    </template>
-  </component>
-  <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
-  <PostSkeletonList v-if="articleStore.isLoading" />
+  <UiErrorMessage
+    v-if="articleStore.error.message"
+    :message="articleStore.error.message"
+  />
+
+  <template v-else>
+    <component :is="postLayout">
+      <template v-for="post of articles" :key="post.id">
+        <PostCard v-if="postId !== post.id" :post="post" />
+      </template>
+    </component>
+    <PostEmpty v-if="!articleStore.isLoading && !articleStore.data.length" />
+    <PostSkeletonList v-if="articleStore.isLoading" />
+  </template>
 </template>
