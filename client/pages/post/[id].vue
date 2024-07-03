@@ -7,12 +7,9 @@ const articleId = params.id as string
 
 provide("articleId", articleId)
 
-const { data: article, pending } = useLazyAsyncData<IArticle>(
+const { data: article, pending } = await useLazyAsyncData<IArticle>(
   `post/${articleId}`,
-  async () => await useApiFetch(`post/get/${articleId}`),
-  {
-    server: true,
-  },
+  () => useApiFetch(`post/get/${articleId}`),
 )
 </script>
 
