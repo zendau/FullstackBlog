@@ -1,10 +1,8 @@
 <script setup lang="ts">
-const { message } = defineProps({
-  message: {
-    type: String,
-    required: true,
-  },
-})
+const { message, classData } = defineProps<{
+  message: string
+  classData?: string
+}>()
 </script>
 
 <template>
@@ -16,6 +14,7 @@ const { message } = defineProps({
     title="Error"
     :description="message"
     class="mb-3"
+    :class="classData"
   />
 </template>
 

@@ -1,7 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { full } = defineProps<{
+  full?: boolean
+}>()
+</script>
 
 <template>
-  <div class="w-full flex justify-center">
+  <div
+    class="w-full flex justify-center items-center"
+    :class="{ 'h-screen': full }"
+  >
     <div class="lds-ellipsis">
       <div></div>
       <div></div>
