@@ -6,11 +6,41 @@ interface IAuthor {
   isBlocked: boolean
 }
 
-const { author, date, message } = defineProps<{
+const { author, date, message, index, id, isEdited } = defineProps<{
   author: IAuthor
   date: string
   message: string
+  index: number
+  id: string
+  isEdited: boolean
 }>()
+
+const isContentEditable = ref(false)
+const commentEl = ref<any>()
+
+const commentStore = useCommentStore()
+const userStore = useUserStore()
+
+const isCommentAuthor = computed(() => userStore.data?.id === author.id)
+
+function cancelEditCommentMode() {
+  isContentEditable.value = false
+}
+
+function onEditMessage() {
+  const commentText = commentEl.value.innerHTML
+
+  if (commentText !== message) {
+    commentStore.edit({ message: commentText, commentId: id }, index)
+  }
+
+  cancelEditCommentMode()
+}
+
+function onDeleteComment() {
+  commentStore.remove(id, index)
+  console.log("remove", id)
+}
 </script>
 
 <template>
@@ -21,17 +51,48 @@ const { author, date, message } = defineProps<{
       </h3>
       <p class="comment__created">{{ dateFormat(date) }}</p>
 
-      <p class="isEdited">Edited</p>
-      <div class="comment__toolbar">
+      <p v-if="isEdited" class="isEdited">Edited</p>
+      <div v-if="isCommentAuthor" class="comment__toolbar">
         <button>
-          <UIcon name="i-heroicons-pencil-square-16-solid" />
-          <!-- <UIcon name="i-heroicons-document-check-16-solid" /> -->
+          <template v-if="isContentEditable">
+            <UIcon
+              name="i-heroicons-document-check-16-solid"
+              class="text-lime-500"
+              @click="onEditMessage"
+            />
+            <UIcon
+              class="text-red-500"
+              name="i-heroicons-no-symbol"
+              @click="cancelEditCommentMode"
+            />
+          </template>
+
+          <UIcon
+            v-else
+            class="text-orange-400"
+            name="i-heroicons-pencil-square-16-solid"
+            @click="isContentEditable = true"
+          />
         </button>
-        <button><UIcon name="i-heroicons-trash" /></button>
+        <UiModalConfirm
+          message="Do you really want to delete this comment?"
+          @confirm="onDeleteComment"
+        >
+          <button>
+            <UIcon class="text-red-500" name="i-heroicons-trash" />
+          </button>
+        </UiModalConfirm>
       </div>
     </div>
 
-    <p class="comment__body">{{ message }}</p>
+    <p
+      ref="commentEl"
+      :contenteditable="isContentEditable"
+      class="comment__body"
+      :class="{ 'comment__body-edit': isContentEditable }"
+    >
+      {{ message }}
+    </p>
   </div>
 </template>
 
@@ -48,9 +109,6 @@ const { author, date, message } = defineProps<{
   &__item {
     margin-top: 10px;
     padding: 5px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 300px;
   }
 
   &__created {
@@ -92,10 +150,20 @@ const { author, date, message } = defineProps<{
   }
 
   &__body {
-    white-space: pre;
     display: inline-block;
     width: 100%;
     padding: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: none;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+
+    &-edit {
+      border: 1px solid #bebebe;
+      border-radius: 6px;
+      background-color: var(--color-primary);
+    }
   }
 
   &__form {

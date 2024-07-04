@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const isOpen = ref(false)
 
-const { message, buttonText } = defineProps<{
-  buttonText: string
+const { message } = defineProps<{
   message: string
 }>()
 
@@ -24,7 +23,9 @@ function onCancel() {
 
 <template>
   <div>
-    <UButton :label="buttonText" @click="isOpen = true" />
+    <div @click="isOpen = true">
+      <slot />
+    </div>
 
     <UModal v-model="isOpen">
       <UCard

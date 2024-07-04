@@ -24,10 +24,11 @@ async function onDeleteProduct() {
     </NuxtLink>
 
     <UiModalConfirm
-      button-text="Delete"
       message="Do you really want to delete this article?"
       @confirm="onDeleteProduct"
-    />
+    >
+      <UButton label="Delete" />
+    </UiModalConfirm>
   </div>
 </template>
 

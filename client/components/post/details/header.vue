@@ -54,6 +54,7 @@ const { addTag } = useArticleParamsStore()
   }
 
   &__header {
+    margin-top: 20px;
     &-content {
       display: flex;
       height: 100%;

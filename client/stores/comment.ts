@@ -20,6 +20,16 @@ interface IComment {
   user: IUser
 }
 
+interface ICreateComment {
+  postId: string
+  message: string
+}
+interface IEditComment {
+  commentId: string
+
+  message: string
+}
+
 export const useCommentStore = defineStore("comment", () => {
   const data = reactive<IComment[]>([])
   const error = ref("")
@@ -33,6 +43,11 @@ export const useCommentStore = defineStore("comment", () => {
   const authorId = ref("")
 
   const hasMore = ref(true)
+
+  watch(error, () => {
+    setTimeout(() => (error.value = ""), 5000)
+  })
+
   function $reset() {
     page.value = 1
     isLoading.value = false
@@ -101,9 +116,7 @@ export const useCommentStore = defineStore("comment", () => {
     }
   }
 
-  async function send(comment: any) {
-    isLoading.value = true
-
+  async function add(comment: ICreateComment) {
     try {
       const commentData = await useApiFetch<IComment>("comment/add", {
         method: "post",
@@ -113,19 +126,57 @@ export const useCommentStore = defineStore("comment", () => {
       })
 
       data.unshift(commentData)
+      total.value++
 
       return true
     } catch (e) {
-      error.value = ""
+      error.value = "Error when sending a comment"
       return false
-    } finally {
-      isLoading.value = false
     }
   }
 
-  function add(comment: any) {
-    send(comment)
-    total.value++
+  async function edit(comment: IEditComment, index: number) {
+    try {
+      const commentData = await useApiFetch<IComment>("comment/edit", {
+        method: "put",
+        body: {
+          ...comment,
+        },
+      })
+
+      if (!commentData || !data[index]) throw Error
+
+      const currentComment = data[index]
+
+      currentComment.edited = true
+      currentComment.message = comment.message
+
+      return true
+    } catch (e) {
+      error.value = "Error when editing a comment"
+      return false
+    }
+  }
+
+  async function remove(commentId: string, index: number) {
+    try {
+      const commentData = await useApiFetch<IComment>("comment/delete", {
+        method: "delete",
+        body: {
+          commentId,
+        },
+      })
+
+      if (!commentData || !data[index]) throw Error
+
+      data.splice(index, 1)
+      total.value--
+
+      return true
+    } catch (e) {
+      error.value = "Error when deleting a comment"
+      return false
+    }
   }
 
   return {
@@ -138,7 +189,9 @@ export const useCommentStore = defineStore("comment", () => {
     authorId,
     isLoading,
     add,
+    edit,
     fetch,
     $reset,
+    remove,
   }
 })
