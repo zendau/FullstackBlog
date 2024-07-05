@@ -1,7 +1,12 @@
 import bcrypt from "bcrypt"
 import { v4 as uuid } from "uuid"
 
-import { combine } from "../aggregation/user.builder.js"
+import {
+  extended,
+  facetData,
+  idFilter,
+  listFilter,
+} from "../aggregation/user.builder.js"
 import { ERROR_USER } from "../constants/error.messages.js"
 import { RESPONSE_MESSAGE } from "../constants/mail.messages.js"
 import UserDTO from "../dtos/user.dto.js"
@@ -84,7 +89,10 @@ class UserService {
   }
 
   async getUserData(id) {
-    const combineAggregate = combine(id)
+    const filterData = idFilter(id)
+    const extendedData = extended(false)
+
+    const combineAggregate = [...filterData, ...extendedData]
 
     const userData = await UserRepository.aggregate(combineAggregate)
     return userData[0]
@@ -198,6 +206,26 @@ class UserService {
     nodemailerService.sendNewPassword(newPaswword, email)
 
     return { message: RESPONSE_MESSAGE.RESET_PASSWORD(email) }
+  }
+
+  async getPaginationList(idList, limit, skip, filterType) {
+    const filter = listFilter(idList, filterType)
+    const extendedData = extended(true)
+    const facet = facetData(skip, limit)
+
+    const combineAggregate = [...filter, ...extendedData, ...facet]
+
+    const resData = await UserRepository.aggregate(combineAggregate)
+
+    if (!resData[0]) return { list: [], hasMore: false, total: 0 }
+
+    if (resData[0].list.length === limit) {
+      resData[0].hasMore = true
+    } else {
+      resData[0].hasMore = false
+    }
+
+    return resData[0]
   }
 }
 

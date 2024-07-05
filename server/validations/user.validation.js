@@ -28,3 +28,10 @@ export const activateAccountScheme = Joi.object({
 export const getUserByIdScheme = Joi.object({
   id: Joi.objectId().required(),
 })
+
+export const paginationScheme = Joi.object({
+  limit: Joi.number(),
+  page: Joi.number(),
+  exclude: Joi.array(),
+  substring: Joi.string(),
+})

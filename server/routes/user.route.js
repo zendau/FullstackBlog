@@ -7,6 +7,7 @@ import {
   activateAccountScheme,
   getUserByIdScheme,
   loginSchema,
+  paginationScheme,
   registrationSchema,
   saveNewUserDataSchema,
   sendConfirmCodeSchema,
@@ -296,6 +297,12 @@ router.get(
   "/data/:id",
   validate(getUserByIdScheme, "params"),
   UserController.getUserById,
+)
+
+router.get(
+  "/pagination",
+  validate(paginationScheme, "query"),
+  UserController.getPaginationList,
 )
 
 export default router

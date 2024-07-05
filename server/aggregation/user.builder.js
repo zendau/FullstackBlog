@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 import { rating } from "./post.builder.js"
 
-export function lookup() {
+function lookup() {
   return [
     {
       $lookup: {
@@ -39,7 +39,7 @@ export function lookup() {
   ]
 }
 
-export function combine(id) {
+export function idFilter(id) {
   return [
     {
       $match: {
@@ -48,6 +48,43 @@ export function combine(id) {
         },
       },
     },
+  ]
+}
+
+export function listFilter(idList, filter) {
+  const matchData = {}
+
+  const objectIdList = Array.isArray(idList)
+    ? idList.map((id) => mongoose.Types.ObjectId(id))
+    : []
+
+  // Выборка по подстроке
+  if (filter.substring) {
+    const regex = new RegExp(filter.substring, "i")
+
+    matchData.title = {
+      $regex: regex,
+    }
+  }
+
+  if (objectIdList.length > 0) {
+    // Исключения записей которые уже были получины
+    matchData._id = {
+      $nin: objectIdList,
+    }
+  }
+
+  return [
+    {
+      $match: {
+        ...matchData,
+      },
+    },
+  ]
+}
+
+export function extended(withAdminData) {
+  return [
     ...lookup(),
     ...rating(true),
     {
@@ -137,7 +174,60 @@ export function combine(id) {
         counterDislikes: 1,
         counterPosts: { $size: "$posts" },
         counterComments: { $size: "$comments" },
+        ...(withAdminData && {
+          roles: "$user.roles",
+          isActivated: "$user.isActivated",
+        }),
       },
     },
   ]
+}
+
+export function facetData(skip, limit) {
+  const limitData = { $limit: limit }
+  const skipData = { $skip: skip }
+
+  const facetAgrs = []
+
+  if (skip) {
+    facetAgrs.push(skipData)
+  }
+  if (limit >= 0) {
+    facetAgrs.push(limitData)
+  }
+
+  const facet = [
+    {
+      $facet: {
+        list: [...facetAgrs],
+        total: [
+          {
+            $group: {
+              _id: null,
+              count: {
+                $sum: 1,
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              count: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$total",
+    },
+    {
+      $project: {
+        list: 1,
+        total: "$total.count",
+      },
+    },
+  ]
+
+  return facet
 }

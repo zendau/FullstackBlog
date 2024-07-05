@@ -120,6 +120,31 @@ class UserController {
       next(e)
     }
   }
+
+  async getPaginationList(req, res, next) {
+    try {
+      const { limit, page, exclude, substring } = req.query
+
+      const skipValue = (page ?? 0) * limit
+
+      const skip = Number.isNaN(skipValue) ? 0 : skipValue
+
+      const limitValue = limit ? parseInt(limit) : 1
+
+      const data = await UserService.getPaginationList(
+        exclude,
+        limitValue,
+        skip,
+        {
+          substring,
+        },
+      )
+
+      res.json(data)
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 export default new UserController()
