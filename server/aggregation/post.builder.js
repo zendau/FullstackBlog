@@ -382,22 +382,22 @@ export function blockExtended() {
 }
 
 export function facetData(skip, limit, sort) {
-  const postsLimit = { $limit: limit }
-  const postsSkip = { $skip: skip }
+  const limitData = { $limit: limit }
+  const skipData = { $skip: skip }
 
-  const facetPosts = []
+  const facetAgrs = []
 
   if (skip) {
-    facetPosts.push(postsSkip)
+    facetAgrs.push(skipData)
   }
   if (limit >= 0) {
-    facetPosts.push(postsLimit)
+    facetAgrs.push(limitData)
   }
 
   const facet = [
     {
       $facet: {
-        posts: [...sort, ...facetPosts],
+        list: [...sort, ...facetAgrs],
         total: [
           {
             $group: {
@@ -421,7 +421,7 @@ export function facetData(skip, limit, sort) {
     },
     {
       $project: {
-        posts: 1,
+        list: 1,
         total: "$total.count",
       },
     },

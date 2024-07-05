@@ -291,9 +291,12 @@ class PostService {
     ]
 
     const resData = await PostRepository.aggregate(combineAggregate)
-    if (!resData[0]) return [{ posts: [], hasMore: false, total: 0 }]
 
-    if (resData[0].posts.length === limit) {
+    console.log(resData)
+
+    if (!resData[0]) return { list: [], hasMore: false, total: 0 }
+
+    if (resData[0].list.length === limit) {
       resData[0].hasMore = true
     } else {
       resData[0].hasMore = false

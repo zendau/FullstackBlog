@@ -54,7 +54,7 @@ interface IFetch {
 }
 
 interface IArticleFetch {
-  posts: IArticle[]
+  list: IArticle[]
   total: number
   hasMore: boolean
 }
@@ -110,6 +110,8 @@ export const useArticleStore = defineStore("article", () => {
         },
       })
 
+      debugger
+
       if (!res) {
         error.message = "Error receiving articles. Try later"
         return
@@ -123,7 +125,7 @@ export const useArticleStore = defineStore("article", () => {
         hasMore.value = false
       }
 
-      data.value.push(...res.posts)
+      data.value.push(...res.list)
 
       return true
     } catch (e) {
