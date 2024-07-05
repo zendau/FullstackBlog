@@ -2,6 +2,10 @@
 definePageMeta({
   middleware: "public",
 })
+
+useHead({
+  title: "Login",
+})
 </script>
 <template>
   <UiViewFormLayout>

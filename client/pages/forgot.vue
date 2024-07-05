@@ -3,6 +3,10 @@ definePageMeta({
   middleware: "public",
 })
 
+useHead({
+  title: "Forgot",
+})
+
 const isShowConfirmCode = ref(false)
 const userStore = useUserStore()
 

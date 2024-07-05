@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+useHead({
+  title: import.meta.env.VITE_SITE_NAME,
+})
+</script>
 
 <template>
   <div class="page-container">

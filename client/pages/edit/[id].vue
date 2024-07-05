@@ -13,6 +13,14 @@ const {
     server: false,
   },
 )
+
+const articlePageTitle = computed(
+  () => article.value?.title || import.meta.env.VITE_SITE_NAME,
+)
+
+useHead({
+  title: () => `Edit '${articlePageTitle.value}'`,
+})
 </script>
 
 <template>

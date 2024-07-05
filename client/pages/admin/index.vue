@@ -3,6 +3,10 @@ definePageMeta({
   layout: "admin",
   middleware: "protect-by-auth",
 })
+
+useHead({
+  title: "Admin panel",
+})
 </script>
 
 <template>

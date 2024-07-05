@@ -3,6 +3,10 @@ definePageMeta({
   middleware: "public",
 })
 
+useHead({
+  title: "Register",
+})
+
 const isShowConfirmCode = ref(false)
 const userStore = useUserStore()
 const router = useRouter()

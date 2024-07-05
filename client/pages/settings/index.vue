@@ -2,6 +2,10 @@
 definePageMeta({
   middleware: "private",
 })
+
+useHead({
+  title: "Settings",
+})
 </script>
 
 <template>

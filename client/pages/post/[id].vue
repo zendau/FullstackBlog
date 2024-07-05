@@ -11,6 +11,14 @@ const { data: article, pending } = await useLazyAsyncData<IArticle>(
   `post/${articleId}`,
   () => useApiFetch(`post/get/${articleId}`),
 )
+
+const articlePageTitle = computed(
+  () => article.value?.title || import.meta.env.VITE_SITE_NAME,
+)
+
+useHead({
+  title: articlePageTitle,
+})
 </script>
 
 <template>

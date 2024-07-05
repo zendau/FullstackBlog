@@ -10,7 +10,10 @@ const { addTag } = useArticleParamsStore()
   <div class="post">
     <div class="post__header">
       <div class="post__info">
-        <p>{{ post.author.email }}</p>
+        <NuxtLink :to="`/user/${post.author.id}`">
+          {{ post.author.email }}
+        </NuxtLink>
+
         <p>{{ dateFormat(post.createdDate) }}</p>
       </div>
 

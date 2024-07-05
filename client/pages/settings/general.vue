@@ -3,6 +3,10 @@ definePageMeta({
   middleware: "private",
 })
 
+useHead({
+  title: "General settings",
+})
+
 const userStore = useUserStore()
 </script>
 

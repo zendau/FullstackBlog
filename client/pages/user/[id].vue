@@ -18,6 +18,12 @@ provide("userId", userId)
 const { data, pending, error } = useLazyAsyncData<IUser>(`user/${userId}`, () =>
   useApiFetch(`user/data/${userId}`),
 )
+
+const userName = computed(() => data.value?.email || "User")
+
+useHead({
+  title: () => `${userName.value} blog`,
+})
 </script>
 
 <template>
