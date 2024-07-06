@@ -1,4 +1,4 @@
-enum Roles {
+export enum Roles {
   User = "user",
   Admin = "admin",
 }
@@ -9,12 +9,13 @@ interface IUpdatehUser {
   confirmCode: string
 }
 
-interface IUser {
+export interface IUser {
   id: string
   email: string
-  roles: Roles
   isActivated: boolean
   isBlocked: boolean
+  isActivate: boolean
+  roles: Roles[]
 }
 
 interface ITokenBody {
@@ -188,6 +189,9 @@ export const useUserStore = defineStore("user", () => {
 
   function $reset() {
     data.value = undefined
+
+    isLoading.value = false
+    error.value = ""
   }
 
   return {

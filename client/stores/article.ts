@@ -110,8 +110,6 @@ export const useArticleStore = defineStore("article", () => {
         },
       })
 
-      debugger
-
       if (!res) {
         error.message = "Error receiving articles. Try later"
         return
