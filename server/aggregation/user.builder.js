@@ -62,7 +62,7 @@ export function listFilter(idList, filter) {
   if (filter.substring) {
     const regex = new RegExp(filter.substring, "i")
 
-    matchData.title = {
+    matchData.email = {
       $regex: regex,
     }
   }
@@ -199,7 +199,14 @@ export function facetData(skip, limit) {
   const facet = [
     {
       $facet: {
-        list: [...facetAgrs],
+        list: [
+          {
+            $sort: {
+              id: -1,
+            },
+          },
+          ...facetAgrs,
+        ],
         total: [
           {
             $group: {
