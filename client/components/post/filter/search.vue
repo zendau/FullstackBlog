@@ -10,7 +10,7 @@ function onInpitTitle() {
   }
 }
 
-watch(() => articleParams.search, useDebounceFn(onInpitTitle, 500))
+const onInputHandler = useDebounceFn(onInpitTitle)
 </script>
 
 <template>
@@ -19,6 +19,7 @@ watch(() => articleParams.search, useDebounceFn(onInpitTitle, 500))
     icon="i-heroicons-magnifying-glass-20-solid"
     placeholder="Search post..."
     class="col-start-1 col-end-4 w-full mb-1"
+    @input="onInputHandler"
   />
 </template>
 

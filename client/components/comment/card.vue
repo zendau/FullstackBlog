@@ -39,7 +39,6 @@ function onEditMessage() {
 
 function onDeleteComment() {
   commentStore.remove(id, index)
-  console.log("remove", id)
 }
 </script>
 
