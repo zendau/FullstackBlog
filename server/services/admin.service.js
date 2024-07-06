@@ -8,36 +8,18 @@ class AdminService {
     return roles
   }
 
-  async setUserRole(userId, role) {
+  async setUserRoles(userId, rolesList) {
     const roles = this.getRoles()
 
-    if (!roles.includes(role)) {
-      throw ApiError.HttpException(ERROR_ADMIN.ROLE_NOT_FOUND)
-    }
+    rolesList.forEach((roleValue) => {
+      if (!roles.includes(roleValue)) {
+        throw ApiError.HttpException(ERROR_ADMIN.ROLE_NOT_FOUND(roleValue))
+      }
+    })
 
     const res = await UserRepository.findOneAndUpdate(
       { _id: userId },
-      { $push: { roles: role } },
-      { new: true },
-    )
-
-    if (!res) {
-      throw ApiError.HttpException(ERROR_ADMIN.USER_NOT_FOUND)
-    }
-
-    return !!res
-  }
-
-  async unSetUserRole(userId, role) {
-    const roles = this.getRoles()
-
-    if (!roles.includes(role)) {
-      throw ApiError.HttpException(ERROR_ADMIN.ROLE_NOT_FOUND)
-    }
-
-    const res = await UserRepository.findOneAndUpdate(
-      { _id: userId },
-      { $pull: { roles: role } },
+      { roles: rolesList },
       { new: true },
     )
 

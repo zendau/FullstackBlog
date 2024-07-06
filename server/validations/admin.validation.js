@@ -3,9 +3,9 @@ import objectId from "joi-objectid"
 
 Joi.objectId = objectId(Joi)
 
-export const setRoleSchema = Joi.object({
+export const setRolesSchema = Joi.object({
   userId: Joi.objectId().required(),
-  role: Joi.string(),
+  roles: Joi.array().required(),
 })
 
 export const unSetRoleSchema = Joi.object({

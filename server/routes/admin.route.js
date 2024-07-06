@@ -5,26 +5,20 @@ import { adminGuard } from "../middlewares/auth.middleware.js"
 import validate from "../middlewares/validate.middleware.js"
 import {
   blockSchema,
-  setRoleSchema,
+  setRolesSchema,
   unBlockSchema,
-  unSetRoleSchema,
 } from "../validations/admin.validation.js"
 
 const router = new Router()
 
 router.patch("/roles", adminGuard, AdminController.getRoles)
 router.patch(
-  "/setRole",
+  "/setRoles",
   adminGuard,
-  validate(setRoleSchema),
-  AdminController.setUserRole,
+  validate(setRolesSchema),
+  AdminController.setUserRoles,
 )
-router.patch(
-  "/unSetRole",
-  adminGuard,
-  validate(unSetRoleSchema),
-  AdminController.unSetUserRole,
-)
+
 router.patch(
   "/block",
   adminGuard,

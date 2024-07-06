@@ -7,22 +7,11 @@ class AdminController {
     return res.json(roles)
   }
 
-  async setUserRole(req, res, next) {
+  async setUserRoles(req, res, next) {
     try {
-      const { userId, role } = req.body
+      const { userId, roles } = req.body
 
-      const data = await AdminService.setUserRole(userId, role)
-      res.json(data)
-    } catch (e) {
-      next(e)
-    }
-  }
-
-  async unSetUserRole(req, res, next) {
-    try {
-      const { userId, role } = req.body
-
-      const data = await AdminService.unSetUserRole(userId, role)
+      const data = await AdminService.setUserRoles(userId, roles)
       res.json(data)
     } catch (e) {
       next(e)
