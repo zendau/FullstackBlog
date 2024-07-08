@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt"
-import { v4 as uuid } from "uuid"
 
 import {
   extended,
@@ -111,7 +110,7 @@ class UserService {
     const user = await UserRepository.findOne({ email })
 
     if (!user) {
-      throw ApiError.HttpException(ERROR_USER.NOT_FOUND_BY_EMAIL)
+      throw ApiError.HttpException(ERROR_USER.NOT_FOUND_BY_EMAIL(email))
     }
 
     const res = await ConfirmCodeService.createCode(user)
@@ -179,7 +178,7 @@ class UserService {
     const candidate = await this.getByEmail(email)
 
     if (candidate) {
-      throw ApiError.HttpException(ERROR_USER.EMAIL_EXISTS)
+      throw ApiError.HttpException(ERROR_USER.EMAIL_EXISTS(email))
     }
 
     return candidate
@@ -197,7 +196,9 @@ class UserService {
     const userData = await this.getByEmail(email)
     await ConfirmCodeService.checkCode(confirmCode)
 
-    const newPaswword = uuid()
+    const newPaswword = crypto
+      .getRandomValues(new BigUint64Array(1))[0]
+      .toString(36)
     const hashPassword = await this.getHashPassword(newPaswword)
 
     userData.password = hashPassword

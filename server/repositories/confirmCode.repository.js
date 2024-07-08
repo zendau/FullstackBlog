@@ -6,7 +6,7 @@ class ConfirmCodeRepository {
   }
 
   async findOne(condition) {
-    return confirmCodeModel.findById(condition)
+    return confirmCodeModel.findOne(condition)
   }
 
   async deleteOne(condition) {
