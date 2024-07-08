@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <p class="p-4">Login to your account to leave a comment</p>
+  <p class="p-4">Your account is blocked and you cannot leave comments</p>
 </template>
 
 <style lang="scss" scoped></style>

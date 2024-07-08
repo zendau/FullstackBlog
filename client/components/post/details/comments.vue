@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { isAuth } = storeToRefs(useAuthStore())
+const { data } = storeToRefs(useUserStore())
 
 const articleId = inject("articleId", "")
 
@@ -10,7 +11,9 @@ onUnmounted(() => commnentStore.$reset())
 </script>
 
 <template>
-  <CommentAddForm v-if="isAuth" />
+  <CommentBlocked v-if="data?.isBlocked" />
+  <CommentNotActivated v-else-if="!data?.isActivated" />
+  <CommentAddForm v-else-if="isAuth" />
   <CommentNoAuth v-else />
   <CommentList />
 </template>
