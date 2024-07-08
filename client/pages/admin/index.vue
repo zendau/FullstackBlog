@@ -10,11 +10,11 @@ useHead({
 </script>
 
 <template>
-  <div class="container">Select operation</div>
+  <div>Select operation</div>
 </template>
 
 <style scoped>
-.container {
+div {
   display: flex;
   width: 100%;
   height: 100%;

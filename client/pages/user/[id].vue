@@ -42,7 +42,7 @@ useHead({
       <div v-else class="mt-4">
         <h1 class="text-xl font-medium">{{ data.email }}</h1>
         <p class="text-sm">
-          {{ data.isBlocked ? "Blocked" : "Not blocked" }} account status
+          {{ data.isBlocked ? "Blocked" : "Active" }} account
         </p>
         <p class="flex items-center my-3">
           <UIcon name="i-heroicons-trophy mr-2 text-3xl" />

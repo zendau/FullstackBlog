@@ -63,10 +63,6 @@
   }
 }
 
-.workspace {
-  min-width: 80%;
-}
-
 @media (max-width: 820px) {
   .container {
     grid-template-columns: 1fr 2fr;
