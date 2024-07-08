@@ -2,6 +2,10 @@
 useHead({
   title: "Create article",
 })
+
+definePageMeta({
+  middleware: ["private", "activate"],
+})
 </script>
 
 <template>

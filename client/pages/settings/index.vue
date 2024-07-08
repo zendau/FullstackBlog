@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: "private",
+  middleware: ["private", "activate"],
 })
 
 useHead({
