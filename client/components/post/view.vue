@@ -3,6 +3,9 @@ import { PostPaginationList, PostInfinityList } from "#components"
 
 const setting = useArticleSettingStore()
 
+const articleParams = useArticleParamsStore()
+articleParams.reset()
+
 const postListType = computed(() => {
   if (setting.currentList === "pagination") {
     return PostPaginationList
