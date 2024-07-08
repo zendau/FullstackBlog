@@ -48,12 +48,11 @@ export const useAuthStore = defineStore("auth", () => {
       isAuth.value = true
       await router.push("/")
     } catch (e: any) {
-      if (e.status === 401) {
-        error.value =
-          "Пожалуйста, проверьте введенные данные и повторите попытку."
+      const errorBody = e.response
+      if (errorBody.status === 400 && errorBody._data.message) {
+        error.value = errorBody._data.message
       } else {
-        error.value =
-          "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
+        error.value = "Unexpected error has occurred. Please try again later"
       }
     } finally {
       loadingIndicator.finish()
@@ -82,16 +81,15 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       isAuth.value = true
+      return true
     } catch (e: any) {
-      if (e.status === 400) {
-        error.value = e.data.message
-      } else if (e.status === 401) {
-        error.value =
-          "Пожалуйста, проверьте введенные данные и повторите попытку."
+      const errorBody = e.response
+      if (errorBody.status === 400 && errorBody._data.message) {
+        error.value = errorBody._data.message
       } else {
-        error.value =
-          "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
+        error.value = "Unexpected error has occurred. Please try again later"
       }
+      return false
     } finally {
       loadingIndicator.finish()
       isLoading.value = false
@@ -155,12 +153,11 @@ export const useAuthStore = defineStore("auth", () => {
       isAuth.value = true
       await router.push("/")
     } catch (e: any) {
-      if (e.status === 401) {
-        error.value =
-          "Пожалуйста, проверьте введенные данные и повторите попытку."
+      const errorBody = e.response
+      if (errorBody.status === 400 && errorBody.statusText) {
+        error.value = errorBody.statusText
       } else {
-        error.value =
-          "Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз позже."
+        error.value = "Unexpected error has occurred. Please try again later"
       }
     } finally {
       loadingIndicator.finish()

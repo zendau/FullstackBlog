@@ -14,7 +14,6 @@ export interface IUser {
   email: string
   isActivated: boolean
   isBlocked: boolean
-  isActivate: boolean
   roles: Roles[]
 }
 
@@ -88,8 +87,7 @@ export const useUserStore = defineStore("user", () => {
       data.value.isActivated = true
       return true
     } catch (e: any) {
-      error.value =
-        "An error occurred when sending the confirmation code. Repeat later."
+      error.value = "An error occurred when activating account. Repeat later."
 
       return false
     } finally {
@@ -100,7 +98,8 @@ export const useUserStore = defineStore("user", () => {
   async function sendConfirmCode(email: string | undefined) {
     try {
       error.value = ""
-      if (!email) throw new Error("The mail was not entered")
+      isLoading.value = true
+      if (!email) throw new Error("The email was not entered")
 
       const res = await useApiFetch<boolean>("/user/sendConfirmCode", {
         method: "post",
@@ -111,10 +110,17 @@ export const useUserStore = defineStore("user", () => {
       })
 
       if (!res) throw Error
+      return true
     } catch (e: any) {
-      error.value =
-        e.message ??
-        "An error occurred when receiving a new confirmation code. Repeat later."
+      const errorBody = e.response
+      if (errorBody.status === 400 && errorBody._data.message) {
+        error.value = errorBody._data.message
+      } else {
+        error.value = "Unexpected error has occurred. Please try again later"
+      }
+      return false
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -143,8 +149,12 @@ export const useUserStore = defineStore("user", () => {
       if (!res) throw Error
       return true
     } catch (e: any) {
-      error.value =
-        "An error occurred when sending the confirmation code. Repeat later."
+      const errorBody = e.response
+      if (errorBody.status === 400 && errorBody._data.message) {
+        error.value = errorBody._data.message
+      } else {
+        error.value = "Unexpected error has occurred. Please try again later"
+      }
 
       return false
     } finally {
