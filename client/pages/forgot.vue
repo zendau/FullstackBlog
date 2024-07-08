@@ -24,10 +24,17 @@ async function onSubmit(confirmCode: string) {
   message.value = "new password already send"
 }
 
-function onReset(emailData: string) {
-  userStore.sendConfirmCode(emailData)
+async function onResetForm(emailData: string) {
+  const res = await userStore.sendConfirmCode(emailData)
+
+  if (!res) return
+
   email.value = emailData
   isShowConfirmCode.value = true
+}
+
+function onResetConfimrCode() {
+  isShowConfirmCode.value = false
 }
 </script>
 
@@ -47,8 +54,9 @@ function onReset(emailData: string) {
       v-if="isShowConfirmCode"
       :on-send="onSubmit"
       :email="email"
+      @on-reset="onResetConfimrCode"
     />
-    <AuthReset v-else @on-reset="onReset" />
+    <AuthReset v-else @on-reset="onResetForm" />
   </UiViewFormLayout>
 </template>
 

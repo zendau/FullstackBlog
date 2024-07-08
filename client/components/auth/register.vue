@@ -27,8 +27,10 @@ type Schema = InferType<typeof schema>
 
 const authStore = useAuthStore()
 
-function onSubmit(event: FormSubmitEvent<Schema>) {
-  authStore.register(event.data)
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  const res = await authStore.register(event.data)
+
+  if (!res) return
   emit("onSumbit")
 }
 </script>

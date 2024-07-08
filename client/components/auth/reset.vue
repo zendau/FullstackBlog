@@ -16,17 +16,16 @@ const schema = object().shape({
 
 type Schema = InferType<typeof schema>
 
-const authStore = useAuthStore()
+const userStore = useUserStore()
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  // authStore.resetPassword(event.data)
   emit("onReset", event.data.email)
 }
 </script>
 
 <template>
-  <UiLoader v-if="authStore.isLoading" />
-  <UiErrorMessage :message="authStore.error" />
+  <UiLoader v-if="userStore.isLoading" />
+  <UiErrorMessage :message="userStore.error" />
 
   <UForm :schema="schema" :state="state" class="mb-2" @submit="onSubmit">
     <UFormGroup label="Email" name="email">
