@@ -22,7 +22,7 @@ export const useAdminStore = defineStore("admin", () => {
   const error = ref("")
 
   const page = ref(1)
-  const count = ref(2)
+  const count = ref(10)
   const total = ref(0)
 
   const hasMore = ref(true)

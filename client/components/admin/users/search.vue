@@ -6,6 +6,7 @@ const searchValue = ref("")
 const onInputHandler = useDebounceFn(function onInputChange(event: any) {
   const searchValue = event.target.value
 
+  adminStore.page = 1
   if (searchValue.length) {
     adminStore.fetch({
       isRewrite: true,
