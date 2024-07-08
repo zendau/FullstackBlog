@@ -4,6 +4,20 @@ import type { NitroFetchRequest } from "nitropack"
 type $FetchType = typeof $fetch
 export type ReqOptions = Parameters<$FetchType>[1]
 
+export async function useJWTRefesh() {
+  const authStore = useAuthStore()
+  try {
+    const res: any = await $fetch("user/refresh", {
+      method: "post",
+      baseURL: import.meta.env.VITE_API,
+      credentials: "include",
+    })
+    authStore.refresh(res.accessToken)
+  } catch (e) {
+    authStore.logout()
+  }
+}
+
 export function useApiFetch<T>(
   url: NitroFetchRequest,
   options: ReqOptions = {},
@@ -27,17 +41,9 @@ export function useApiFetch<T>(
 
   const fetchParams: ReqOptions = {
     ...defaultParams,
-    onResponseError: async (ctx) => {
+    onResponseError: (ctx) => {
       if (ctx.response.status === 401) {
-        try {
-          const res: any = await $fetch("user/refresh", {
-            method: "post",
-            ...defaultParams,
-          })
-          authStore.refresh(res.accessToken)
-        } catch (e) {
-          authStore.logout()
-        }
+        useJWTRefesh()
       }
     },
   }
