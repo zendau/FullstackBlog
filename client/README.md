@@ -1,75 +1,45 @@
-# Nuxt 3 Minimal Starter
+# Клиентская часть
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# npm
+## Установка зависимостей
+```sh
+cd client
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
+# или
 yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+## Запуск в режиме разработки
+```sh
+cd client
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
+# или
 yarn dev
-
-# bun
-bun run dev
+```
+## Запуск в режиме тестирования
+```sh
+cd client
+npm run test
+# или
+yarn test
 ```
 
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+## Переменные окружения
+```env
+VITE_API=http://localhost:8080
+VITE_SITE_NAME='Site Blog'
 ```
 
-Locally preview production build:
+**Описание переменных**:
+ - VITE_API: URL API сервера.
+ - VITE_SITE_NAME: Название сайта.
 
-```bash
-# npm
-npm run preview
 
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Документация
+### Структура проекта
+**client**: Клиентская часть приложения на Nuxt.js.
+  - **composables**: Повторно используемые Vue.js композиции.
+  - **layouts**: Шаблоны макетов страниц.
+  - **middleware**: Middleware для обработки запросов.
+  - **pages**: Роуты страниц.
+  - **stores**: Хранилища состояния приложения.
+  - **utils**: Вспомогательные функции.
