@@ -20,6 +20,13 @@
   min-width: 100%;
   display: grid;
   grid-template-columns: 250px 1fr;
+  overflow-x: hidden;
+}
+
+.workspace {
+  display: block;
+  overflow: auto;
+  width: 100%;
 }
 
 .admin-navbar {
