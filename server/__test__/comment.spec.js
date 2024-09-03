@@ -42,9 +42,7 @@ describe("CommentService delete method", () => {
   it("should throw an error if user is not the author of the comment", async () => {
     const commentId = "testCommentId"
     const userId = "wrongUserId"
-    const deleteStatus = {
-      /* mock delete result */
-    }
+    const deleteStatus = null
 
     commentModel.findOneAndDelete.mockResolvedValue(deleteStatus)
 

@@ -38,7 +38,7 @@ class CommentService {
     )
 
     if (res === null) {
-      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND)
+      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND(commentId, userId))
     }
 
     const commentPopulate = await res.populate("user").execPopulate()
@@ -52,7 +52,7 @@ class CommentService {
       $and: [{ _id: commentId }, { user: userId }],
     })
     if (deleteStatus === null) {
-      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND)
+      throw ApiError.HttpException(ERROR_COMMENT.NOT_FOUND(commentId, userId))
     }
     const commentDTO = new CommentDTO(deleteStatus)
     return commentDTO
